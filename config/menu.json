@@ -1,0 +1,19 @@
+{
+  "button":[
+    {
+      "type":"view",
+      "name":"首页",
+      "url":"http://dev.wegroup1p1.avosapps.com"
+    },
+    {
+     "type":"click",
+     "name":"接受消息",
+     "key":"V1001_Recieve_Msg"
+    },
+    {
+      "type":"view",
+      "name":"我的云盘",
+      "url":"http://v.qq.com/"
+    }
+  ]
+}
