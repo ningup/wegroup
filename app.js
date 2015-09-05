@@ -13,14 +13,15 @@ var fs = require('fs');
 var path = require('path');
 var AV = require('leanengine');
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
-var menu = JSON.stringify(require('./config/menu.json'));
-//var followers;
+var USER = require('./common/user.js'); 
+var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var app = express();
-var config = {
+var config = {          //微信服务号相关数据
   token: 'ontheway',
   appid: 'wx88cb5d33bbbe9e75',
   encodingAESKey: 'dUpASyLHyc2X6ie3K5ZWBrbZHiFFJfYjXpfnNKaUud6'
 };
+
 // 设置 view 引擎
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -28,7 +29,6 @@ app.use(express.static('public'));
 
 // 加载云代码方法
 app.use(cloud);
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -64,10 +64,8 @@ app.use('/wechat', wechat(config, function (req, res, next) {
    else {} 
 }));
 api.createMenu(menu, function (err, result){});
-api.getFollowers(function (err, data, resf) {
-    fs.writeFile(path.join('./config','userlist'),data.data.openid[0] ,function(errw){} );
-
-});
+var user = new USER();
+user.followedUserRegister();
 
 // 未处理异常捕获 middleware
 app.use(function(req, res, next) {
@@ -93,7 +91,8 @@ app.get('/', function(req, res) {
 
 // 可以将一类的路由单独保存在一个文件中
 app.use('/todos', todos);
-app.use('/user', user);
+//app.use('/user', user);
+
 // 如果任何路由都没匹配到，则认为 404
 // 生成一个异常让后面的 err handler 捕获
 app.use(function(req, res, next) {
