@@ -5,12 +5,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var todos = require('./routes/todos');
+var user = require('./routes/user');
 var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
 var wechat = require('wechat');
+var fs = require('fs');
+var path = require('path');
+var AV = require('leanengine');
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 var menu = JSON.stringify(require('./config/menu.json'));
-
+//var followers;
 var app = express();
 var config = {
   token: 'ontheway',
@@ -36,10 +40,16 @@ app.use('/wechat', wechat(config, function (req, res, next) {
   {
      res.reply({type: "text", content: '你发的信息是'+message.Content});
   }
-  if(message.MsgType === 'event')
+  else if(message.MsgType === 'event')
   {
-     api.getUser(message.FromUserName, function (err, data, userres){
-     res.reply([
+     if(message.Event === 'subscribe')
+     {
+        res.reply({type: "text", content: '感谢您找到了我！！！'});
+     }
+     else if (message.Event === 'CLICK' && message.EventKey === 'V1001_Recieve_Msg')
+     {
+      api.getUser({openid:message.FromUserName, lang: 'zh_CN'}, function (err, data, userres){
+        res.reply([
         {
         title: data.nickname+'的个人信息',
         description: '你来自'+data.country+' '+data.province+' '+data.city,
@@ -47,11 +57,17 @@ app.use('/wechat', wechat(config, function (req, res, next) {
         url: 'baidu.com'
         }
          ]);
-    
-     });	
+       });
+     }
+     else{}
    }
+   else {} 
 }));
 api.createMenu(menu, function (err, result){});
+api.getFollowers(function (err, data, resf) {
+    fs.writeFile(path.join('./config','userlist'),data.data.openid[0] ,function(errw){} );
+
+});
 
 // 未处理异常捕获 middleware
 app.use(function(req, res, next) {
@@ -69,13 +85,15 @@ app.use(function(req, res, next) {
   d.run(next);
 });
 
+
 app.get('/', function(req, res) {
   res.render('index', { currentTime: new Date() });
 });
 
+
 // 可以将一类的路由单独保存在一个文件中
 app.use('/todos', todos);
-
+app.use('/user', user);
 // 如果任何路由都没匹配到，则认为 404
 // 生成一个异常让后面的 err handler 捕获
 app.use(function(req, res, next) {
