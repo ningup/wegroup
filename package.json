@@ -19,7 +19,7 @@
     "ejs": "2.3.1",
     "express": "4.12.3",
     "leanengine": "^0.1.4",
-    "wechat-api": "",
-    "wechat": ""
+    "wechat-api": "1.11.0",
+    "wechat": "2.0.1"
   }
 }

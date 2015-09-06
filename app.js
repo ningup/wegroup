@@ -33,6 +33,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.query());
+app.use(AV.Cloud.CookieSession({secret: 'wegroup.av'}));
 app.use('/wechat', wechat(config, function (req, res, next) {
   // 微信输入信息都在req.weixin上
   var message = req.weixin;
@@ -44,28 +45,66 @@ app.use('/wechat', wechat(config, function (req, res, next) {
   {
      if(message.Event === 'subscribe')
      {
-        res.reply({type: "text", content: '感谢您找到了我！！！'});
+          api.getUser({openid:message.FromUserName, lang: 'zh_CN'}, function (err, data, userres){
+                        var newUser = new AV.User();
+                        newUser.set("username", data.openid);
+                        newUser.set("password", "A00000000~");
+                        newUser.set("openid", data.openid);
+                        newUser.set("nickname", data.nickname);
+                        newUser.set("sex", data.sex);
+                        newUser.set("headimgurl", data.headimgurl);
+                        newUser.set("subscribe", 1);
+                        newUser.set("country", data.country);
+                        newUser.set("province", data.province);
+                        newUser.set("city", data.city);
+                        newUser.signUp(null, {
+                                success: function(newUser) {
+                                // 注册成功，可以使用了.
+					res.reply({type: "text", content: '感谢您找到了我，注册成功！！！'});
+                                },
+                                error: function(newUser, error) {
+						var query = new AV.Query(AV.User);
+          					query.equalTo("username", message.FromUserName);
+          					query.first({
+                				success: function(queryUser) {
+                        				queryUser.set('subscribe', 1 );
+                        				queryUser.save();
+                        				res.reply({type: "text", content: '您已经注册过了，欢迎再次回来！！！'}); 
+                				},
+                				error: function(error) {
+                                		} });
+					}
+                    			});
+
+                            
+                        });
+                 
      }
+     else if(message.Event === 'unsubscribe')
+     {
+        var query = new AV.Query(AV.User);
+	query.equalTo("username", message.FromUserName);
+	query.first({
+  		success: function(queryUser) {
+			queryUser.set('subscribe', 0 );
+      			queryUser.save();
+  		},
+  		error: function(error) {
+    			//alert("Error: " + error.code + " " + error.message);
+  		}
+	});
+     } 
      else if (message.Event === 'CLICK' && message.EventKey === 'V1001_Recieve_Msg')
      {
-      api.getUser({openid:message.FromUserName, lang: 'zh_CN'}, function (err, data, userres){
-        res.reply([
-        {
-        title: data.nickname+'的个人信息',
-        description: '你来自'+data.country+' '+data.province+' '+data.city,
-        picurl: data.headimgurl,
-        url: 'baidu.com'
-        }
-         ]);
-       });
+         res.reply({type: "text", content:'您点击了接受消息这个按钮'});
      }
      else{}
    }
    else {} 
 }));
 api.createMenu(menu, function (err, result){});
-var user = new USER();
-user.followedUserRegister();
+//var user = new USER();
+//user.followedUserRegister();
 
 // 未处理异常捕获 middleware
 app.use(function(req, res, next) {
