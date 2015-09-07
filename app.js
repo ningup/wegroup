@@ -13,6 +13,8 @@ var fs = require('fs');
 var path = require('path');
 var AV = require('leanengine');
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
+var OAuth = require('wechat-oauth');
+var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 var USER = require('./common/user.js'); 
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var app = express();
@@ -124,7 +126,14 @@ app.use(function(req, res, next) {
 
 
 app.get('/', function(req, res) {
-  res.render('index', { currentTime: new Date() });
+  
+  client.getAccessToken(req.query.code, function (err, result) {
+  var accessToken = result.data.access_token;
+  var openid = result.data.openid;
+  res.render('index', { openid: openid });
+  });
+  
+  //res.render('index', { openid: req.query.code });
 });
 
 

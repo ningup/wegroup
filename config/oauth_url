@@ -1,0 +1,6 @@
+###oauth_url
+https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wctest.avosapps.com&response_type=code&scope=snsapi_base&state=123#wechat_redirect
+
+
+###redirect_url
+http://dev.wctest.avosapps.com
