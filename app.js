@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var todos = require('./routes/todos');
 var user = require('./routes/user');
+var group = require('./routes/group');
 var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
 var wechat = require('wechat');
@@ -15,7 +16,7 @@ var AV = require('leanengine');
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 var OAuth = require('wechat-oauth');
 var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
-var USER = require('./common/user.js'); 
+//var USER = require('./common/user.js'); 
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var app = express();
 var config = {          //微信服务号相关数据
@@ -130,7 +131,9 @@ app.get('/', function(req, res) {
   client.getAccessToken(req.query.code, function (err, result) {
   var accessToken = result.data.access_token;
   var openid = result.data.openid;
-  res.render('index', { openid: openid });
+  //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
+  	res.render('index', { openid: openid });
+  //else res.render('index', { openid: '你没有权限访问，向管理员申请' });
   });
   
   //res.render('index', { openid: req.query.code });
@@ -139,6 +142,7 @@ app.get('/', function(req, res) {
 
 // 可以将一类的路由单独保存在一个文件中
 app.use('/todos', todos);
+app.use('/group', group);
 //app.use('/user', user);
 
 // 如果任何路由都没匹配到，则认为 404
