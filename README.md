@@ -26,12 +26,33 @@ city: "城市",
 subscribe: "是否关注 1关注2没关注",
 subscribeTime: "关注时间即注册时间"
 groupCreated: "创建的群",
-groupJoined: "参加其他人的群（包括自己创建的群）"
+groupJoined: "参加其他人的群（不包括自己创建的群）"
 
+###group数据表
+createdBy: "创建者username"
+nickname:  "群名称"
+followers  "群成员"
+nicknameOfCUser: "创建者nickname"
+pushMsg2wechat: "是否推送至公众号"
+identityVerify: "加群者是否需要群主同意" 
 
+### 文件组织
+app.js			主文件，中间件的使用，路由的分配，微信公众号的事件处理
+common/user_class.js    用户相关的类文件
+common/group_class.js   群相关的类文件
+public			放置静态文件
+routes/user.js		user路由文件
+routes/group.js		group路由文件
+cloud.js		云代码文件
+config/menu.js		自定义菜单文件
+views/group.ejs		模板文件		
+views/index.ejs		-------
+view/user.ejs		-------
 ###开发相关
 1.注意微信调用接口次数限制问题，此版本不加以考虑，因为用户较少。
 2.leancloud部署环境里，写文件操作失败，本地部署可以写入成功。
+3.目前加入群没有考虑群名字相同的情况
+4.用户目前可以加入自己的建立的群，需要考虑。
 #bug
 1.必须利用 wechat 原始代码接入，否则失败。
 2.自定义菜单bug，时不时变化到一个固定的情况。

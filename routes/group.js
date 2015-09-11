@@ -25,8 +25,6 @@ router.get('/', function(req, res, next) {
     error: function(err) {
       if (err.code === 101) {
         // 该错误的信息为：{ code: 101, message: 'Class or object doesn\'t exists.' }，说明 Todo 数据表还未创建，所以返回空的 Todo 列表。
-        // 具体的错误代码详见：https://leancloud.cn/docs/error_code.html
-        res.render('groups', {
           title: 'Groups 列表',
           groups: []
         });
@@ -42,39 +40,18 @@ router.post('/create', function(req, res, next) {
   var nickName=req.body.nickName;
   var groupclass = new GroupClass();
   console.log(req.query.username);
-  groupclass.create(nickName,req.query.username);        
+  groupclass.create(nickName,req.query.username);       //调用groupclass的建群函数 
   res.redirect('/group?username='+req.query.username);
 })
 
 
-//用户关注群
+//用户加入群
 router.post('/follow',function(req,res,next){
  	var groupName=req.body.targetGroup;
 	var username = req.query.username;
 	var groupclass = new GroupClass();
-  	var queryUser = new AV.Query(AV.User);
-        queryUser.equalTo("username",username);
-        queryUser.first({
-            success:function(queryUser){
-               	   var query = new AV.Query(Group);
-   	 	    query.equalTo("nickname",groupName);
-   		     query.first({
-           		 success:function(group){
-				var relation = group.relation('followers');
-                        	relation.add(queryUser);
-                        	group.save();
-
-           		 },  
-          		  error:function(error){
-           		 }
-       			 });
-
-	    },
-            error:function(error){
-            }
-        });
-
-	groupclass.follow(groupName,req.query.username);
+	groupclass.addFollower(groupName,req.query.username); //添加群成员 
+	groupclass.joinGroup(groupName,req.query.username);  //在用户groupJoined添加群信息
   	res.redirect('/group?username='+req.query.username);
 
 })

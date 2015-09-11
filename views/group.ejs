@@ -18,7 +18,7 @@
     </form>
     <ul>
       <% for(var i=0; i<groups.length; i++) {%>
-      <li><%= groups[i].get('nickname') %></li>
+      <li><%= groups[i].get('nickname') %> &nbsp;&nbsp;&nbsp;&nbsp;建群者<%= groups[i].get('nicknameOfCUser') %></li>
       <% } %>
     </ul>
   </body>

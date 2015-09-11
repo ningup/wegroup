@@ -7,7 +7,6 @@ function GroupClass()
 		var group=new Group();
 		group.set('nickname',nickname);
           	group.set('createdBy',username);
-		//var relation = group.relation('followers');
 		var query = new AV.Query(AV.User);
                 query.equalTo("username", username);
                 query.first({
@@ -31,7 +30,7 @@ function GroupClass()
                    }});
 		//return group;
 	};
-	this.follow = function(groupName,username){
+	this.joinGroup = function(groupName,username){
 		var query = new AV.Query(Group);
   		query.equalTo('nickname', groupName);
   		query.find({
@@ -52,5 +51,30 @@ function GroupClass()
   			}
   		});		
 	};
+     this.addFollower = function(groupName,username){
+        var queryUser = new AV.Query(AV.User);
+        queryUser.equalTo("username",username);
+        queryUser.first({
+            success:function(queryUser){
+                   var query = new AV.Query(Group);
+                    query.equalTo("nickname",groupName);
+                     query.first({
+                         success:function(group){
+                                var relation = group.relation('followers');
+                                relation.add(queryUser);
+                                group.save();
+
+                         },
+                          error:function(error){
+                         }
+                         });
+
+            },
+            error:function(error){
+            }
+        });
+
+    };
+
 };
 module.exports = GroupClass;

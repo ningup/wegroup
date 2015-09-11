@@ -16,7 +16,7 @@ var AV = require('leanengine');
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 var OAuth = require('wechat-oauth');
 var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
-//var USER = require('./common/user.js'); 
+//var UserClass = require('./common/user_class.js'); 
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var app = express();
 var config = {          //微信服务号相关数据
@@ -106,8 +106,8 @@ app.use('/wechat', wechat(config, function (req, res, next) {
    else {} 
 }));
 api.createMenu(menu, function (err, result){});
-//var user = new USER();
-//user.followedUserRegister();
+//var userclass  = new UserClass();
+//userclass.followedUserRegister();
 
 // 未处理异常捕获 middleware
 app.use(function(req, res, next) {
