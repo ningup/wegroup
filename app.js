@@ -81,6 +81,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 
                             
                         });
+		
                  
      }
      else if(message.Event === 'unsubscribe')
@@ -132,7 +133,16 @@ app.get('/', function(req, res) {
   var accessToken = result.data.access_token;
   var openid = result.data.openid;
   //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
-  	res.render('index', { openid: openid });
+  AV.User.logIn(openid, "A00000000~", {
+  success: function(user) {
+    // 成功了，现在可以做其他事情了.
+	res.render('index', { openid: openid });
+  },
+  error: function(user, error) {
+    // 失败了.
+  }
+});
+  //	res.render('index', { openid: openid });
   //else res.render('index', { openid: '你没有权限访问，向管理员申请' });
   });
   
