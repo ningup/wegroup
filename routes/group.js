@@ -17,7 +17,9 @@ router.get('/', function(req, res, next) {
   	querys.queryString('*');
    }
    else {
-	querys.queryString('*'+searchString+'*');
+	querys.queryString(searchString+'~5');
+	//querys.queryString('nickname:'+'['+searchString+']');
+
    }
   querys.find().then(function(results) {
     console.log('Found %d objects', querys.hits());
