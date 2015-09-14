@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
   	querys.queryString('*');
    }
    else {
-	querys.queryString(searchString+'~5');
+	querys.queryString(searchString+'~3');
 	//querys.queryString('nickname:'+'['+searchString+']');
 
    }
