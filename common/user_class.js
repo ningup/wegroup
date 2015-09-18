@@ -37,6 +37,18 @@ function userFollowed()
                             
          });
       });
-    } 
+    }
+    this.getUserNickname = function(username){
+				var queryUser = new AV.Query(AV.User);
+				queryUser.equalTo("username",username);
+				queryUser.first({
+					success:function(queryUser){
+						return queryUser.get('nickname');
+					},
+					error:function(error){
+						return 0;
+					}
+				});
+	}; 
 }
 module.exports = userFollowed;

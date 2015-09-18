@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Feed列表</title>
+  </head>
+  <body>
+    <head>username:<%= username %></head>
+    <h1><%= title %></h1>
+    <form action="/feed/post?username=<%= username %>" method="POST">
+    <p>  新增feed </p>
+    <p> feedType: <input type="text" name="feedType" />  </p>
+    <p>feedContent: <input type="text" name="feedContent" /> </p>
+    <p> groupObjId <input type="text" name="groupObjId" /> </p>    
+      <input type="submit" value="发布feed" />
+    </form>
+    <ul>
+      <% for(var i=0; i<feeds.length; i++) {%>
+      <li><%= feeds[i].get('feedContent') %> &nbsp;&nbsp;&nbsp;&nbsp;发布者<%= feeds[i].get('nicknameOfPUser') %></li>
+      <% } %>
+    </ul>
+  </body>
+</html>

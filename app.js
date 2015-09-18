@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var todos = require('./routes/todos');
 var user = require('./routes/user');
 var group = require('./routes/group');
+var feed = require('./routes/feed');
 var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
 var wechat = require('wechat');
@@ -109,7 +110,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 api.createMenu(menu, function (err, result){});
 //var userclass  = new UserClass();
 //userclass.followedUserRegister();
-
+//var status = new AV.Status('视频url', '我喜欢了视频xxxx.');
 // 未处理异常捕获 middleware
 app.use(function(req, res, next) {
   var d = domain.create();
@@ -135,7 +136,7 @@ app.get('/', function(req, res) {
   //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
   AV.User.logIn(openid, "A00000000~", {
   success: function(user) {
-    // 成功了，现在可以做其他事情了.
+	// 成功了，现在可以做其他事情了.
 	res.render('index', { openid: openid });
   },
   error: function(user, error) {
@@ -151,8 +152,9 @@ app.get('/', function(req, res) {
 
 
 // 可以将一类的路由单独保存在一个文件中
-app.use('/todos', todos);
+//app.use('/todos', todos);
 app.use('/group', group);
+app.use('/feed', feed);
 //app.use('/user', user);
 
 // 如果任何路由都没匹配到，则认为 404
