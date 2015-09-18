@@ -5,7 +5,7 @@ var Feed = AV.Object.extend('Feed');
 
 function FeedClass()
 {
-	this.postFeed_text = function(groupObjId,username,feedContent){
+	this.postFeed_text = function(groupObjId,username,feedContent,redirect){
 		var feed=new Feed();
 		//var userclass = new UserClass();
 		//var nicknameOfPUser = userclass.getUserNickname(username);
@@ -40,7 +40,10 @@ function FeedClass()
 		queryUser.first({
 			success:function(queryUser){
 				feed.set('nicknameOfPUser',queryUser.get('nickname'));
-				feed.save();
+				feed.save().then(function(feed){
+						redirect();
+					});
+				
 			},
 			error:function(error){
 				

@@ -39,8 +39,8 @@ router.post('/post', function(req, res, next) {
   var feedContent=req.body.feedContent;
   var feedclass = new FeedClass();
   console.log(req.query.username);
-  feedclass.postFeed_text(groupObjId,req.query.username,feedContent); 
-   res.redirect('/feed?username='+req.query.username);
+  feedclass.postFeed_text(groupObjId,req.query.username,feedContent,function(){res.redirect('/feed?username='+req.query.username);}); 
+  
 })
 
 
