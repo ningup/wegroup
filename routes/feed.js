@@ -2,12 +2,14 @@ var router = require('express').Router();
 var AV = require('leanengine');
 var GroupClass = require('../common/group_class.js'); //引入group_class.js
 var FeedClass = require('../common/feed_class.js');   //引入Feed_class.js
-
+var LikeClass = require('../common/like_class.js');
 var Group = AV.Object.extend('Group');
 var Feed = AV.Object.extend('Feed');
 
 //  feed 结果
 router.get('/', function(req, res, next) {
+	//var likeclass = new LikeClass();
+	//likeclass.like('55fc293860b21fbf5733ec7d',req.query.username);
 	var query = new AV.Query(Feed);
     query.descending('createdAt');
     query.find({

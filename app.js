@@ -8,6 +8,7 @@ var todos = require('./routes/todos');
 var user = require('./routes/user');
 var group = require('./routes/group');
 var feed = require('./routes/feed');
+var comment = require('./routes/comment');
 var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
 var wechat = require('wechat');
@@ -155,6 +156,7 @@ app.get('/', function(req, res) {
 //app.use('/todos', todos);
 app.use('/group', group);
 app.use('/feed', feed);
+app.use('/comment', comment);
 //app.use('/user', user);
 
 // 如果任何路由都没匹配到，则认为 404
