@@ -1,5 +1,5 @@
 var AV = require('leanengine');
-var UserClass = require('./user_class.js');
+//var UserClass = require('./user_class.js');
 var Group=AV.Object.extend('Group');
 var Feed = AV.Object.extend('Feed');
 
@@ -7,15 +7,10 @@ function FeedClass()
 {
 	this.postFeed_text = function(groupObjId,username,feedContent,redirect){
 		var feed=new Feed();
-		//var userclass = new UserClass();
-		//var nicknameOfPUser = userclass.getUserNickname(username);
-		//console.log(nicknameOfPUser);
 		feed.set('postedBy',username);
 		feed.set('feedType','text');
 		feed.set('feedContent',feedContent);
 		feed.set('inWhichGroup',groupObjId);
-		//if (nicknameOfPUser)
-			//feed.set('nicknameOfPUser',userclass.getUserNickname(username));
 		feed.save().then(function(feed) {
 			//对象保存成功
 			var queryG = new AV.Query(Group);

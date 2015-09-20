@@ -38,17 +38,66 @@ function userFollowed()
          });
       });
     }
-    this.getUserNickname = function(username){
-				var queryUser = new AV.Query(AV.User);
-				queryUser.equalTo("username",username);
-				queryUser.first({
-					success:function(queryUser){
-						return queryUser.get('nickname');
-					},
-					error:function(error){
-						return 0;
+    this.config_lastAccessTime = function(username){
+		var lastAccessTime = new Object();
+		lastAccessTime.time = new Array();
+		var queryUser = new AV.Query(AV.User);
+		queryUser.equalTo("username",username);
+		queryUser.first({
+			success:function(queryUser){
+				console.log('find user'+ queryUser.get('nickname'));
+				var relation = queryUser.relation("groupCreated");
+				relation.targetClassName = 'Group';
+				var query = relation.query();
+				//query.equalTo('nickname','北交大');
+				query.find({
+				  success: function(results) {
+					  var i = 0;
+					  var j=0;
+					for (i = 0; i < results.length; i++) {
+					  var object = results[i];
+					  console.log('find relation group:'+ object.get('nickname')+ '创建者是:' +object.get('nicknameOfCUser'));
+						lastAccessTime.time[i] = new Object() ;
+						lastAccessTime.time[i].gid = object.getObjectId();
+						lastAccessTime.time[i].time = object.getCreatedAt();
+						j++;
 					}
+					var relationJ = queryUser.relation("groupJoined");
+					relationJ.targetClassName = 'Group';
+					var queryJ = relationJ.query();
+					queryJ.find({
+					  success: function(resultsJ) {
+						for (i = 0; i < resultsJ.length; i++) {
+						  var objectJ = resultsJ[i];
+						  console.log('find relation group:'+ objectJ.get('nickname')+ '创建者是:' +objectJ.get('nicknameOfCUser'));
+							lastAccessTime.time[j] = new Object() ;
+							lastAccessTime.time[j].gid = objectJ.getObjectId();
+							lastAccessTime.time[j].time = objectJ.getCreatedAt();
+							j++;
+							if(j===(resultsJ.length+results.length))
+							{
+								console.log(lastAccessTime);
+								queryUser.set('lastAccessTime',lastAccessTime);
+								queryUser.save();
+							}
+							
+						}
+						}});
+					
+					
+				  },
+				  error: function(error) {	
+				  }
 				});
+				
+				
+				
+			},
+			error:function(error){
+				
+			}
+		});
+
 	}; 
 }
 module.exports = userFollowed;
