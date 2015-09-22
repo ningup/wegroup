@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>创建微群</title>
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta name="Keywords" content="微群助手－设置" />
+<meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/skin.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-switch.css">
+<script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
+<script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>
+<script language="javascript" type="text/javascript" src="/javascript/bootstrap-switch.js"></script>
+</head>
+<body>
+<div class="horizontal_wrap">
+	<div class="make_wrap " data-uiselector="containerWrapper"> 
+		<a href="#" class="btn_close" style="display:block;" data-uiselector="btnConfirm">完成</a>
+		<form id="ok_form" style="display:none;" action="/group/createSet?username=<%= username %> & groupObjId=<%= groupObjId %>" method="post">
+   			<input type="hidden"  class="form_band_set1" maxlength="50" value="1" name="pushMsg2Wechat" /> 
+   			<input type="hidden"  class="form_band_set2" maxlength="50" value="1" name="identityVerify" /> 
+   		</form>
+		<div style="padding: 12px 0 0;"> 
+			<div class="make_head" style="margin: 25px auto;"><h1 class="make_title">微群基本设置</h1></div> 
+			<div class="media media_content">
+            	<h4 class="media-heading">成员加入是否验证</h4>           
+				<div class="media-body">成员加入时，不需要群主同意即可加入。</div>
+				<div class="media-right"><input class="form-control" type="checkbox" checked="" id="x1" name="x1"></div>
+			</div>      
+			<div class="media media_content">
+            	<h4 class="media-heading">是否推送到服务号对话窗口</h4>
+				<div class="media-body">新消息不推送到服务号对话窗口。</div>
+				<div class="media-right"><input class="form-control" type="checkbox" checked="" id="x2" name="x2"></div>
+			</div>      
+			<div class="media media_content">           
+				<div class="media-body"><h4 class="media-heading" style="color:#F00;font-weight:bold">退出此微群</h4></div>
+				<div class="media-right"></div>
+			</div>      
+			<div class="make_head" style="margin: 25px auto;"><h1 class="make_title">分享给大家知道</h1></div> 
+			<div class="media_pic text-center">           
+            	<p><img class="media-object" data-src="holder.js/128x128" alt="128x128" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNGZhMWZjNGYwYyB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE0ZmExZmM0ZjBjIj48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 128px; height: 128px;border:#CCC solid;"></p>
+            	<p><button type="button" class="btn btn-default btn-lg center-block pull-left">保存二维码</button></p>
+			</div>
+		</div> 
+	</div>
+</div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+	$("#x1").bootstrapSwitch({
+		state: true
+	})
+	$("#x2").bootstrapSwitch({
+		state: true
+	})
+})
+$(function(){$(".btn_close[data-uiselector='btnConfirm']").click(function(){
+	$("#ok_form").submit();
+})
+	$("#x1").on('switchChange.bootstrapSwitch', function (e, state){
+		if (state) {
+			$(".form_band_set1").val('1');
+		} else{
+			$(".form_band_set1").val('0');
+		}
+	})
+	$("#x2").on('switchChange.bootstrapSwitch', function (e, state){
+		if (state) {
+			$(".form_band_set2").val('1');
+		} else{
+			$(".form_band_set2").val('0');
+		}
+	})
+})
+$(function(argument){$("[type='checkbox']").bootstrapSwitch();})
+</script>
+</body>
+</html>

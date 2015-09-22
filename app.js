@@ -138,17 +138,15 @@ app.get('/', function(req, res) {
   AV.User.logIn(openid, "A00000000~", {
   success: function(user) {
 	// 成功了，现在可以做其他事情了.
-	res.render('index', { openid: openid });
+	//res.render('index', { openid: openid });
+	res.redirect('/group?username='+openid);
   },
   error: function(user, error) {
     // 失败了.
   }
 });
-  //	res.render('index', { openid: openid });
-  //else res.render('index', { openid: '你没有权限访问，向管理员申请' });
   });
   
-  //res.render('index', { openid: req.query.code });
 });
 
 

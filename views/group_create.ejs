@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>创建微群</title>
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta name="Keywords" content="微群助手－创建群" />
+<meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/skin.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">
+<script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
+<script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>
+<script language="javascript" type="text/javascript" src="/javascript/iscroll.js"></script>
+</head>
+<body>
+<div class="horizontal_wrap">
+  <div class="make_wrap " data-uiselector="containerWrapper"> 
+   <div class="make_area"> 
+    <div class="make_head"> 
+     <h1 class="make_title">创建微群</h1> 
+     <p class="make_dsc">微群能更好的管理微信群<br />具备投票、存储文件、公告等微信没有的功能</p> 
+    </div> 
+    <div class="make_content"> 
+     <div class="band _bandTheme" data-uiselector="bandTheme" data-looktype="band" data-skin="skin1"> 
+      <div class="band_uri _band_uri"> 
+		<a href="javascript:" data-icon="camera" class="cover_change _cover_change" style="display: block;">修改封面图片</a>
+       <div class="cover" data-skin_factor="before_bg" data-uiselector="bandColorThemeBelt" style="width: 100%;"> 
+        <img class="cover_img _bandThemeCover" src="/images/t/1.jpg" alt="" /> 
+       </div> 
+       <a href="javascript:" data-skin_factor="bg" class="color_change _color_change"><span class="bg" data-icon="bandcolor">选择封面颜色</span></a> 
+       <div class="band_name"> 
+        <input type="text" placeholder="请输入团体名" class="band_text" maxlength="50" data-uiselector="inputBandName" /> 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+
+
+  <div class="make_footer" data-uiselector="selectContainerWrap" style=""> 
+   <div class="photo_select" data-uiselector="coverSelectWrap" style="display: none;">
+    <div data-viewname="MCoverSelectView">
+     <div class="btn_photo" data-icon="camera" data-uiselector="coverImageUploader"> 
+      <span class="img" data-uiselector="coverImage" style="display:none; background:url() no-repeat 50% 0;background-size:cover;-webkit-background-size:cover"></span> 
+      <input type="file" style="z-index:1" accept="image/*" name="attachment" /> 
+      <span class="text">選擇照片</span> 
+     </div> 
+				<div class="scroll_wrap"> 
+					<div class="scroll_area" data-uiselector="coverListLayer"> 
+						<ul class="list_cover"> 
+							<for start="1" end="31">
+							<li data-uiselector="coverItemLi" <eq name="i" value="1">class="select" data-icon="select01"</eq>><a href="javascript:" class="band" data-looktype="band" data-skin="skin{$i}"> 
+								<div class="band_uri" data-uiselector="coverItems"> 
+									<div class="cover" data-skin_factor="before_bg"><img class="cover_img" src="/images/t/{$i}.jpg" alt="" /></div> 
+									<div class="band_name"><span class="text _band_name_on_layer" data-uiselector="_bandNameOnImageLayer">封面{$i}</span></div>
+								</div></a>
+							</li>
+							</for>
+						</ul> 
+					</div> 
+				</div> 
+				<a href="javascript:" class="layer_close" data-icon="calendar-down" data-uiselector="btnClose">關閉</a>
+			</div>
+   </div> 
+		<div class="color_select" data-uiselector="colorSelectWrap" style="display: block;">
+			<div data-viewname="MColorSelectView">
+				<div class="scroll_wrap"> 
+					<div class="scroll_area" data-uiselector="colorListLayer"> 
+						<ul class="list_cover">
+							<for name="j" start="1" end="16">
+							<li data-skin="skin{$j}" data-uiselector="colorItemLi" data-idx="{$j}" <eq name="j" value="1">class="select" data-icon="select01"</eq>> <a href="javascript:" class="cover_color" data-skin_factor="before_bg" data-uiselector="colorItems" data-idx="{$j}">封面{$j}</a> </li> 
+							</for>
+						</ul> 
+					</div> 
+     			</div> 
+			<a href="javascript:" class="layer_close" data-icon="calendar-down" data-uiselector="btnClose">關閉</a>
+			</div>
+		</div> 
+	</div> 
+
+
+
+   <a href="javascript:" class="btn_cancle glyphicon glyphicon-remove" data-icon="layer-close" data-uiselector="btnCancel">取消</a> 
+   <span class="btn_close" style="display:block;" data-uiselector="spanConfirm">下一步</span> 
+   <a href="javascript:" class="btn_close" style="display:none;" data-uiselector="btnConfirm">下一步</a>
+   <form id="next_form" style="display:none;" action="/group/create?username=<%= username %>" method="post">
+   		<input type="hidden"  class="form_band_name" maxlength="50" value="" name="nickName" /> 
+   </form>
+  </div>
+</div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+	$(".make_footer").hide();
+		$(".btn_close[data-uiselector='btnConfirm']").click(function(){/*window.open("./set","_self");*/
+			var temp = $(".band_text").val();
+			$(".form_band_name").val(temp);
+			$("#next_form").submit();})
+		$(".btn_cancle").click(function(){window.open("./list","_self");})
+		
+		$(".layer_close").click(function(){$(".make_footer").hide();$(".cover_change").show();$(".color_change").show();})
+		
+		$(".color_change").click(function(){$(".make_footer").show();$(".color_change").hide();$(".cover_change").show();$(".photo_select").hide();$(".color_select").show();})
+		
+		$(".cover_change").click(function(){$(".make_footer").show();$(".cover_change").hide();$(".color_change").show();$(".color_select").hide();$(".photo_select").show();})
+
+		$(".band_text").change(function(){if($(".band_text").val()==''){$(".btn_close[data-uiselector='spanConfirm']").show();$(".btn_close[data-uiselector='btnConfirm']").hide();}else{$(".btn_close[data-uiselector='spanConfirm']").hide();$(".btn_close[data-uiselector='btnConfirm']").show();}})
+		
+		$("li[data-uiselector='colorItemLi']").click(function(){
+			$("div[data-uiselector='colorListLayer']>ul>li[class='select']").removeAttr("data-icon"); ;
+			$("div[data-uiselector='colorListLayer']>ul>li[class='select']").removeAttr("class");
+			$("._bandTheme[data-uiselector='bandTheme']").attr('data-skin',$(this).attr("data-skin"));
+			$(this).attr("data-icon","select01"); ;
+			$(this).addClass("select");
+		})
+		$("li[data-uiselector='coverItemLi']").click(function(){
+			$("div[data-uiselector='coverListLayer']>ul>li[class='select']").removeAttr("data-icon"); ;
+			$("div[data-uiselector='coverListLayer']>ul>li[class='select']").removeAttr("class");
+			$("._bandThemeCover").attr("src",$(".cover_img",this).attr("src"));
+			$(this).attr("data-icon","select01"); ;
+			$(this).addClass("select");
+		})
+			//console.debug($(this>".cover_img").attr("src"));
+//$(".btn_cancle").focus(function(){window.open("./list","_self");})
+//$("#search_box").blur(function(){$("#search_cancel").hide();})
+})
+</script>
+<!--<script type="text/javascript">
+$(document).ready(function(){
+})
+var myScroll,generatedCount = 0;
+function loaded () {
+	myScroll = new IScroll('.scroll_area', { mouseWheel: true, tap: true,scrollbarClass: 'myScrollbar',useTransition: true, });
+}
+document.addEventListener('touchmove', function (e) {e.preventDefault();}, false);
+document.addEventListener('DOMContentLoaded', loaded, false); 
+</script>-->
+</body>
+</html>

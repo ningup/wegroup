@@ -1,0 +1,110 @@
+/*!
+ * 揭阳_榕城林囝
+ * 2015-09-03
+ */
+
+[data-skin="skin1"] [data-skin_factor~="color"]{color:#21c700 !important}
+[data-skin="skin2"] [data-skin_factor~="color"]{color:#00b994 !important}
+[data-skin="skin3"] [data-skin_factor~="color"]{color:#32b0e5 !important}
+[data-skin="skin4"] [data-skin_factor~="color"]{color:#9470f0 !important}
+[data-skin="skin5"] [data-skin_factor~="color"]{color:#f875c0 !important}
+[data-skin="skin6"] [data-skin_factor~="color"]{color:#ff5b72 !important}
+[data-skin="skin7"] [data-skin_factor~="color"]{color:#ff703d !important}
+[data-skin="skin8"] [data-skin_factor~="color"]{color:#fdb00d !important}
+[data-skin="skin9"] [data-skin_factor~="color"]{color:#5b5b5b !important}
+[data-skin="skin10"] [data-skin_factor~="color"]{color:#5471d8 !important}
+[data-skin="skin11"] [data-skin_factor~="color"]{color:#525a62 !important}
+[data-skin="skin12"] [data-skin_factor~="color"]{color:#ff5b72 !important}
+[data-skin="skin13"] [data-skin_factor~="color"]{color:#39c0f9 !important}
+[data-skin="skin14"] [data-skin_factor~="color"]{color:#506f87 !important}
+[data-skin="skin15"] [data-skin_factor~="color"]{color:#5b5b5b !important}
+[data-skin="skin1"] [data-skin_factor~="border"]{border-color:#21c700 !important}
+[data-skin="skin2"] [data-skin_factor~="border"]{border-color:#00b994 !important}
+[data-skin="skin3"] [data-skin_factor~="border"]{border-color:#32b0e5 !important}
+[data-skin="skin4"] [data-skin_factor~="border"]{border-color:#9470f0 !important}
+[data-skin="skin5"] [data-skin_factor~="border"]{border-color:#f875c0 !important}
+[data-skin="skin6"] [data-skin_factor~="border"]{border-color:#ff5b72 !important}
+[data-skin="skin7"] [data-skin_factor~="border"]{border-color:#ff703d !important}
+[data-skin="skin8"] [data-skin_factor~="border"]{border-color:#fdb00d !important}
+[data-skin="skin9"] [data-skin_factor~="border"]{border-color:#5b5b5b !important}
+[data-skin="skin10"] [data-skin_factor~="border"]{border-color:#5471d8 !important}
+[data-skin="skin11"] [data-skin_factor~="border"]{border-color:#525a62 !important}
+[data-skin="skin12"] [data-skin_factor~="border"]{border-color:#ff5b72 !important}
+[data-skin="skin13"] [data-skin_factor~="border"]{border-color:#39c0f9 !important}
+[data-skin="skin14"] [data-skin_factor~="border"]{border-color:#506f87 !important}
+[data-skin="skin15"] [data-skin_factor~="border"]{border-color:#5b5b5b !important}
+[data-skin="skin1"] [data-skin_factor~="bg"]{background-color:#21c700 !important}
+[data-skin="skin2"] [data-skin_factor~="bg"]{background-color:#00b994 !important}
+[data-skin="skin3"] [data-skin_factor~="bg"]{background-color:#32b0e5 !important}
+[data-skin="skin4"] [data-skin_factor~="bg"]{background-color:#9470f0 !important}
+[data-skin="skin5"] [data-skin_factor~="bg"]{background-color:#f875c0 !important}
+[data-skin="skin6"] [data-skin_factor~="bg"]{background-color:#ff5b72 !important}
+[data-skin="skin7"] [data-skin_factor~="bg"]{background-color:#ff703d !important}
+[data-skin="skin8"] [data-skin_factor~="bg"]{background-color:#fdb00d !important}
+[data-skin="skin9"] [data-skin_factor~="bg"]{background-color:#5b5b5b !important}
+[data-skin="skin10"] [data-skin_factor~="bg"]{background-color:#5471d8 !important}
+[data-skin="skin11"] [data-skin_factor~="bg"]{background-color:#525a62 !important}
+[data-skin="skin12"] [data-skin_factor~="bg"]{background-color:#ff5b72 !important}
+[data-skin="skin13"] [data-skin_factor~="bg"]{background-color:#39c0f9 !important}
+[data-skin="skin14"] [data-skin_factor~="bg"]{background-color:#506f87 !important}
+[data-skin="skin15"] [data-skin_factor~="bg"]{background-color:#5b5b5b !important}
+[data-skin="skin1"] [data-skin_factor~="before_color"]:before{color:#21c700 !important}
+[data-skin="skin2"] [data-skin_factor~="before_color"]:before{color:#00b994 !important}
+[data-skin="skin3"] [data-skin_factor~="before_color"]:before{color:#32b0e5 !important}
+[data-skin="skin4"] [data-skin_factor~="before_color"]:before{color:#9470f0 !important}
+[data-skin="skin5"] [data-skin_factor~="before_color"]:before{color:#f875c0 !important}
+[data-skin="skin6"] [data-skin_factor~="before_color"]:before{color:#ff5b72 !important}
+[data-skin="skin7"] [data-skin_factor~="before_color"]:before{color:#ff703d !important}
+[data-skin="skin8"] [data-skin_factor~="before_color"]:before{color:#fdb00d !important}
+[data-skin="skin9"] [data-skin_factor~="before_color"]:before{color:#5b5b5b !important}
+[data-skin="skin10"] [data-skin_factor~="before_color"]:before{color:#5471d8 !important}
+[data-skin="skin11"] [data-skin_factor~="before_color"]:before{color:#525a62 !important}
+[data-skin="skin12"] [data-skin_factor~="before_color"]:before{color:#ff5b72 !important}
+[data-skin="skin13"] [data-skin_factor~="before_color"]:before{color:#39c0f9 !important}
+[data-skin="skin14"] [data-skin_factor~="before_color"]:before{color:#506f87 !important}
+[data-skin="skin15"] [data-skin_factor~="before_color"]:before{color:#5b5b5b !important}
+[data-skin="skin1"] [data-skin_factor~="before_border"]:before{border-color:#21c700 !important}
+[data-skin="skin2"] [data-skin_factor~="before_border"]:before{border-color:#00b994 !important}
+[data-skin="skin3"] [data-skin_factor~="before_border"]:before{border-color:#32b0e5 !important}
+[data-skin="skin4"] [data-skin_factor~="before_border"]:before{border-color:#9470f0 !important}
+[data-skin="skin5"] [data-skin_factor~="before_border"]:before{border-color:#f875c0 !important}
+[data-skin="skin6"] [data-skin_factor~="before_border"]:before{border-color:#ff5b72 !important}
+[data-skin="skin7"] [data-skin_factor~="before_border"]:before{border-color:#ff703d !important}
+[data-skin="skin8"] [data-skin_factor~="before_border"]:before{border-color:#fdb00d !important}
+[data-skin="skin9"] [data-skin_factor~="before_border"]:before{border-color:#5b5b5b !important}
+[data-skin="skin10"] [data-skin_factor~="before_border"]:before{border-color:#5471d8 !important}
+[data-skin="skin11"] [data-skin_factor~="before_border"]:before{border-color:#525a62 !important}
+[data-skin="skin12"] [data-skin_factor~="before_border"]:before{border-color:#ff5b72 !important}
+[data-skin="skin13"] [data-skin_factor~="before_border"]:before{border-color:#39c0f9 !important}
+[data-skin="skin14"] [data-skin_factor~="before_border"]:before{border-color:#506f87 !important}
+[data-skin="skin15"] [data-skin_factor~="before_border"]:before{border-color:#5b5b5b !important}
+[data-skin="skin1"] [data-skin_factor~="before_bg"]:before{background-color:#21c700 !important}
+[data-skin="skin2"] [data-skin_factor~="before_bg"]:before{background-color:#00b994 !important}
+[data-skin="skin3"] [data-skin_factor~="before_bg"]:before{background-color:#32b0e5 !important}
+[data-skin="skin4"] [data-skin_factor~="before_bg"]:before{background-color:#9470f0 !important}
+[data-skin="skin5"] [data-skin_factor~="before_bg"]:before{background-color:#f875c0 !important}
+[data-skin="skin6"] [data-skin_factor~="before_bg"]:before{background-color:#ff5b72 !important}
+[data-skin="skin7"] [data-skin_factor~="before_bg"]:before{background-color:#ff703d !important}
+[data-skin="skin8"] [data-skin_factor~="before_bg"]:before{background-color:#fdb00d !important}
+[data-skin="skin9"] [data-skin_factor~="before_bg"]:before{background-color:#5b5b5b !important}
+[data-skin="skin10"] [data-skin_factor~="before_bg"]:before{background-color:#5471d8 !important}
+[data-skin="skin11"] [data-skin_factor~="before_bg"]:before{background-color:#525a62 !important}
+[data-skin="skin12"] [data-skin_factor~="before_bg"]:before{background-color:#ff5b72 !important}
+[data-skin="skin13"] [data-skin_factor~="before_bg"]:before{background-color:#39c0f9 !important}
+[data-skin="skin14"] [data-skin_factor~="before_bg"]:before{background-color:#506f87 !important}
+[data-skin="skin15"] [data-skin_factor~="before_bg"]:before{background-color:#5b5b5b !important}
+
+[data-section="false"]{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+[data-show="false"]{position:absolute;visibility:hidden}
+[data-scroll="on"]{z-index:100;position:relative !important;height:auto;top:auto;bottom:auto}
+[data-scroll="off"]{z-index:1;position:fixed;width:100%;height:100%;overflow:hidden}
+[data-band-bg="eeeff0"]{background:#eeeff0}
+[data-band-bg="fff"]{background-color:#fff}
+[data-pos="absolute"]{position:absolute;min-height:100%;width:100%}
+[data-pos="static"]{min-height:100%}
+[data-height="window"]{height:100%}
+[data-read="false"]{background-color:#fefdee}
+
+
+@font-face{font-family:basic_icon;src:url(../fonts/basic_icon.eot);src:url(../fonts/basic_icon.eot?#iefix) format("embedded-opentype"),url(../fonts/basic_icon.woff) format("woff"),url(../fonts/basic_icon.ttf) format("truetype"),url(../fonts/basic_icon.svg#basic_icon) format("svg");font-weight:normal;font-style:normal}[class="txt_icon"]{font-family:basic_icon!important;font-style:normal!important;font-weight:normal!important;font-variant:normal!important;text-transform:none!important;speak:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+[class^="icon-"]:before,[class*=" icon-"]:before,[data-icon]:before{content:attr(data-icon);font-family:basic_icon!important;font-style:normal!important;font-weight:normal!important;font-variant:normal!important;text-transform:none!important;speak:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}[data-icon]::-webkit-input-placeholder:before{content:attr(data-icon);font-family:basic_icon!important;font-style:normal!important;font-weight:normal!important;font-variant:normal!important;text-transform:none!important;speak:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}[data-icon="add01"]:before,.icon-add01:before{content:"a"}[data-icon="add02"]:before,.icon-add02:before{content:"b"}[data-icon="album"]:before,.icon-album:before{content:"d"}[data-icon="bandcolor"]:before,.icon-bandcolor:before{content:"e"}[data-icon="bandhome"]:before,.icon-bandhome:before{content:"f"}[data-icon="birth"]:before,.icon-birth:before{content:"g"}[data-icon="bolg-bg"]:before,.icon-bolg-bg:before{content:"h"}[data-icon="bolg-text"]:before,.icon-bolg-text:before{content:"i"}[data-icon="calendar"]:before,.icon-calendar:before{content:"j"}[data-icon="calendar-down"]:before,.icon-calendar-down:before{content:"k"}[data-icon="calendar-event"]:before,.icon-calendar-event:before{content:"l"}[data-icon="calendar-up"]:before,.icon-calendar-up:before{content:"m"}[data-icon="camera"]:before,.icon-camera:before{content:"n"}[data-icon="camera-bg"]:before,.icon-camera-bg:before{content:"o"}[data-icon="chat-member"]:before,.icon-chat-member:before{content:"p"}[data-icon="chat-off"]:before,.icon-chat-off:before{content:"q"}[data-icon="chat-on"]:before,.icon-chat-on:before{content:"r"}[data-icon="comment-off"]:before,.icon-comment-off:before{content:"s"}[data-icon="comment-on"]:before,.icon-comment-on:before{content:"t"}[data-icon="delete"]:before,.icon-delete:before{content:"u"}[data-icon="etc-album"]:before,.icon-etc-album:before{content:"v"}[data-icon="etc-event"]:before,.icon-etc-event:before{content:"w"}[data-icon="exclamation"]:before,.icon-exclamation:before{content:"x"}[data-icon="exitchat"]:before,.icon-exitchat:before{content:"y"}[data-icon="facebook"]:before,.icon-facebook:before{content:"z"}[data-icon="file-docx"]:before,.icon-file-docx:before{content:"A"}[data-icon="file-expire"]:before,.icon-file-expire:before{content:"B"}[data-icon="file-hwp"]:before,.icon-file-hwp:before{content:"C"}[data-icon="file-mp3"]:before,.icon-file-mp3:before{content:"D"}[data-icon="file-mp4"]:before,.icon-file-mp4:before{content:"E"}[data-icon="file-off"]:before,.icon-file-off:before{content:"F"}[data-icon="file-on"]:before,.icon-file-on:before{content:"G"}[data-icon="file-pdf"]:before,.icon-file-pdf:before{content:"H"}[data-icon="file-png"]:before,.icon-file-png:before{content:"I"}[data-icon="file-pptx"]:before,.icon-file-pptx:before{content:"J"}[data-icon="file-xlsx"]:before,.icon-file-xlsx:before{content:"K"}[data-icon="file-zip"]:before,.icon-file-zip:before{content:"L"}[data-icon="gnb-back"]:before,.icon-gnb-back:before{content:"M"}[data-icon="gnb-bandlogo"]:before,.icon-gnb-bandlogo:before{content:"N"}[data-icon="gnb-close"]:before,.icon-gnb-close:before{content:"O"}[data-icon="gnb-keypad"]:before,.icon-gnb-keypad:before{content:"P"}[data-icon="home-off"]:before,.icon-home-off:before{content:"Q"}[data-icon="home-on"]:before,.icon-home-on:before{content:"R"}[data-icon="info01"]:before,.icon-info01:before{content:"S"}[data-icon="info02"]:before,.icon-info02:before{content:"T"}[data-icon="invite01-off"]:before,.icon-invite01-off:before{content:"U"}[data-icon="invite01-on"]:before,.icon-invite01-on:before{content:"V"}[data-icon="invite-book-on"]:before,.icon-invite-book-on:before{content:"W"}[data-icon="invite-code"]:before,.icon-invite-code:before{content:"X"}[data-icon="invite-daum"]:before,.icon-invite-daum:before{content:"Y"}[data-icon="invite-email"]:before,.icon-invite-email:before{content:"Z"}[data-icon="invite-etc-off"]:before,.icon-invite-etc-off:before{content:"0"}[data-icon="invite-etc-on"]:before,.icon-invite-etc-on:before{content:"1"}[data-icon="invite-facebook"]:before,.icon-invite-facebook:before{content:"2"}[data-icon="invite-groupme"]:before,.icon-invite-groupme:before{content:"3"}[data-icon="invite-kakao"]:before,.icon-invite-kakao:before{content:"4"}[data-icon="invite-line"]:before,.icon-invite-line:before{content:"5"}[data-icon="invite-link"]:before,.icon-invite-link:before{content:"6"}[data-icon="invite-member"]:before,.icon-invite-member:before{content:"7"}[data-icon="invite-message"]:before,.icon-invite-message:before{content:"8"}[data-icon="invite-off"]:before,.icon-invite-off:before{content:"9"}[data-icon="invite-passcode"]:before,.icon-invite-passcode:before{content:"!"}[data-icon="invite-qrcode"]:before,.icon-invite-qrcode:before{content:"\""}[data-icon="invite-wechat"]:before,.icon-invite-wechat:before{content:"#"}[data-icon="invite-whatsapp"]:before,.icon-invite-whatsapp:before{content:"$"}[data-icon="layer-album"]:before,.icon-layer-album:before{content:"%"}[data-icon="layer-close"]:before,.icon-layer-close:before{content:"&"}[data-icon="layer-write"]:before,.icon-layer-write:before{content:"'"}[data-icon="layer-write02"]:before,.icon-layer-write02:before{content:"("}[data-icon="left"]:before,.icon-left:before{content:")"}[data-icon="like-off"]:before,.icon-like-off:before{content:"*"}[data-icon="like-on"]:before,.icon-like-on:before{content:"+"}[data-icon="lock"]:before,.icon-lock:before{content:","}[data-icon="login-mail"]:before,.icon-login-mail:before{content:"-"}[data-icon="login-naver"]:before,.icon-login-naver:before{content:"."}[data-icon="login-phone"]:before,.icon-login-phone:before{content:"/"}[data-icon="make"]:before,.icon-make:before{content:":"}[data-icon="makealbum"]:before,.icon-makealbum:before{content:";"}[data-icon="map-off"]:before,.icon-map-off:before{content:"<"}[data-icon="map-on"]:before,.icon-map-on:before{content:"="}[data-icon="member2"]:before,.icon-member2:before{content:">"}[data-icon="member3"]:before,.icon-member3:before{content:"?"}[data-icon="member-profile-phone"]:before,.icon-member-profile-phone:before{content:"@"}[data-icon="member-profile-save"]:before,.icon-member-profile-save:before{content:"["}[data-icon="member-profile-sms"]:before,.icon-member-profile-sms:before{content:"]"}[data-icon="mike"]:before,.icon-mike:before{content:"^"}[data-icon="more"]:before,.icon-more:before{content:"_"}[data-icon="more-basic"]:before,.icon-more-basic:before{content:"`"}[data-icon="movie-off"]:before,.icon-movie-off:before{content:"{"}[data-icon="movie-on"]:before,.icon-movie-on:before{content:"|"}[data-icon="n-member"]:before,.icon-n-member:before{content:"}"}[data-icon="n-off"]:before,.icon-n-off:before{content:"~"}[data-icon="n-on"]:before,.icon-n-on:before{content:"\\"}[data-icon="n-rollback"]:before,.icon-n-rollback:before{content:"\e000"}[data-icon="newchat"]:before,.icon-newchat:before{content:"\e001"}[data-icon="no-album"]:before,.icon-no-album:before{content:"\e002"}[data-icon="notice-x"]:before,.icon-notice-x:before{content:"\e003"}[data-icon="pc-addmember"]:before,.icon-pc-addmember:before{content:"\e004"}[data-icon="pc-delete"]:before,.icon-pc-delete:before{content:"\e005"}[data-icon="pc-download"]:before,.icon-pc-download:before{content:"\e006"}[data-icon="pc-waste"]:before,.icon-pc-waste:before{content:"\e007"}[data-icon="photo-gif"]:before,.icon-photo-gif:before{content:"\e008"}[data-icon="play"]:before,.icon-play:before{content:"\e009"}[data-icon="player"]:before,.icon-player:before{content:"\e00a"}[data-icon="profile"]:before,.icon-profile:before{content:"\e00b"}[data-icon="profile-gender"]:before,.icon-profile-gender:before{content:"\e00c"}[data-icon="profile-non"]:before,.icon-profile-non:before{content:"\e00d"}[data-icon="profile-phone"]:before,.icon-profile-phone:before{content:"\e00e"}[data-icon="push-off"]:before,.icon-push-off:before{content:"\e00f"}[data-icon="push-on"]:before,.icon-push-on:before{content:"\e010"}[data-icon="report"]:before,.icon-report:before{content:"\e011"}[data-icon="right"]:before,.icon-right:before{content:"\e012"}[data-icon="search"]:before,.icon-search:before{content:"\e013"}[data-icon="search-delete"]:before,.icon-search-delete:before{content:"\e014"}[data-icon="select01"]:before,.icon-select01:before{content:"\e015"}[data-icon="select02"]:before,.icon-select02:before{content:"\e016"}[data-icon="send"]:before,.icon-send:before{content:"\e017"}[data-icon="setting"]:before,.icon-setting:before{content:"\e018"}[data-icon="setting02"]:before,.icon-setting02:before{content:"\e019"}[data-icon="share"]:before,.icon-share:before{content:"\e01a"}[data-icon="share-3rd"]:before,.icon-share-3rd:before{content:"\e01b"}[data-icon="shortcut-album"]:before,.icon-shortcut-album:before{content:"\e01c"}[data-icon="shortcut-schedule"]:before,.icon-shortcut-schedule:before{content:"\e01d"}[data-icon="speaker-off"]:before,.icon-speaker-off:before{content:"\e01e"}[data-icon="speaker-on"]:before,.icon-speaker-on:before{content:"\e01f"}[data-icon="sticker-off"]:before,.icon-sticker-off:before{content:"\e020"}[data-icon="sticker-on"]:before,.icon-sticker-on:before{content:"\e021"}[data-icon="stop"]:before,.icon-stop:before{content:"\e022"}[data-icon="todo-off"]:before,.icon-todo-off:before{content:"\e023"}[data-icon="todo-on"]:before,.icon-todo-on:before{content:"\e024"}[data-icon="twitter"]:before,.icon-twitter:before{content:"\e025"}[data-icon="type-set00"]:before,.icon-type-set00:before{content:"\e026"}[data-icon="type-set01"]:before,.icon-type-set01:before{content:"\e027"}[data-icon="type-set02"]:before,.icon-type-set02:before{content:"\e028"}[data-icon="type-set03"]:before,.icon-type-set03:before{content:"\e029"}[data-icon="view-member"]:before,.icon-view-member:before{content:"\e02a"}[data-icon="volume"]:before,.icon-volume:before{content:"\e02b"}[data-icon="vote-off"]:before,.icon-vote-off:before{content:"\e02c"}[data-icon="vote-on"]:before,.icon-vote-on:before{content:"\e02d"}[data-icon="won"]:before,.icon-won:before{content:"\e02e"}[data-icon="write-camera-on"]:before,.icon-write-camera-on:before{content:"\e02f"}[data-icon="write-camera-off"]:before,.icon-write-camera-off:before{content:"\e030"}[data-icon="write-control-left"]:before,.icon-write-control-left:before{content:"\e031"}[data-icon="write-control-right"]:before,.icon-write-control-right:before{content:"\e032"}[data-icon="write-move"]:before,.icon-write-move:before{content:"\e033"}[data-icon="write-picture"]:before,.icon-write-picture:before{content:"\e034"}[data-icon="download"]:before,.icon-download:before{content:"\e035"}[data-icon="chat-golist"]:before,.icon-chat-golist:before{content:"\e036"}[data-icon="repeat"]:before,.icon-repeat:before{content:"\e037"}

@@ -5,6 +5,7 @@ function GroupClass()
 {
 	this.create = function(nickname,username){
 		var group=new Group();
+		var promise = new AV.Promise();
 		group.set('nickname',nickname);
           	group.set('createdBy',username);
 		var query = new AV.Query(AV.User);
@@ -19,7 +20,20 @@ function GroupClass()
 			{
 				var relationUser = queryUser.relation('groupCreated');
 				relationUser.add(group);
-				queryUser.save();				
+				//var promise = new AV.Promise();       
+                                //promise.resolve(group);
+                                //return promise;
+
+				queryUser.save().then(function(obj) {
+  				//对象保存成功
+					//var promise = new AV.Promise();	
+   					 promise.resolve(group);
+ 					 return promise;
+
+				}, function(error) {
+				  //对象保存失败，处理 error
+				});	
+							
 			},
 			error: function(group,err){
 			
@@ -28,8 +42,22 @@ function GroupClass()
 		   },
                    error: function(error) {
                    }});
-		//return group;
+		
 	};
+	this.groupSet = function(groupObjId,pushMsg2Wechat,identityVerify){
+		var query = new AV.Query(Group);
+		query.get(groupObjId, {
+  		success: function(group) {
+    		// 成功获得实例
+			group.set('pushMsg2wechat',pushMsg2Wechat);
+			group.set('identityVerify',identityVerify);
+			group.save();
+  		},
+  		error: function(object, error) {
+    		// 失败了.
+  		}
+});
+	}; 
 	this.joinGroup = function(groupName,username){
 		var query = new AV.Query(Group);
   		query.equalTo('nickname', groupName);

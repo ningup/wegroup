@@ -1,25 +1,55 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html>
-  <head>
-    <title>群列表</title>
-  </head>
-  <body>
-    <head>username:<%= username %></head>
-    <h1><%= title %></h1>
-    <form action="/group/create?username=<%= username %>" method="POST">
-      群名称：
-      <input type="text" name="nickName" />      
-      <input type="submit" value="创建群" />
-    </form>
-    <form action="/group/follow?username=<%= username %>" method="POST">
-	输入群名称：
-      <input type="text" name="targetGroup" />
-      <input type="submit" value="搜索群" />
-    </form>
-    <ul>
-      <% for(var i=0; i<groups.length; i++) {%>
-      <li><%= groups[i].get('nickname') %> &nbsp;&nbsp;&nbsp;&nbsp;建群者<%= groups[i].get('nicknameOfCUser') %></li>
-      <% } %>
-    </ul>
-  </body>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>微群帮手</title>
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta name="Keywords" content="微群助手－主页" />
+<meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/skin.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">
+<script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
+<script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="top_button">
+    <button id="search_g" type="button" class="btn btn-default btn-lg center-block pull-left" style=" width:50%"><i class="glyphicon glyphicon-ok-sign" aria-hidden="true"></i>查找微群</button>
+    <button id="create_g" type="button" class="btn btn-default btn-lg center-block f_l" style="width:50%"><i class="glyphicon glyphicon-plus-sign" aria-hidden="true"></i>创建微群</button>
+  </div>
+  <div class="we_list">
+    <ul class="list-unstyled">
+        <!-- <for start="1" end="5"> -->
+        <% for(var i=0; i<groups.length; i++) {%>
+      <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3"><div class=" band" data-viewname="MBandCollectionItemView" data-looktype="band" data-skin="skin{:rand(1,15)}" data-playback_button="false">
+        <a href="#" class="band_uri">
+          <div class="cover" data-skin_factor="before_bg"><img class="cover_img" src="http://coresos.phinf.naver.net/a/2fhe4e_8/7efUd015wd81ueoih5fw_jmgi3b.jpg?type=cover_a640" alt=""></div>
+          <div class="band_name"><div class="band_wrap"><span class="uri_text"><!--微群{$i}--><%= groups[i].get('nickname')%></span></div></div>
+        </a>
+        <img src="/images/n_mark.gif" class="new_icon" alt="">
+            </div></li>
+        <% } %>
+    <!-- </for> -->
+      <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3"><div class=" band" data-viewname="MBandCollectionItemView" data-looktype="create" data-playback_button="false">
+        <a href="#" class="band_uri">
+          <div class="cover" ><img src="/images/empty_cover_img.png" class="cover_image">
+            <div class="create_img"><img src="/images/band_create.gif" alt=""></div>                    
+                    </div>
+          <div class="band_name"><div class="band_wrap"><span class="uri_text">创建一个群</span></div></div>
+        </a>
+            </div></li>
+        </ul>
+  </div>
+</div>
+<div id="footer"></div>
+<script language="javascript" type="text/javascript">
+$(function(){
+$("#search_g").click(function(){window.open("/group/search?username=<%= username %> & recommendOrNot=1","_self");})
+$("#create_g").click(function(){window.open("/group/create?username=<%= username %>","_self");})
+$(".band[data-looktype='create']").click(function(){window.open("./create","_self");})
+})
+</script>
+</body>
 </html>
