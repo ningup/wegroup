@@ -1,0 +1,49 @@
+{
+"votoResults":{
+	"votePeopleNum":"投票人数，默认为0",
+	"voteTitle":"投票标题",
+	"voteDecription":"投票描述",
+	"itemNum":"有多少要投票的条目",
+	"voteItemContent":[
+	  {
+		"title":"titleContent",
+		"choiceNum":"该条目的选项个数",
+		"choiceItem":[
+			{
+				"choiceTitle":"选项题目",
+				"choiceValue":"选项值，默认为0"	
+			},
+			{
+				"choiceTitle":"选项题目",
+				"choiceValue":"选项值，默认为0"
+			},
+			{
+				"choiceTitle":"选项题目",
+				"choiceValue":"选项值，默认为0"
+			}
+		]
+	    },
+	    
+	    {
+		"title":"titleContent",
+		"choiceNum":"该条目的选项个数",
+		"choiceItem":[
+			{
+				"choiceTitle":"选项题目",
+				"choiceValue":"选项值，默认为0"	
+			},
+			{
+				"choiceTitle":"选项题目",
+				"choiceValue":"选项值，默认为0"
+			},
+			{
+				"choiceTitle":"选项题目",
+				"choiceValue":"选项值，默认为0"
+			}
+		]
+
+	    }
+	]
+  }
+}
+
