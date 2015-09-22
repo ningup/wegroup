@@ -3,7 +3,7 @@ var Group=AV.Object.extend('Group');
 
 function GroupClass()
 {
-	this.create = function(nickname,username){
+	this.create = function(nickname,username,cb){
 		var group=new Group();
 		var promise = new AV.Promise();
 		group.set('nickname',nickname);
@@ -26,9 +26,10 @@ function GroupClass()
 
 				queryUser.save().then(function(obj) {
   				//对象保存成功
+					cb(null,group.getObjectId());
 					//var promise = new AV.Promise();	
-   					 promise.resolve(group);
- 					 return promise;
+   					 //promise.resolve(group);
+ 					 //return promise;
 
 				}, function(error) {
 				  //对象保存失败，处理 error
@@ -46,14 +47,16 @@ function GroupClass()
 	};
 	this.groupSet = function(groupObjId,pushMsg2Wechat,identityVerify){
 		var query = new AV.Query(Group);
-		query.get(groupObjId, {
+		query.get('5601771060b2b52ca72cd617', {
   		success: function(group) {
     		// 成功获得实例
+			console.log('find group in groupSet');
 			group.set('pushMsg2wechat',pushMsg2Wechat);
 			group.set('identityVerify',identityVerify);
 			group.save();
   		},
   		error: function(object, error) {
+		//console.log('find group in groupSet');
     		// 失败了.
   		}
 });

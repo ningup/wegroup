@@ -83,36 +83,12 @@ router.get('/create', function(req, res, next) {
 router.post('/create', function(req, res, next) {
   var nickName=req.body.nickName;
   var username=req.query.username; 
-  //var groupclass = new GroupClass();
+  var groupclass = new GroupClass();
   //console.log(req.query.username);
-	var group=new Group();
-		group.set('nickname',nickName);
-          	group.set('createdBy',username);
-		var query = new AV.Query(AV.User);
-                query.equalTo("username", username);
-                query.first({
-                   success: function(queryUser) {
-			var relation = group.relation('followers');
-                   	relation.add(queryUser);
-			group.set('nicknameOfCUser',queryUser.get('nickname'));
-			group.save(null,{
-			success:function(group)
-			{
-				var relationUser = queryUser.relation('groupCreated');
-				relationUser.add(group);
-				queryUser.save().then(function(obj){
-				res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
+  groupclass.create(nickName,username,function(err,groupObjId){
 
-				});				
-			},
-			error: function(group,err){
-			
-			}
-		        });
-		   },
-                   error: function(error) {
-                   }}); 
- //res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
+	res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+groupObjId);
+ });
 	
 });
 
