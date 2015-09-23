@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.query());
-app.use(AV.Cloud.CookieSession({secret: 'wegroup.av'}));
+app.use(AV.Cloud.CookieSession({ secret: 'my secret', fetchUser: true }));
 app.use('/wechat', wechat(config, function (req, res, next) {
   // 微信输入信息都在req.weixin上
   var message = req.weixin;
@@ -108,7 +108,15 @@ app.use('/wechat', wechat(config, function (req, res, next) {
    }
    else {} 
 }));
-api.createMenu(menu, function (err, result){});
+//api.createMenu(menu, function (err, result){});
+/*
+api.getMenu(function(err,results){
+	console.log(JSON.stringify(results));
+});*/
+/*api.removeMenu(function(err,results){
+        console.log(JSON.stringify(results));
+});*/
+
 //var userclass  = new UserClass();
 //userclass.followedUserRegister();
 //var status = new AV.Status('视频url', '我喜欢了视频xxxx.');
@@ -132,19 +140,19 @@ app.use(function(req, res, next) {
 app.get('/', function(req, res) {
   
   client.getAccessToken(req.query.code, function (err, result) {
-  var accessToken = result.data.access_token;
-  var openid = result.data.openid;
-  //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
-  AV.User.logIn(openid, "A00000000~", {
-  success: function(user) {
-	// 成功了，现在可以做其他事情了.
-	//res.render('index', { openid: openid });
-	res.redirect('/group?username='+openid);
-  },
-  error: function(user, error) {
-    // 失败了.
-  }
-});
+	  var accessToken = result.data.access_token;
+	  var openid = result.data.openid;
+	  //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
+	  AV.User.logIn(openid, "A00000000~", {
+		  success: function(user) {
+			// 成功了，现在可以做其他事情了.
+			//res.render('index', { openid: openid });
+			res.redirect('/group?username='+openid);
+		  },
+		  error: function(user, error) {
+			// 失败了.
+		  }
+	  });
   });
   
 });

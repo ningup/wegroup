@@ -18,20 +18,19 @@ router.get('/', function(req, res, next) {
 		    });
 		
 	});
+	//console.log((req.AV.user).get('nickname'));
     						
 });
 
 router.get('/create', function(req, res, next) {
   var nickName=req.body.nickName;
   var groupclass = new GroupClass();
-  console.log(req.query.username);
+  //console.log('create'+(req.AV.user).get('nickname'));
   res.render('group_create', {
           //title: 'Groups 列表',
           username: req.query.username,
           //groups: results
     });
-
-   //res.redirect('/group?username='+req.query.username+'&searchString='+searchString);
 });
 
 // 新增 Group
@@ -41,8 +40,7 @@ router.post('/create', function(req, res, next) {
   var groupclass = new GroupClass();
   //console.log(req.query.username);
   groupclass.create(nickName,username,function(err,groupObjId){
-
-	res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+groupObjId);
+		res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+groupObjId);
  });
 	
 });
@@ -106,20 +104,38 @@ router.get('/search',function(req,res,next){
 
    }
 
-  //groupclass.addFollower(groupName,req.query.username); //添加群成员 
-  //groupclass.joinGroup(groupName,req.query.username);  //在用户groupJoined添加群信息
-    //res.redirect('/group?username='+req.query.username+'&searchString='+searchString);
-
 })
 //查询群
 router.post('/search',function(req,res,next){
  	var searchString=req.body.targetGroup;
 	var username = req.query.username;
-	//var groupclass = new GroupClass();
-	//groupclass.addFollower(groupName,req.query.username); //添加群成员 
-	//groupclass.joinGroup(groupName,req.query.username);  //在用户groupJoined添加群信息
   	res.redirect('/group/search?username='+req.query.username+'&searchString='+searchString+'recommandOrNot==0');
 
 })
+
+//加入群
+router.get('/joinGroup',function(req,res,next){
+	var username = req.query.username;
+	var groupObjId = req.query.groupObjId;
+	var groupclass = new GroupClass();
+	groupclass.addFollower(groupObjId,username,function(err,queryUser){
+		var query = new AV.Query(Group);
+	    query.get(groupObjId,{
+			 success:function(group){
+					var relation = group.relation('followers');
+					relation.add(queryUser);
+					group.save().then(function(group){
+						//res.redirect('/group/search?username='+username);
+					},function(err){});;
+
+			 },
+			  error:function(error){
+			 }
+	    });
+	});      //添加群成员 
+	//groupclass.joinGroup(groupObjId,username);       //在用户groupJoined添加群信息
+})
+
+
 
 module.exports = router;

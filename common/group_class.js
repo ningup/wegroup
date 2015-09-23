@@ -51,7 +51,7 @@ function GroupClass()
   		success: function(group) {
     		// 成功获得实例
 			console.log('find group in groupSet');
-			group.set('pushMsg2wechat',pushMsg2Wechat);
+			group.set('pushMsg2Wechat',pushMsg2Wechat);
 			group.set('identityVerify',identityVerify);
 			group.save();
   		},
@@ -59,12 +59,12 @@ function GroupClass()
 		//console.log('find group in groupSet');
     		// 失败了.
   		}
-});
-	}; 
-	this.joinGroup = function(groupName,username){
+      });
+   }; 
+	this.joinGroup = function(groupObjId,username,cb){
 		var query = new AV.Query(Group);
-  		query.equalTo('nickname', groupName);
-  		query.find({
+  		//query.equalTo('nickname', groupName);
+  		query.get(groupObjId,{
   			success: function(group) {
 				var queryUser = new AV.Query(AV.User);
 				queryUser.equalTo("username",username);
@@ -72,7 +72,9 @@ function GroupClass()
 					success:function(queryUser){
 						var relationUser = queryUser.relation('groupJoined');
                                 		relationUser.add(group);
-						queryUser.save();
+						queryUser.save().then(function(user){
+							cb(null,user);
+						},function(err){});
 					},
 					error:function(error){
 					}
@@ -82,7 +84,7 @@ function GroupClass()
   			}
   		});		
 	};
-     this.addFollower = function(groupName,username){
+     this.addFollower = function(groupObjId,username,cb){
         var queryUser = new AV.Query(AV.User);
         queryUser.equalTo("username",username);
         queryUser.first({
