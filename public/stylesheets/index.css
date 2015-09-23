@@ -149,7 +149,7 @@ content: "";display: block;position: absolute;bottom: 0;left: 0;width: 100%;heig
 .make_wrap .make_footer .photo_select .btn_photo:after{content:'';position:absolute;top:0;left:0;width:67px;height:79px;border-radius:3px;box-shadow:inset 0 0 0 1px;background:rgba(0,0,0,.4)}
 .make_wrap .make_footer .photo_select .btn_photo .img{display:block;width:67px;height:79px;border-radius:3px}
 .make_wrap .make_footer .photo_select .btn_photo .text{position:absolute;top:45px;left:0;right:0;text-align:center;z-index:1}
-.make_wrap .make_footer .photo_select .btn_photo input{position:absolute;left:0;top:0;width:100%;height:80px;opacity:0;z-index:1}
+.make_wrap .make_footer .photo_select .btn_photo .btn_photo_upload{position:absolute;left:0;top:0;width:100%;height:80px;opacity:0;z-index:1}
 .make_wrap .make_footer .photo_select .list_cover{height:80px;-webkit-transform:translate3d(0,0,0)}
 .make_wrap .make_footer .photo_select .list_cover li{position:relative;overflow:hidden;display:inline-block;width:70px;height:80px}
 .make_wrap .make_footer .photo_select .list_cover li.select:before{position:absolute;left:1px;top:0;width:45px;height:36px;padding:14px 0 0 20px;font-size:25px;color:#fff;border-radius:3px 3px 0 0;background:rgba(0,0,0,.55);z-index:10}

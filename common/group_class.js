@@ -3,11 +3,12 @@ var Group=AV.Object.extend('Group');
 
 function GroupClass()
 {
-	this.create = function(nickname,username,cb){
+	this.create = function(groupColor,nickname,username,cb){
 		var group=new Group();
 		var promise = new AV.Promise();
 		group.set('nickname',nickname);
           	group.set('createdBy',username);
+          	group.set('groupColor',groupColor);
 		var query = new AV.Query(AV.User);
                 query.equalTo("username", username);
                 query.first({
@@ -47,12 +48,14 @@ function GroupClass()
 	};
 	this.groupSet = function(groupObjId,pushMsg2Wechat,identityVerify){
 		var query = new AV.Query(Group);
-		query.get('5601771060b2b52ca72cd617', {
+		console.log(groupObjId);
+		query.get(groupObjId, {
   		success: function(group) {
     		// 成功获得实例
 			console.log('find group in groupSet');
 			group.set('pushMsg2Wechat',pushMsg2Wechat);
 			group.set('identityVerify',identityVerify);
+			//group.set('groupColor',groupColor);
 			group.save();
   		},
   		error: function(object, error) {

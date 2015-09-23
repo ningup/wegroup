@@ -13,6 +13,7 @@
 <script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
 <script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>
 <script language="javascript" type="text/javascript" src="/javascript/iscroll.js"></script>
+<script language="javascript" type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 </head>
 <body>
 <div class="horizontal_wrap">
@@ -44,20 +45,23 @@
     <div data-viewname="MCoverSelectView">
      <div class="btn_photo" data-icon="camera" data-uiselector="coverImageUploader"> 
       <span class="img" data-uiselector="coverImage" style="display:none; background:url() no-repeat 50% 0;background-size:cover;-webkit-background-size:cover"></span> 
-      <input type="file" style="z-index:1" accept="image/*" name="attachment" /> 
+      <span style="z-index:1" name="attachment" class="btn_photo_upload"></span> 
+      <!--<input type="hidden" style="z-index:1" name="attachment" class="btn_photo_upload" />-->
       <span class="text">選擇照片</span> 
      </div> 
 				<div class="scroll_wrap"> 
 					<div class="scroll_area" data-uiselector="coverListLayer"> 
 						<ul class="list_cover"> 
-							<for start="1" end="31">
-							<li data-uiselector="coverItemLi" <eq name="i" value="1">class="select" data-icon="select01"</eq>><a href="javascript:" class="band" data-looktype="band" data-skin="skin{$i}"> 
+							<!--<for start="1" end="31">-->
+							<% for(var i=1; i<31; i++) {%>
+							<li data-uiselector="coverItemLi" <eq name="i" value="1">class="select" data-icon="select01"</eq>><a href="javascript:" class="band" data-looktype="band" data-skin="skin<%= i%>"> 
 								<div class="band_uri" data-uiselector="coverItems"> 
-									<div class="cover" data-skin_factor="before_bg"><img class="cover_img" src="/images/t/{$i}.jpg" alt="" /></div> 
-									<div class="band_name"><span class="text _band_name_on_layer" data-uiselector="_bandNameOnImageLayer">封面{$i}</span></div>
+									<div class="cover" data-skin_factor="before_bg"><img class="cover_img" src="/images/t/<%= i%>.jpg" alt="" /></div> 
+									<div class="band_name"><span class="text _band_name_on_layer" data-uiselector="_bandNameOnImageLayer">封面<%= i%></span></div>
 								</div></a>
 							</li>
-							</for>
+							<% } %>
+							<!--</for>-->
 						</ul> 
 					</div> 
 				</div> 
@@ -69,9 +73,12 @@
 				<div class="scroll_wrap"> 
 					<div class="scroll_area" data-uiselector="colorListLayer"> 
 						<ul class="list_cover">
-							<for name="j" start="1" end="16">
-							<li data-skin="skin{$j}" data-uiselector="colorItemLi" data-idx="{$j}" <eq name="j" value="1">class="select" data-icon="select01"</eq>> <a href="javascript:" class="cover_color" data-skin_factor="before_bg" data-uiselector="colorItems" data-idx="{$j}">封面{$j}</a> </li> 
-							</for>
+							<!--<for name="j" start="1" end="16">-->
+							<% for(var j=1; j<16; j++) {%>
+							<li data-skin="skin<%= j%>" data-uiselector="colorItemLi" data-idx="<%= j%>" <%if (j==1){%> class="select" data-icon="select01"<%}%> > <a href="javascript:" class="cover_color" data-skin_factor="before_bg" data-uiselector="colorItems" data-idx="<%= j%>">封面<%= j%></a> </li> 
+							<% } %>
+							<!--在li里面的属性判断<eq name="j" value="1">class="select" data-icon="select01"</eq>-->
+							<!--</for>-->
 						</ul> 
 					</div> 
      			</div> 
@@ -87,17 +94,62 @@
    <a href="javascript:" class="btn_close" style="display:none;" data-uiselector="btnConfirm">下一步</a>
    <form id="next_form" style="display:none;" action="/group/create?username=<%= username %>" method="post">
    		<input type="hidden"  class="form_band_name" maxlength="50" value="" name="nickName" /> 
+   		<input type="hidden"  class="form_band_color" maxlength="50" value="" name="groupColor" /> 
+   		<input type="hidden"  class="form_band_serverId" maxlength="50" value="" name="serverId" /> 
+   		<input type="hidden"  class="form_band_flagImg" maxlength="50" value="" name="flagImg" /> 
    </form>
   </div>
 </div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function(){
+	var flag_img = 0;
+	wx.config({
+		debug: true,
+		appId: 'wx88cb5d33bbbe9e75',
+		timestamp: '<%= timestamp%>',
+		nonceStr: '<%= nonceStr%>',
+		signature: '<%= signature%>',
+		jsApiList: ['chooseImage','uploadImage']});
 	$(".make_footer").hide();
 		$(".btn_close[data-uiselector='btnConfirm']").click(function(){/*window.open("./set","_self");*/
-			var temp = $(".band_text").val();
-			$(".form_band_name").val(temp);
-			$("#next_form").submit();})
+				if (flag_img==1){
+					wx.uploadImage({
+					    localId: $("._bandThemeCover").attr("src"), // 需要上传的图片的本地ID，由chooseImage接口获得
+					    isShowProgressTips: 1, // 默认为1，显示进度提示
+					    success: function (res) {
+					        var serverId = res.serverId; // 返回图片的服务器端ID
+					        $(".form_band_name").val($(".band_text").val());
+							$(".form_band_color").val($("._bandTheme[data-uiselector='bandTheme']").attr('data-skin'));
+							$(".form_band_serverId").val(serverId);
+							$(".form_band_flagImg").val("1");
+							$("#next_form").submit();
+					    }
+					});
+				} else{
+					$(".form_band_name").val($(".band_text").val());
+					$(".form_band_color").val($("._bandTheme[data-uiselector='bandTheme']").attr('data-skin'));
+					$(".form_band_serverId").val($("._bandThemeCover").attr("src"));
+					$(".form_band_flagImg").val("0");
+					$("#next_form").submit();
+					window.console.log($("._bandThemeCover").attr("src"));
+				}
+			})
 		$(".btn_cancle").click(function(){window.open("./list","_self");})
+
+		$(".btn_photo_upload").click(function(){
+			window.console.log("aaaaaaaa");
+			wx.chooseImage({
+				count:1,
+				sizeType:['original','compressed'],
+				sourceType:['album','camera'],
+				success:function(res){
+					window.console.log("bbbbbbbb");
+					var localIds = res.localIds;
+					$("._bandThemeCover").attr("src",localIds);
+					flag_img = 1;
+				}
+			})
+		})
 		
 		$(".layer_close").click(function(){$(".make_footer").hide();$(".cover_change").show();$(".color_change").show();})
 		
@@ -120,6 +172,8 @@ $(document).ready(function(){
 			$("._bandThemeCover").attr("src",$(".cover_img",this).attr("src"));
 			$(this).attr("data-icon","select01"); ;
 			$(this).addClass("select");
+			flag_img = 0;
+			//window.console.log("aaaaaaaa");
 		})
 			//console.debug($(this>".cover_img").attr("src"));
 //$(".btn_cancle").focus(function(){window.open("./list","_self");})

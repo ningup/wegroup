@@ -108,7 +108,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
    }
    else {} 
 }));
-//api.createMenu(menu, function (err, result){});
+api.createMenu(menu, function (err, result){});
 /*
 api.getMenu(function(err,results){
 	console.log(JSON.stringify(results));
@@ -140,7 +140,7 @@ app.use(function(req, res, next) {
 app.get('/', function(req, res) {
   
   client.getAccessToken(req.query.code, function (err, result) {
-	  var accessToken = result.data.access_token;
+	  //var accessToken = result.data.access_token;
 	  var openid = result.data.openid;
 	  //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
 	  AV.User.logIn(openid, "A00000000~", {

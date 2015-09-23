@@ -2,7 +2,7 @@ var router = require('express').Router();
 var AV = require('leanengine');
 var GroupClass = require('../common/group_class.js'); //引入group_class.js
 var UserClass = require('../common/user_class.js'); 
-
+var sign=require('../common/sign.js');
 //声明一个Group类，为避免堆栈溢出，放到全局变量里面
 var Group = AV.Object.extend('Group');
 
@@ -25,38 +25,76 @@ router.get('/', function(req, res, next) {
 router.get('/create', function(req, res, next) {
   var nickName=req.body.nickName;
   var groupclass = new GroupClass();
+  AV.Cloud.httpRequest({
+  url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx88cb5d33bbbe9e75&secret=77aa757e3bf312d9af6e6f05cb01de1c',
+  /*params: {
+    q : 'Sean Plott'
+  },*/
+  success: function(httpResponse) {
+    //console.log(JSON.parse(httpResponse.text).access_token);
+        AV.Cloud.httpRequest({
+        url: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket',
+        params: {
+          access_token: JSON.parse(httpResponse.text).access_token,
+          type:'jsapi'
+        },
+        success: function(httpResponse1) {
+          //console.log(JSON.parse(httpResponse1.text).ticket);
+          var ticket=JSON.parse(httpResponse1.text).ticket;
+          var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/group/create?username='+req.query.username);
+          console.log('.............'+jsapi.nonceStr);
+          res.render('group_create', {
+                //title: 'Groups 列表',
+                username: req.query.username,
+                nonceStr: jsapi.nonceStr,
+                timestamp: jsapi.timestamp,
+                signature: jsapi.signature
+                //groups: results
+          });
+
+        },
+        error: function(httpResponse) {
+          console.error('Request failed with response code ' + httpResponse.status);
+        }
+      });
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
   //console.log('create'+(req.AV.user).get('nickname'));
-  res.render('group_create', {
-          //title: 'Groups 列表',
-          username: req.query.username,
-          //groups: results
-    });
+
 });
 
 // 新增 Group
 router.post('/create', function(req, res, next) {
   var nickName=req.body.nickName;
+  var groupColor = req.body.groupColor;
   var username=req.query.username; 
   var groupclass = new GroupClass();
-  //console.log(req.query.username);
-  groupclass.create(nickName,username,function(err,groupObjId){
+  console.log('clor'+groupColor);
+  groupclass.create(groupColor,nickName,username,function(err,groupObjId){
 		res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+groupObjId);
  });
 	
 });
 
 router.get('/createSet', function(req, res, next) {
+  console.log('get createset');
   res.render('group_set', {
           username: req.query.username,
-	  groupObjId:req.query.groupObjId
+	         groupObjId:req.query.groupObjId
     });
 
 });
 router.post('/createSet', function(req, res, next) {
 	var pushMsg2Wechat=req.body.pushMsg2Wechat;
-        var identityVerify=req.body.identityVerify;
+  var identityVerify=req.body.identityVerify;
+  //var groupColor = req.body.groupColor;
 	var username = req.query.username;
+  console.log('post...'+username);
 	var groupObjId = req.query.groupObjId;
+  console.log("post ....."+groupObjId);
 	console.log('push'+pushMsg2Wechat+'iden'+identityVerify);
 	var groupclass = new GroupClass();
  	groupclass.groupSet(groupObjId,pushMsg2Wechat,identityVerify);
