@@ -70,11 +70,14 @@ router.get('/create', function(req, res, next) {
 router.post('/create', function(req, res, next) {
   var nickName=req.body.nickName;
   var groupColor = req.body.groupColor;
-  var username=req.query.username; 
+  var username=req.query.username;
+  var flagImg = req.body.flagImg;
+  var serverId = req.body.serverId;
+  console.log("serverid="+serverId+' flagImg='+flagImg); 
   var groupclass = new GroupClass();
-  console.log('clor'+groupColor);
-  groupclass.create(groupColor,nickName,username,function(err,groupObjId){
-		res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+groupObjId);
+  console.log('color'+groupColor);
+  groupclass.create(flagImg,serverId,groupColor,nickName,username,function(err,groupObjId){
+	res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+groupObjId);
  });
 	
 });

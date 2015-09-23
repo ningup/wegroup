@@ -3,12 +3,14 @@ var Group=AV.Object.extend('Group');
 
 function GroupClass()
 {
-	this.create = function(groupColor,nickname,username,cb){
+	this.create = function(flagImg,serverId,groupColor,nickname,username,cb){
 		var group=new Group();
 		var promise = new AV.Promise();
 		group.set('nickname',nickname);
           	group.set('createdBy',username);
           	group.set('groupColor',groupColor);
+		group.set('flagImg',flagImg);
+                group.set('serverId',serverId);
 		var query = new AV.Query(AV.User);
                 query.equalTo("username", username);
                 query.first({
