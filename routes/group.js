@@ -1,69 +1,24 @@
 var router = require('express').Router();
 var AV = require('leanengine');
 var GroupClass = require('../common/group_class.js'); //引入group_class.js
-
-
-//声明类对象的时候，要先设置App的applicationId,applicationKey, 有待验证
-//AV.initialize('DKHKFtC7GKQ73o88sUgyEEON','vjB7pWwwzSYaaze1nrgwXYWL');
+var UserClass = require('../common/user_class.js'); 
 
 //声明一个Group类，为避免堆栈溢出，放到全局变量里面
 var Group = AV.Object.extend('Group');
 
 // 搜索 Groups 结果
 router.get('/', function(req, res, next) {
-		var queryUser = new AV.Query(AV.User);
-    		username = req.query.username;
-		console.log('username'+username);
-		queryUser.equalTo("username",username);
-		queryUser.first({
-			success:function(queryUser){
-				console.log('find '+ queryUser.get('nickname'));
-				var relation = queryUser.relation("groupCreated");
-				relation.targetClassName = 'Group';
-				var query = relation.query();
-				//query.equalTo('nickname','北交大');
-				query.find({
-				  success: function(results) {
-					  var i = 0;
-					  var j=0;
-					for (i = 0; i < results.length; i++) {
-					  var object = results[i];
-					  console.log('find relation group:'+ object.get('nickname')+ '创建者是:' +object.get('nicknameOfCUser'));
-						j++;
-					}
-					var relationJ = queryUser.relation("groupJoined");
-					relationJ.targetClassName = 'Group';
-					var queryJ = relationJ.query();
-					queryJ.find({
-					  success: function(resultsJ) {
-						for (i = 0; i < resultsJ.length; i++) {
-						  var objectJ = resultsJ[i];
-						  results[j] = objectJ
-						  console.log('find relation group:'+ objectJ.get('nickname')+ '创建者是:' +objectJ.get('nicknameOfCUser'));
-							j++;					
-						}
-						res.render('group', {
-					        //title: 'Groups 列表',
-        					username: req.query.username,
-        					groups: results
-      						});
-	
-						}});
+    var username = req.query.username;
+    var userclass = new UserClass();
+    userclass.getUserAllGroup(username,function(err,results){
+			res.render('group', {
+					//title: 'Groups 列表',
+					username: username,
+					groups: results
+		    });
 		
-				  },
-				  error: function(error) {	
-				  }
-				});
-		
-				
-			},
-			error:function(error){
-				
-			}
-		});
-
-	   
-
+	});
+    						
 });
 
 router.get('/create', function(req, res, next) {

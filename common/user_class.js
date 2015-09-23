@@ -99,5 +99,53 @@ function userFollowed()
 		});
 
 	}; 
+	this.getUserAllGroup = function(username,cb){
+		var queryUser = new AV.Query(AV.User);
+		//console.log('username'+username);
+		queryUser.equalTo("username",username);
+		queryUser.first({
+			success:function(queryUser){
+				console.log('find '+ queryUser.get('nickname'));
+				var relation = queryUser.relation("groupCreated");
+				relation.targetClassName = 'Group';
+				var query = relation.query();
+				//query.equalTo('nickname','北交大');
+				query.find({
+				  success: function(results) {
+					  var i = 0;
+					  var j=0;
+					for (i = 0; i < results.length; i++) {
+					  var object = results[i];
+					  console.log('find relation group:'+ object.get('nickname')+ '创建者是:' +object.get('nicknameOfCUser'));
+						j++;
+					}
+					var relationJ = queryUser.relation("groupJoined");
+					relationJ.targetClassName = 'Group';
+					var queryJ = relationJ.query();
+					queryJ.find({
+					  success: function(resultsJ) {
+						for (i = 0; i < resultsJ.length; i++) {
+						  var objectJ = resultsJ[i];
+						  results[j] = objectJ
+						  console.log('find relation group:'+ objectJ.get('nickname')+ '创建者是:' +objectJ.get('nicknameOfCUser'));
+							j++;					
+						}
+						cb(null, results);
+
+	
+						}});
+		
+				  },
+				  error: function(error) {	
+				  }
+				});
+		
+				
+			},
+			error:function(error){
+				
+			}
+		});
+	};
 }
 module.exports = userFollowed;
