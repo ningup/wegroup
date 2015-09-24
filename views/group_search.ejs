@@ -17,7 +17,7 @@
 	<div class="search_button">
 		<div class="input-group form-control">
 			<span class="glyphicon glyphicon-search" id="sizing-addon2"></span>
-			<input type="text" id="search_box" class="" placeholder="查找微群" aria-describedby="sizing-addon2">
+			<form action="/group/search?username=<%= username %>" method="post"><input type="search" id="search_box" class="" placeholder="查找微群" aria-describedby="sizing-addon2" name="targetGroup"></form>
 			<span class="input-group-addon" id="search_cancel" style="background: none;border: none;">取消</span>
 		</div>
 	</div>

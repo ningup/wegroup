@@ -149,7 +149,7 @@ router.get('/search',function(req,res,next){
     	querys.find().then(function(results) {
       	console.log('Found %d objects', querys.hits());
       	//Process results
-      	res.render('group_serach', {
+      	res.render('group_search', {
           	//title: 'Groups 列表',
           	username: req.query.username,
           	groups: results
@@ -178,7 +178,7 @@ router.get('/search',function(req,res,next){
 router.post('/search',function(req,res,next){
  	var searchString=req.body.targetGroup;
 	var username = req.query.username;
-  	res.redirect('/group/search?username='+req.query.username+'&searchString='+searchString+'recommandOrNot==0');
+  	res.redirect('/group/search?username='+req.query.username+'&searchString='+searchString+'&recommandOrNot=0');
 
 })
 
