@@ -133,12 +133,13 @@ router.post('/createSet', function(req, res, next) {
 
 
 router.get('/search',function(req,res,next){
-  var searchString=req.query.targetGroup;
+  var searchString=req.query.searchString;
   var username = req.query.username;
   var recommandOrNot = req.query.recommandOrNot; 
   //var groupclass = new GroupClass();
   var querys = new AV.SearchQuery(Group);
     if(recommandOrNot==='0'){
+	console.log(searchString);
     	if(searchString === 'all'){
          	 querys.queryString('*');
     	}
