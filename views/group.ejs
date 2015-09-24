@@ -23,9 +23,9 @@
     <ul class="list-unstyled">
         <!-- <for start="1" end="5"> -->
         <% for(var i=0; i<groups.length; i++) {%>
-      <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3"><div class=" band" data-viewname="MBandCollectionItemView" data-looktype="band" data-skin="skin{:rand(1,15)}" data-playback_button="false">
+      <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3"><div class=" band" data-viewname="MBandCollectionItemView" data-looktype="band" data-skin="<%= groups[i].get('groupColor')%>" data-playback_button="false">
         <a href="#" class="band_uri">
-          <div class="cover" data-skin_factor="before_bg"><img class="cover_img" src="http://coresos.phinf.naver.net/a/2fhe4e_8/7efUd015wd81ueoih5fw_jmgi3b.jpg?type=cover_a640" alt=""></div>
+          <div class="cover" data-skin_factor="before_bg"><img class="cover_img" src="<%= groups[i].get('groupHeadImgUrl')%>" alt=""></div>
           <div class="band_name"><div class="band_wrap"><span class="uri_text"><!--微群{$i}--><%= groups[i].get('nickname')%></span></div></div>
         </a>
         <img src="/images/n_mark.gif" class="new_icon" alt="">
