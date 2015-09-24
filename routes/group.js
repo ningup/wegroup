@@ -3,6 +3,8 @@ var AV = require('leanengine');
 var GroupClass = require('../common/group_class.js'); //引入group_class.js
 var UserClass = require('../common/user_class.js'); 
 var sign=require('../common/sign.js');
+var WechatAPI = require('wechat-api');
+var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 //声明一个Group类，为避免堆栈溢出，放到全局变量里面
 var Group = AV.Object.extend('Group');
 
@@ -76,8 +78,34 @@ router.post('/create', function(req, res, next) {
   console.log("serverid="+serverId+' flagImg='+flagImg); 
   var groupclass = new GroupClass();
   console.log('color'+groupColor);
-  groupclass.create(flagImg,serverId,groupColor,nickName,username,function(err,groupObjId){
-	res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+groupObjId);
+  groupclass.create(flagImg,serverId,groupColor,nickName,username,function(err,group){
+     if(flagImg === '1'){
+
+	api.getMedia(serverId, function (err, data, res) {
+             console.log(data);
+             //fs.writeFile('test.jpg',data,function(err){});
+             var file = new AV.File(serverId+'.jpg', data);
+             file.save().then(function(file){
+                //console.log('上传成功！'+file.getObjectId());
+                 //res.send('uploadchenggong');
+		group.set('headImgFile',file);
+		group.set('groupHeadImgUrl',file.url());
+		group.save().then(function(){
+		//var id = group.getObjectId();
+		//res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+id);
+		});	
+		//res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
+             });
+ 	});
+     }else{
+	//group.set('serverId',serverId);
+	group.set('groupHeadImgUrl',serverId);
+	group.save().then(function(){
+		//res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
+
+	});
+     }	
+	res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
  });
 	
 });

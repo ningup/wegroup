@@ -29,7 +29,7 @@ function GroupClass()
 
 				queryUser.save().then(function(obj) {
   				//对象保存成功
-					cb(null,group.getObjectId());
+					cb(null,group);
 					//var promise = new AV.Promise();	
    					 //promise.resolve(group);
  					 //return promise;
