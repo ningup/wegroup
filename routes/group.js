@@ -90,9 +90,10 @@ router.post('/create', function(req, res, next) {
                  //res.send('uploadchenggong');
 		group.set('headImgFile',file);
 		group.set('groupHeadImgUrl',file.url());
+	     	group.set('groupHeadImgUrl',file.url());
+		group.set('groupHeadImgUrlHomePage',file.thumbnailURL(640,480));
+		group.set('groupHeadImgUrlSearchPage',file.thumbnailURL(64,64));	
 		group.save().then(function(){
-		//var id = group.getObjectId();
-		//res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+id);
 		});	
 		//res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
              });
@@ -100,6 +101,8 @@ router.post('/create', function(req, res, next) {
      }else{
 	//group.set('serverId',serverId);
 	group.set('groupHeadImgUrl',serverId);
+	group.set('groupHeadImgUrlHomePage',serverId);
+	group.set('groupHeadImgUrlSearchPage',serverId);
 	group.save().then(function(){
 		//res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
 
