@@ -68,15 +68,18 @@ function GroupClass()
    }; 
 	this.joinGroup = function(groupObjId,username,cb){
 		var query = new AV.Query(Group);
+		console.log('jaqunzhe...'+username);
   		//query.equalTo('nickname', groupName);
   		query.get(groupObjId,{
   			success: function(group) {
+  				console.log('jiaru de qun'+group.get('nickname'));
 				var queryUser = new AV.Query(AV.User);
 				queryUser.equalTo("username",username);
 				queryUser.first({
 					success:function(queryUser){
+						console.log('加群者是：'+queryUser.get('nickname'));
 						var relationUser = queryUser.relation('groupJoined');
-                                		relationUser.add(group);
+                        relationUser.add(group);
 						queryUser.save().then(function(user){
 							cb(null,user);
 						},function(err){});
@@ -88,7 +91,7 @@ function GroupClass()
   			error: function(object, error) {
   			}
   		});		
-	};
+	};/*
      this.addFollower = function(groupObjId,username,cb){
         var queryUser = new AV.Query(AV.User);
         queryUser.equalTo("username",username);
@@ -112,7 +115,7 @@ function GroupClass()
             }
         });
 
-    };
+    };  */
     this.groupQuery = function(groups,cb){
 		var j=0;
 		var reQueryGroup = new Array();

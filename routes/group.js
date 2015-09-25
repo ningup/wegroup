@@ -209,18 +209,22 @@ router.post('/search',function(req,res,next){
 })
 
 //加入群
-router.get('/joinGroup',function(req,res,next){
-	var username = req.query.username;
-	var groupObjId = req.query.groupObjId;
+router.post('/joinGroup',function(req,res,next){
+	var username = req.body.username;
+	var groupObjIdJoined = req.body.groupObjIdJoined;
 	var groupclass = new GroupClass();
-	groupclass.addFollower(groupObjId,username,function(err,queryUser){
+  username = username.trim();
+	console.log('get into join group');
+  console.log('joined group'+ groupObjIdJoined);
+  console.log('joined group username'+username);
+	groupclass.joinGroup(groupObjIdJoined,username,function(err,queryUser){
 		var query = new AV.Query(Group);
-	    query.get(groupObjId,{
+	    query.get(groupObjIdJoined,{
 			 success:function(group){
 					var relation = group.relation('followers');
 					relation.add(queryUser);
 					group.save().then(function(group){
-						//res.redirect('/group/search?username='+username);
+						res.redirect('/group/search?username='+username);
 					},function(err){});;
 
 			 },
