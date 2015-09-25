@@ -139,41 +139,62 @@ router.get('/search',function(req,res,next){
   var searchString=req.query.searchString;
   var username = req.query.username;
   var recommandOrNot = req.query.recommandOrNot; 
-  //var groupclass = new GroupClass();
+  var groupclass = new GroupClass();
   var querys = new AV.SearchQuery(Group);
+  console.log('fjdkla;');
     if(recommandOrNot==='0'){
 	console.log(searchString);
     	if(searchString === 'all'){
          	 querys.queryString('*');
     	}
-   	 else {
+   	    else {
         	querys.queryString(searchString+'~3');
         	//querys.queryString('nickname:'+'['+searchString+']');
-  	}
+  	   }
     	querys.find().then(function(results) {
       	console.log('Found %d objects', querys.hits());
       	//Process results
-      	res.render('group_search', {
+      	if(results.length===0){
+			res.render('group_search', {
           	//title: 'Groups 列表',
           	username: req.query.username,
           	groups: results
             });
-
-    	});
+		}else{
+			groupclass.groupQuery(results,function(err,finalGroups){
+				console.log('final');
+				res.render('group_search', {
+				//title: 'Groups 列表',
+				username: req.query.username,
+				groups: finalGroups
+				});
+			});
+	     }   
+    	}); 
     }
     else{
    	querys.queryString('*');
  	querys.find().then(function(results) {
         console.log('Found %d objects', querys.hits());
-        console.log(results);
+        //console.log(results);
         //Process results
-        res.render('group_search', {
-                //title: 'Groups 列表',
-                username: req.query.username,
-                groups: results
+        if(results.length===0){
+			res.render('group_search', {
+          	//title: 'Groups 列表',
+          	username: req.query.username,
+          	groups: results
             });
-
-        });
+		}else{
+			groupclass.groupQuery(results,function(err,finalGroups){
+				console.log('final');
+				res.render('group_search', {
+				//title: 'Groups 列表',
+				username: req.query.username,
+				groups: finalGroups
+				});
+			});
+	     }
+    });
 
 
    }
@@ -209,7 +230,6 @@ router.get('/joinGroup',function(req,res,next){
 	});      //添加群成员 
 	//groupclass.joinGroup(groupObjId,username);       //在用户groupJoined添加群信息
 })
-
 
 
 module.exports = router;

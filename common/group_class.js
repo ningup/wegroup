@@ -113,6 +113,31 @@ function GroupClass()
         });
 
     };
+    this.groupQuery = function(groups,cb){
+		var j=0;
+		var reQueryGroup = new Array();
+        for(var i=0 ; i< groups.length;i++){
+			(function(i){
+			groupObjId = groups[i].getObjectId();
+			console.log('requery'+groupObjId);
+			var query = new AV.Query(Group);
+			query.get(groupObjId,{
+				success: function(group) {
+					reQueryGroup[i]=group;
+					j++;
+					console.log('requery'+group.get('nickname'));
+					if(j===groups.length)
+					{
+							cb(null,reQueryGroup);
+					}
+				},
+				error: function(object, error) {
+				  
+				}
+			});
+		   })(i);
+	     }
+    };
 
 };
 module.exports = GroupClass;
