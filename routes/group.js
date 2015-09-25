@@ -165,6 +165,7 @@ router.get('/search',function(req,res,next){
    	querys.queryString('*');
  	querys.find().then(function(results) {
         console.log('Found %d objects', querys.hits());
+        console.log(results);
         //Process results
         res.render('group_search', {
                 //title: 'Groups 列表',
