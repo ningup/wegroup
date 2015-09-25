@@ -221,6 +221,9 @@ router.post('/joinGroup',function(req,res,next){
 		var query = new AV.Query(Group);
 	    query.get(groupObjIdJoined,{
 			 success:function(group){
+					var followersNum = queryUser.get('followersNum');
+						followersNum ++;
+						queryUser.set('followersNum',followersNum);
 					var relation = group.relation('followers');
 					relation.add(queryUser);
 					group.save().then(function(group){

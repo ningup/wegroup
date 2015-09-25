@@ -7,33 +7,28 @@ function GroupClass()
 		var group=new Group();
 		var promise = new AV.Promise();
 		group.set('nickname',nickname);
-          	group.set('createdBy',username);
-          	group.set('groupColor',groupColor);
+		group.set('createdBy',username);
+		group.set('groupColor',groupColor);
 		group.set('flagImg',flagImg);
-                group.set('serverId',serverId);
+		group.set('serverId',serverId);
 		var query = new AV.Query(AV.User);
-                query.equalTo("username", username);
-                query.first({
-                   success: function(queryUser) {
+		query.equalTo("username", username);
+		query.first({
+		    success: function(queryUser) {
 			var relation = group.relation('followers');
-                   	relation.add(queryUser);
+            relation.add(queryUser);
 			group.set('nicknameOfCUser',queryUser.get('nickname'));
 			group.save(null,{
 			success:function(group)
 			{
+				var groupJoinedNum = queryUser.get('groupJoinedNum');
+				groupJoinedNum ++;
+				queryUser.set('groupJoinedNum',groupJoinedNum);
 				var relationUser = queryUser.relation('groupCreated');
 				relationUser.add(group);
-				//var promise = new AV.Promise();       
-                                //promise.resolve(group);
-                                //return promise;
-
 				queryUser.save().then(function(obj) {
   				//对象保存成功
 					cb(null,group);
-					//var promise = new AV.Promise();	
-   					 //promise.resolve(group);
- 					 //return promise;
-
 				}, function(error) {
 				  //对象保存失败，处理 error
 				});	
@@ -77,6 +72,9 @@ function GroupClass()
 				queryUser.equalTo("username",username);
 				queryUser.first({
 					success:function(queryUser){
+						var groupJoinedNum = queryUser.get('groupJoinedNum');
+						groupJoinedNum ++;
+						queryUser.set('groupJoinedNum',groupJoinedNum);
 						console.log('加群者是：'+queryUser.get('nickname'));
 						var relationUser = queryUser.relation('groupJoined');
                         relationUser.add(group);
@@ -91,7 +89,8 @@ function GroupClass()
   			error: function(object, error) {
   			}
   		});		
-	};/*
+	};
+	/*
      this.addFollower = function(groupObjId,username,cb){
         var queryUser = new AV.Query(AV.User);
         queryUser.equalTo("username",username);
