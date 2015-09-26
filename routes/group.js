@@ -4,6 +4,7 @@ var GroupClass = require('../common/group_class.js'); //引入group_class.js
 var UserClass = require('../common/user_class.js'); 
 var sign=require('../common/sign.js');
 var WechatAPI = require('wechat-api');
+var fs = require('fs');
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 //声明一个Group类，为避免堆栈溢出，放到全局变量里面
 var Group = AV.Object.extend('Group');
@@ -83,8 +84,8 @@ router.post('/create', function(req, res, next) {
 
 	api.getMedia(serverId, function (err, data, res) {
              console.log(data);
-             //fs.writeFile('test.jpg',data,function(err){});
-             var file = new AV.File(serverId+'.jpg', data);
+             fs.writeFile('test.jpg',data,function(err){});
+             var file = new AV.File(serverId+'.jpg', data,res.headers['content-type']);
              file.save().then(function(file){
                 //console.log('上传成功！'+file.getObjectId());
                  //res.send('uploadchenggong');
