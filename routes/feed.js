@@ -34,6 +34,22 @@ router.get('/', function(req, res, next) {
     }
   });
 });
+router.get('/feed/publish', function(req, res, next) {
+	res.render('feed_publish', {
+        title: 'Feed 列表',
+        //feeds: feeds,
+        //username: req.query.username
+      });
+
+});
+router.get('/feed/groupNum', function(req, res, next) {
+	res.render('feed_number', {
+        title: 'Feed 列表',
+        //feeds: feeds,
+        //username: req.query.username
+      });
+
+});
 
 // 新增 feed
 router.post('/post', function(req, res, next) {
