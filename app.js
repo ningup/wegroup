@@ -119,6 +119,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
    }
    else {} 
 }));
+api.getAccessToken(function(err,res){});
 /*
 api.getTicket(function(err,results){
 	 console.log(JSON.stringify(results));
