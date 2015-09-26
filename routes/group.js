@@ -61,11 +61,15 @@ router.get('/create', function(req, res, next) {
   var nickName=req.body.nickName;
   var ticket;
   var groupclass = new GroupClass();
-  fs.readFile(path.join(__dirname,'../config/ticket.txt'), 'utf8', function (err, txt) {
-			if((new Date().getTime()) < (JSON.parse(txt).expireTime)){
-				ticket = JSON.parse(txt).ticket;
+  var query = new AV.Query('WechatTicket');
+   query.get("5606be0760b294604924a0c5", {
+	   success: function(obj) {
+		// 成功获得实例
+		if((new Date().getTime()) < (JSON.parse(obj.get('ticket')).expireTime)){
+				ticket = JSON.parse(obj.get('ticket')).ticket;
 				var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/group/create?username='+req.query.username);
 				console.log('not exoired'+ticket);
+				console.log('.............'+jsapi.nonceStr);
 				res.render('group_create', {
 					//title: 'Groups 列表',
 					username: req.query.username,
@@ -81,25 +85,31 @@ router.get('/create', function(req, res, next) {
 					//console.log(JSON.stringify(results));
 					console.log('guoqi?');
 					ticket = results.ticket;
-					fs.writeFile(path.join(__dirname,'../config/ticket.txt'), JSON.stringify(results), function(){
-							console.log('ticket expire time'+results.expireTime);
-							var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/group/create?username='+req.query.username);
-							//console.log('.............'+jsapi.nonceStr);
-							res.render('group_create', {
-								//title: 'Groups 列表',
-								username: req.query.username,
-								nonceStr: jsapi.nonceStr,
-								timestamp: jsapi.timestamp,
-								signature: jsapi.signature
-								//groups: results
+					obj.set('ticket',JSON.stringify(results));
+					obj.save().then(function(obj){
+								console.log('ticket expire time'+results.expireTime);
+								var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/group/create?username='+req.query.username);
+								//console.log('.............'+jsapi.nonceStr);
+								res.render('group_create', {
+									//title: 'Groups 列表',
+									username: req.query.username,
+									nonceStr: jsapi.nonceStr,
+									timestamp: jsapi.timestamp,
+									signature: jsapi.signature
+									//groups: results
 							});
+						
+					
 					});
-	
+
 				});
 		
 			}
-			
-  });
+	  },
+	  error: function(object, error) {
+		// 失败了.
+	  }
+});
 
 });
 
