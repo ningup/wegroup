@@ -34,7 +34,7 @@ router.get('/', function(req, res, next) {
     }
   });
 });
-router.get('/feed/publish', function(req, res, next) {
+router.get('/publish', function(req, res, next) {
 	res.render('feed_publish', {
         title: 'Feed 列表',
         //feeds: feeds,
@@ -42,8 +42,8 @@ router.get('/feed/publish', function(req, res, next) {
       });
 
 });
-router.get('/feed/groupNum', function(req, res, next) {
-	res.render('feed_number', {
+router.get('/groupMember', function(req, res, next) {
+	res.render('feed_member', {
         title: 'Feed 列表',
         //feeds: feeds,
         //username: req.query.username
