@@ -15,20 +15,42 @@ var wechat = require('wechat');
 var fs = require('fs');
 var path = require('path');
 var AV = require('leanengine');
+//WechatAPI.mixin(require('/home/ning/liaoqu/wegroup/node_modules/wechat-api/lib/api_media.js'));
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
   // 传入一个获取全局token的方法
-  fs.readFile('access_token.txt', 'utf8', function (err, txt) {
-    if (err) {return callback(err);}
-    callback(null, JSON.parse(txt));
-  });
+   var query = new AV.Query('WechatToken');
+   query.get("5606afe9ddb2e44a47769124", {
+  success: function(obj) {
+    // 成功获得实例
+    callback(null, JSON.parse(obj.get('accessToken')));
+  },
+  error: function(object, error) {
+    // 失败了.
+  }
+});
+  
 }, function (token, callback) {
   // 请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等
   // 这样才能在cluster模式及多机情况下使用，以下为写入到文件的示例
-  fs.writeFile('access_token.txt', JSON.stringify(token), callback);
+  //fs.writeFile('access_token.txt', JSON.stringify(token), callback);
+	  var query = new AV.Query('WechatToken');
+	   query.get("5606afe9ddb2e44a47769124", {
+	  success: function(wechatToken) {
+		// 成功获得实例
+			   wechatToken.set('accessToken',JSON.stringify(token));
+			   wechatToken.save().then(function(obj){});
+		
+	  },
+	  error: function(object, error) {
+		// 失败了.
+	  }
+	});
+   
 });
 //var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 var OAuth = require('wechat-oauth');
 var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
+api.getAccessToken(function(){});
 //var UserClass = require('./common/user_class.js'); 
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var app = express();
@@ -51,6 +73,7 @@ app.use(cookieParser());
 app.use(express.query());
 app.use(AV.Cloud.CookieSession({ secret: 'my secret', fetchUser: true }));
 app.use('/wechat', wechat(config, function (req, res, next) {
+	api.getLatestToken(function(){});
   // 微信输入信息都在req.weixin上
   var message = req.weixin;
   if(message.MsgType === 'text')
@@ -61,6 +84,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
   {
      if(message.Event === 'subscribe')
      {
+		  api.getLatestToken(function(){});
           api.getUser({openid:message.FromUserName, lang: 'zh_CN'}, function (err, data, userres){
                         var newUser = new AV.User();
                         newUser.set("username", data.openid);
@@ -119,10 +143,10 @@ app.use('/wechat', wechat(config, function (req, res, next) {
    }
    else {} 
 }));
-api.getAccessToken(function(err,res){});
 /*
 api.getTicket(function(err,results){
-	 console.log(JSON.stringify(results));
+	 //console.log(JSON.stringify(results));
+	 console.log(results);
 	
 });*/
 //api.createMenu(menu, function (err, result){});
@@ -164,6 +188,7 @@ app.get('/', function(req, res) {
 		  success: function(user) {
 			// 成功了，现在可以做其他事情了.
 			//res.render('index', { openid: openid });
+			//if(err)
 			res.redirect('/group?username='+openid);
 		  },
 		  error: function(user, error) {
