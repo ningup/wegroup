@@ -5,7 +5,19 @@ var UserClass = require('../common/user_class.js');
 var sign=require('../common/sign.js');
 var WechatAPI = require('wechat-api');
 var fs = require('fs');
-var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
+var path= require('path');
+//var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
+var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
+  // 传入一个获取全局token的方法
+  fs.readFile(path.join(__dirname,'../access_token.txt'), 'utf8', function (err, txt) {
+    if (err) {return callback(err);}
+    callback(null, JSON.parse(txt));
+  });
+}, function (token, callback) {
+  // 请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等
+  // 这样才能在cluster模式及多机情况下使用，以下为写入到文件的示例
+  fs.writeFile(path.join(__dirname,'../access_token.txt'), JSON.stringify(token), callback);
+});
 //声明一个Group类，为避免堆栈溢出，放到全局变量里面
 var Group = AV.Object.extend('Group');
 
@@ -27,45 +39,45 @@ router.get('/', function(req, res, next) {
 
 router.get('/create', function(req, res, next) {
   var nickName=req.body.nickName;
+  var ticket;
   var groupclass = new GroupClass();
-  AV.Cloud.httpRequest({
-  url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx88cb5d33bbbe9e75&secret=77aa757e3bf312d9af6e6f05cb01de1c',
-  /*params: {
-    q : 'Sean Plott'
-  },*/
-  success: function(httpResponse) {
-    //console.log(JSON.parse(httpResponse.text).access_token);
-        AV.Cloud.httpRequest({
-        url: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket',
-        params: {
-          access_token: JSON.parse(httpResponse.text).access_token,
-          type:'jsapi'
-        },
-        success: function(httpResponse1) {
-          //console.log(JSON.parse(httpResponse1.text).ticket);
-          var ticket=JSON.parse(httpResponse1.text).ticket;
-          var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/group/create?username='+req.query.username);
-          console.log('.............'+jsapi.nonceStr);
-          res.render('group_create', {
-                //title: 'Groups 列表',
-                username: req.query.username,
-                nonceStr: jsapi.nonceStr,
-                timestamp: jsapi.timestamp,
-                signature: jsapi.signature
-                //groups: results
-          });
-
-        },
-        error: function(httpResponse) {
-          console.error('Request failed with response code ' + httpResponse.status);
-        }
-      });
-  },
-  error: function(httpResponse) {
-    console.error('Request failed with response code ' + httpResponse.status);
-  }
-});
-  //console.log('create'+(req.AV.user).get('nickname'));
+  fs.readFile(path.join(__dirname,'../config/ticket.txt'), 'utf8', function (err, txt) {
+			if((new Date().getTime()) < (JSON.parse(txt).expireTime)){
+				ticket = JSON.parse(txt).ticket;
+				var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/group/create?username='+req.query.username);
+				console.log('not exoired'+ticket);
+				res.render('group_create', {
+					//title: 'Groups 列表',
+					username: req.query.username,
+					nonceStr: jsapi.nonceStr,
+					timestamp: jsapi.timestamp,
+					signature: jsapi.signature
+					//groups: results
+				});
+			}
+			else{
+				api.getTicket(function(err,results){
+					//console.log(JSON.stringify(results));
+					ticket = results.ticket;
+					fs.writeFile(path.join(__dirname,'../config/ticket.txt'), JSON.stringify(results), function(){
+							console.log('ticket expire time'+results.expireTime);
+							var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/group/create?username='+req.query.username);
+							//console.log('.............'+jsapi.nonceStr);
+							res.render('group_create', {
+								//title: 'Groups 列表',
+								username: req.query.username,
+								nonceStr: jsapi.nonceStr,
+								timestamp: jsapi.timestamp,
+								signature: jsapi.signature
+								//groups: results
+							});
+					});
+	
+				});
+		
+			}
+			
+  });
 
 });
 
