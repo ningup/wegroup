@@ -29,7 +29,7 @@ router.get('/', function(req, res, next) {
         // 具体的错误代码详见：https://leancloud.cn/docs/error_code.html
         res.render('todos', {
           title: 'TODO 列表',
-          groupObjIdGotInto,groupObjIdGotInto,
+          groupObjIdGotInto:groupObjIdGotInto,
           username: req.query.username,
           feeds: []
         });
