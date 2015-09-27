@@ -4,6 +4,7 @@ var WechatAPI = require('wechat-api');
 var GroupClass = require('../common/group_class.js'); //引入group_class.js
 var FeedClass = require('../common/feed_class.js');   //引入Feed_class.js
 var LikeClass = require('../common/like_class.js');
+var sign=require('../common/sign.js');
 var Group = AV.Object.extend('Group');
 var Feed = AV.Object.extend('Feed');
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
