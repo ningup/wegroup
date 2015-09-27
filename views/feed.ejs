@@ -60,7 +60,8 @@
             </div>
   
     <ul class="list-unstyled">
-        <for start="1" end="5">
+        <!--<for start="1" end="5">-->
+        <% for(var i=0; i<feeds.length; i++) {%>
         
       <li class="media" data-looktype="bandLook" data-read="0" data-skin="skin9" style="margin-top:18px">
         <div class="media_content">
@@ -69,11 +70,13 @@
             <div class="media-body media-middle"><h5 class="media-heading" data-textover="1" style="margin-top: 0;color:#000"><strong>姓名</strong></h5><p data-textover="1" style="color:#999;margin-bottom: 0;"><small>{$i}分钟前</small></p></div>
           </div>
           <div class="media-footing">
-            <div class="media-bottom media-middle"><p>测试内容，测试内容</p></div>
+            <div class="media-bottom media-middle"><p><%= feeds[i].get('feedContent')%></p></div>
             <div data-type="pic">
-            <for name="j" start="1" end="7">
-                <img class="media-object" src="http://coresos.phinf.naver.net/a/2g61f4_4/g89Ud0158aic1exyaq1q_8u3vvy.jpg" data-holder-rendered="true">
-            </for>
+            <!--<for name="j" start="1" end="7">-->
+            <% for(var j=0; j<(feeds[i].get('feedImgArraySmall')).length; j++) {%>
+                <img class="media-object" src="<%=(feeds[i].get('feedImgArraySmall'))[j] %>" data-holder-rendered="true">
+            <% } %>
+            <!--</for>-->
             </div>
             <div data-type="custom"><div data-share="custom"></div><div data-share="custom-info"><h5 class="media-heading" style="margin-top: 0;color:#000">标题标题</h5><p style="color:#999;margin-bottom: 0;"><small>{$i}分钟前</small></p></div></div>
           </div>
@@ -100,7 +103,9 @@
           </for>
         </ul>
             </li>
-    </for>
+
+    <% } %>
+    <!--</for>-->
         </ul>
   </div>
   
