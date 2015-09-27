@@ -146,12 +146,13 @@ router.get('/groupMember', function(req, res, next) {
 router.post('/post', function(req, res, next) {
   var groupObjId=req.body.groupObjId;
   var feedContent=req.body.feedContent;
+  var serverId = req.body.serverId;
   var feedType = req.body.feedType;
   var username = req.body.username;
   username = username.trim();
   var feedclass = new FeedClass(); 
   console.log('...postfeed'+username);
-  var serverId = new Array();
+  /*var serverId = new Array();
   serverId[0] = 'GYLFX0KpquT3JV7-vC6ltS6qyVjCFmw9VDTeTfx6uWu0J2PZg08CZGyNXDi5LZOk';
   serverId[1] = 'rK1U_mqzU9B28TwbdXrItOC9Mn8yP6zDUSYcFfXprW9nXlMT7HDWFrAGaUeoCDH2';
   serverId[2] = 'tCDcX2ZuSh3ZbvU5JDNEbe53uCzK05jfwUnFb-KvaCO3nkmduGWvC4DumpX-Zm1E';
@@ -163,7 +164,7 @@ router.post('/post', function(req, res, next) {
   serverId[8] = 'YE94LDeVo4SOKoybRu1fxJ5M3SILOR05Hngmumo0qh1vf16j24r_WcFBp6-LwP-1';
   //console.log('serverIdLength:'+server.length);
   //console.log('serverId:'+server);
-  
+ */ 
   if(feedType === 'text'){
 	  feedclass.postFeed_text(groupObjId,username,feedContent,function(){
 			res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
