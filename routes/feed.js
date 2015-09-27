@@ -64,10 +64,12 @@ router.post('/post', function(req, res, next) {
   var groupObjId=req.body.groupObjId;
   var feedContent=req.body.feedContent;
   var feedType = req.body.feedType;
+  var username = req.body.username;
+  username = username.trim();
   var feedclass = new FeedClass(); 
-  //console.log(req.query.username);
-  if (feedTpye == 'text')
-  feedclass.postFeed_text(groupObjId,req.query.username,feedContent,function(){
+  console.log('...postfeed'+username);
+  if (feedType == 'text')
+  feedclass.postFeed_text(groupObjId,username,feedContent,function(){
 		res.redirect('/feed?username='+req.query.username);}); 
   
 })

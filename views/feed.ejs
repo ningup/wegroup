@@ -5,8 +5,8 @@
 <title>测试测试微群</title>
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-<meta name="Keywords" content="微群助手－信息页" />
-<meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+<meta name="Keywords" content="{$Think.config.SITENAME}" />
+<meta name="Description" content="{$Think.config.SITENAME},{$Think.config.DESCRIPTION}" />
 <link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
 <link rel="stylesheet" type="text/css" href="/stylesheets/skin.css">
 <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">
@@ -16,34 +16,51 @@
 <script language="javascript" type="text/javascript" src="/javascript/bootstrap-switch.js"></script>
 </head>
 <body>
-  <!--<button style="position:fixed; bottom:40px; right:20px; z-index:999;">发表</button>-->
-  <!--<a role="button" href="#" class="write_btn" data-skin_factor="bg" data-icon="layer-write" data-uiselector="btnPostWrite" style="position:fixed; bottom:40px; right:20px; z-index:999; background-color: #FF6600;width:40px;height:40px;border-radius:20px;">发表</a>-->
-  <a role="button" href="/feed/publish" class="write_btn" style="position:fixed; bottom:40px; right:20px; z-index:999; background-color: #FF6600;width:40px;height:40px;border-radius:20px; text-align:center; line-height:40px; color:#FFFFFF;">发表</a>
-  <a role="button" href="/feed/groupMember" class="write_btn" style="position:fixed; bottom:100px; right:20px; z-index:999; background-color: #FF6600;width:40px;height:40px;border-radius:20px; text-align:center; line-height:40px; color:#FFFFFF;overflow:hidden;">群成员</a>
-  <a role="button" href="#" class="write_btn" style="position:fixed; bottom:160px; right:20px; z-index:999; background-color: #FF6600;width:40px;height:40px;border-radius:20px; text-align:center; line-height:40px; color:#FFFFFF;">相册</a>
-  <a role="button" href="#" class="write_btn" style="position:fixed; bottom:220px; right:20px; z-index:999; background-color: #FF6600;width:40px;height:40px;border-radius:20px; text-align:center; line-height:40px; color:#FFFFFF;">投票</a>
-  <div class="magin_0">
+  <a href="/feed/publish?groupObjIdGotInto=<%= groupObjIdGotInto%>&username=<%= username %>" style="position:fixed;right:20px;bottom:40px;width:40px;height:40px;border-radius:20px;text-align:center;line-height:40px;z-index:999;background-color:#f0ffff">发表</a>
+  <div class="search_button">
+    <div class="input-group form-control" style="width: 88%;">
+      <span class="glyphicon glyphicon-search" id="sizing-addon2"></span>
+      <form name"search" class="form-inline">
+      <input type="search" alt="查找群帖子、成员" contextmenu="查找群帖子、成员" title="查找群帖子、成员" aria- id="search_box" class="" placeholder="查找群帖子、成员" aria-describedby="sizing-addon2"></form>
+    </div>
+      <span style="background: none;border: none;float: right;margin-top: -30px;width: 10%;padding: 0;"><i class="glyphicon glyphicon-camera" style="font-size: 1.6em;"></i></span>
+  </div>
+
+  <div class="container-fluid" style="background:#FFF;">
+    <div class="row">
+      <ul class="list-unstyled">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 band_shortcut" data-link="user"><i class="glyphicon glyphicon-user"></i><p>群成员</p></div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 band_shortcut" data-link="picture"><i class="glyphicon glyphicon-picture"></i><p>群相册</p></div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 band_shortcut" data-link="stats"><i class="glyphicon glyphicon-stats"></i><p>群投票</p></div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 band_shortcut" data-link="file"><i class="glyphicon glyphicon-file"></i><p>群文件</p></div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 band_shortcut" data-link="comment"><i class="glyphicon glyphicon-comment"></i><p>群消息</p></div>
+      </ul>
+    </div>
+  </div>
+  
+  <!--<div class="magin_0">
     <div class="group-bg">
           <div class="bg_img" style="background: url(http://coresos.phinf.naver.net/a/2g61f4_4/g89Ud0158aic1exyaq1q_8u3vvy.jpg);background-size:cover;"></div>
     </div>
           <div class="bl-wi-color"></div>
-  </div>
+  </div>--><!-- 顶部图片-->
 
   <div class="chat_list" style="width:92%;margin:10px auto;">
       <div class="media" style=" margin-top:15px;">
         <div class="media_content">
           <div class="media-heading" data-skin="skin8">
-            <div class="media-body media-middle" data-skin_factor="color"><h5 class="media-heading" data-textover="1" style="margin-top: 0;"><strong>告示</strong></h5></div>
+            <div class="media-body media-middle" data-skin_factor="color" style="width:4em"><h5 class="media-heading" data-textover="1" style="margin-top: 0;"><strong>告知</strong></h5></div>
+            <i class="glyphicon glyphicon-edit" style="float: right;top: -26px;color: #47B1FD;font-size: 1.7em;"></i>
           </div>
           <div class="media-gonggao">
-            <div class="media-bottom media-middle"><p>测试内容，测试内容</p></div>
+            <div class="media-bottom media-middle">测试内容，测试内容</div>
           </div>
+            <textarea id="gonggaoedit" class="hidden form-control" style="width:100%;" rows="3" maxlength="140" ></textarea>
         </div>
             </div>
   
     <ul class="list-unstyled">
-        <!--<for start="1" end="5">-->
-    <% for(var i=1; i<5; i++) {%>
+        <for start="1" end="5">
         
       <li class="media" data-looktype="bandLook" data-read="0" data-skin="skin9" style="margin-top:18px">
         <div class="media_content">
@@ -54,26 +71,73 @@
           <div class="media-footing">
             <div class="media-bottom media-middle"><p>测试内容，测试内容</p></div>
             <div data-type="pic">
-            <!--<for name="j" start="1" end="7">-->
-            <% for(var j=1; j<7; j++) {%>
+            <for name="j" start="1" end="7">
                 <img class="media-object" src="http://coresos.phinf.naver.net/a/2g61f4_4/g89Ud0158aic1exyaq1q_8u3vvy.jpg" data-holder-rendered="true">
-            <% } %>
-            <!--</for>-->
+            </for>
             </div>
             <div data-type="custom"><div data-share="custom"></div><div data-share="custom-info"><h5 class="media-heading" style="margin-top: 0;color:#000">标题标题</h5><p style="color:#999;margin-bottom: 0;"><small>{$i}分钟前</small></p></div></div>
           </div>
         </div>
                 <div class="media_btn">
                   <span class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border-right: solid 1px #fff;"><i class="glyphicon glyphicon-thumbs-up"></i> 赞</span>
-                    <span class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border-left: solid 1px #DDD;"><i class="glyphicon glyphicon-comment"></i> 发表评论</span>
+                    <span class="col-xs-6 col-sm-6 col-md-6 col-lg-6 pubcomentbtn" style="border-left: solid 1px #DDD;"><i class="glyphicon glyphicon-comment"></i> 发表评论</span>
                 </div>
+            <div class="media_content pinglunkuang hidden" style="background: #F4F4F4;border-bottom: solid 1.2px #DBDBDB;">
+              <div class="media-heading">
+                <div class="media-left_content media-middle container-fluid"><textarea class="form-control" rows="3" class="container-fluid"></textarea></div>
+                <div class="media-right-conbtn"><button type="button" class="btn btn-success">评论</button></div>
+              </div>
+            </div>
+        
+        <ul class="comment list-unstyled">
+          <for name="k" start="1" end="4">
+            <li class="media_content" style="background: #F4F4F4;border-bottom: solid 1.2px #DBDBDB;">
+              <div class="media-heading">
+                <div class="media-left media-middle"><img class="media-object img-circle" data-src="holder.js/46x46" alt="46x46" src="http://coresos.phinf.naver.net/a/2g61f4_4/g89Ud0158aic1exyaq1q_8u3vvy.jpg" data-holder-rendered="true" style="width: 46px; height: 46px;"></div>
+                <div class="media-body media-middle"><h5 class="media-heading" data-textover="1" style="margin-top: 6px;color:#000;"><strong>姓名</strong><small class="pull-right">{$i}分钟前</small></h5><div class="media-bottom media-middle"><p>测试内容，测试内容</p></div></div>
+              </div>
             </li>
-    <% } %>
-    <!--</for>-->
+          </for>
+        </ul>
+            </li>
+    </for>
         </ul>
   </div>
+  
 <script>
-$(document).ready(function(){$('.ellipsis').ellipsis();})
+$('.glyphicon-edit').click(function(){
+  if($('#gonggaoedit').hasClass('hidden')){
+    $('#gonggaoedit').removeClass('hidden');
+    $('.media-gonggao').addClass('hidden');
+    $('#gonggaoedit').val($('.media-gonggao').find('.media-bottom').html());
+  }else{
+    $('#gonggaoedit').addClass('hidden');
+    $('.media-gonggao').removeClass('hidden');
+    $('.media-gonggao').find('.media-bottom').html($('#gonggaoedit').val());
+  }
+})
+$('.pubcomentbtn').click(function(){
+  if($('.pinglunkuang').hasClass('hidden')){
+    $('.pinglunkuang').removeClass('hidden');
+  }else{
+    $('.pinglunkuang').addClass('hidden');
+  }
+  })
+$('[data-link=user]').click(function(){
+  window.open("{:U('Group/member')}","_self");
+})
+$('[data-link=picture]').click(function(){
+  window.open("{:U('Group/album')}","_self");
+})
+$('[data-link=stats]').click(function(){
+  window.open("{:U('Group/member')}","_self");
+})
+$('[data-link=file]').click(function(){
+  window.open("{:U('Group/filescontant')}","_self");
+})
+$('[data-link=comment]').click(function(){
+  window.open("{:U('Group/message')}","_self");
+})
 </script>
 </body>
 </html>

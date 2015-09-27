@@ -4236,7 +4236,7 @@ a.thumbnail.active {
   list-style: none;
 }
 .media-gonggao{border: solid 1px #DBDBDB;padding: 5px;}
-.media_btn{width:100%;height:40px;text-align:center;border-top: solid 1px #DBDBDB;vertical-align: middle;background: #F4F4F4;}
+.media_btn{width:100%;height:40px;text-align:center;border: solid 1.2px #DBDBDB;vertical-align: middle;background: #F4F4F4;}
 .media_btn span{ min-height: 30px;padding: 8px 0;}
 .media-footing [data-type="pic"]{ max-width:340px;width:100%; height:auto;position:relative;margin: 15px auto 15px 0px;}
 .media-footing [data-type="pic"] img{width: 100px; height: 100px; display:inline;margin: 2px 2px 0px 0px;}
@@ -4246,6 +4246,14 @@ a.thumbnail.active {
 .media-footing [data-type="custom"] [data-share="custom-info"] h5{overflow:hidden;text-overflow:ellipsis;-o-text-overflow:ellipsis;white-space:nowrap;width:100%;}
 .media-footing [data-type="custom"] [data-share="custom-info"] p{overflow:hidden;text-overflow:ellipsis;-o-text-overflow:ellipsis;white-space:nowrap;width:100%;}
 [data-textover="1"]{overflow:hidden;text-overflow:ellipsis;-o-text-overflow:ellipsis;white-space:nowrap;width:100%;}
+.media_pub_content .row div{min-height: 20px;}
+.media-left_content{ width:82%; margin:0}
+.media-right-conbtn{width: 60px;float: right;margin-top: -35px;}
+
+.band_shortcut{ height:80px; padding:10px;text-align: center;min-height: 20px;}
+.band_shortcut i{ font-size:2em}
+
+
 .list-group {
   padding-left: 0;
   margin-bottom: 20px;
