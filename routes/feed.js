@@ -63,8 +63,10 @@ router.get('/groupMember', function(req, res, next) {
 router.post('/post', function(req, res, next) {
   var groupObjId=req.body.groupObjId;
   var feedContent=req.body.feedContent;
-  var feedclass = new FeedClass();
-  console.log(req.query.username);
+  var feedType = req.body.feedType;
+  var feedclass = new FeedClass(); 
+  //console.log(req.query.username);
+  if (feedTpye == 'text')
   feedclass.postFeed_text(groupObjId,req.query.username,feedContent,function(){
 		res.redirect('/feed?username='+req.query.username);}); 
   
