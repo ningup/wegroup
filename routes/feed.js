@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
     success: function(feeds) {
       res.render('feed', {
         title: 'Feed 列表',
-        groupObjIdGotInto,groupObjIdGotInto,
+        groupObjIdGotInto:groupObjIdGotInto,
         feeds: feeds,
         username: req.query.username
       });
@@ -40,10 +40,13 @@ router.get('/', function(req, res, next) {
   });
 });
 router.get('/publish', function(req, res, next) {
+	var username = req.query.username;
+	var groupObjIdGotInto = req.query.groupObjIdGotInto;
 	res.render('feed_publish', {
         title: 'Feed 列表',
         //feeds: feeds,
-        //username: req.query.username
+        groupObjIdGotInto:groupObjIdGotInto,
+		username: req.query.username
       });
 
 });
