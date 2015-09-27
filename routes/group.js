@@ -130,7 +130,7 @@ router.post('/create', function(req, res, next) {
 		});
 	api.getMedia(serverId, function (err, data, res) {
              console.log(data);
-             fs.writeFile('test.jpg',data,function(err){});
+             //fs.writeFile('test.jpg',data,function(err){});
              var file = new AV.File(serverId, data,res.headers['content-type']);
              file.save().then(function(file){
                 //console.log('上传成功！'+file.getObjectId());
