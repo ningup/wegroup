@@ -146,14 +146,18 @@ router.get('/groupMember', function(req, res, next) {
 router.post('/post', function(req, res, next) {
   var groupObjId=req.body.groupObjId;
   var feedContent=req.body.feedContent;
-  var serverId = req.body.serverId;
+  //var serverId = req.body.serverId;
   //var iid = req.body.iid;
   var feedType = req.body.feedType;
+  feedType = feedType.trim();
   var username = req.body.username;
   username = username.trim();
   var feedclass = new FeedClass(); 
   //console.log('...postfeed....'+iid);
-  serverId=JSON.parse(serverId).serverId;
+  if(feedType != 'text'){
+  	var serverId = req.body.serverId;
+  	serverId=JSON.parse(serverId).serverId;
+  }
   //iid = JSON.parse(iid);
 
   //console.log('jjd length:'+iid.serverId.length);
@@ -171,9 +175,10 @@ router.post('/post', function(req, res, next) {
   //console.log('serverIdLength:'+server.length);
   //console.log('serverId:'+server);
  */ 
-  feedType = feedType.trim();
+  //feedType = feedType.trim();
   console.log('feedType'+feedType);
   if(feedType === 'text'){
+  	  console.log('into the text post');
 	  feedclass.postFeed_text(groupObjId,username,feedContent,function(){
 			res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
 	   }); 

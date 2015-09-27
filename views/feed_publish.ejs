@@ -83,12 +83,13 @@ $(function(){
 $("#publish_button").click(function(){
 	window.console.log(".....................");
 	$(".form_publish_username").val("<%= username %>");
+	$(".form_publish_groupObjId").val("<%=groupObjIdGotInto%>");
 	if (flag_img==0) {
 		$(".form_publish_feedType").val("text");
+		$("#publish_form").submit();
 	}else{
 		$(".form_publish_feedType").val("imgtext");
 	}
-	$(".form_publish_groupObjId").val("<%=groupObjIdGotInto%>");
     var j=0;
     syncUpload(local_img);
 	/*for(var i=0;i<local_img.length;i++){
