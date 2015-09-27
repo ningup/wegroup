@@ -10,12 +10,15 @@ var Feed = AV.Object.extend('Feed');
 router.get('/', function(req, res, next) {
 	//var likeclass = new LikeClass();
 	//likeclass.like('55fc293860b21fbf5733ec7d',req.query.username);
+	var username = req.query.username;
+	var groupObjIdGotInto = req.query.groupObjIdGotInto;
 	var query = new AV.Query(Feed);
     query.descending('createdAt');
     query.find({
     success: function(feeds) {
       res.render('feed', {
         title: 'Feed 列表',
+        groupObjIdGotInto,groupObjIdGotInto,
         feeds: feeds,
         username: req.query.username
       });
@@ -26,6 +29,8 @@ router.get('/', function(req, res, next) {
         // 具体的错误代码详见：https://leancloud.cn/docs/error_code.html
         res.render('todos', {
           title: 'TODO 列表',
+          groupObjIdGotInto,groupObjIdGotInto,
+          username: req.query.username,
           feeds: []
         });
       } else {
@@ -57,7 +62,8 @@ router.post('/post', function(req, res, next) {
   var feedContent=req.body.feedContent;
   var feedclass = new FeedClass();
   console.log(req.query.username);
-  feedclass.postFeed_text(groupObjId,req.query.username,feedContent,function(){res.redirect('/feed?username='+req.query.username);}); 
+  feedclass.postFeed_text(groupObjId,req.query.username,feedContent,function(){
+		res.redirect('/feed?username='+req.query.username);}); 
   
 })
 
