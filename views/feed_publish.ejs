@@ -12,37 +12,130 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">
 <script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
 <script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>
+<script language="javascript" type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 </head>
 <body>
 <div style="position:absolute;top:0;left:0;width: 100%;height:20em">
 	<form id="publish_form" action="/feed/post" method="post">
-		<input type="hidden"  class="form_publish_groupObjId" maxlength="50" value="" name="groupObjId" /> 
+		<input type="hidden"  class="form_publish_groupObjId" value="" name="groupObjId" /> 
 			<textarea class="form-control" rows="5" id="textarea_box" placeholder="有什么新消息分享给大家吧！" aria-describedby="sizing-addon2" style="height:100%;resize:none" maxlength="140" name="feedContent"></textarea>
-		<input type="hidden"  class="form_publish_feedType" maxlength="50" value="" name="feedType" /> 
-		<input type="hidden"  class="form_publish_username" maxlength="50" value="" name="username" /> 
+		<input type="hidden"  class="form_publish_feedType" value="" name="feedType" /> 
+		<input type="hidden"  class="form_publish_username" value="" name="username" /> 
+		<input type="hidden"  class="form_publish_img" value="" name="serverId" /> 
 	</form>
-	<img src="http://ac-dkhkftc7.clouddn.com/87d89cdde09dd239b539.jpg" style="width:100px;height:100px;">
-	<img src="http://ac-dkhkftc7.clouddn.com/87d89cdde09dd239b539.jpg" style="width:100px;height:100px;">
-	<img src="http://ac-dkhkftc7.clouddn.com/87d89cdde09dd239b539.jpg" style="width:100px;height:100px;">
-	<img src="http://ac-dkhkftc7.clouddn.com/87d89cdde09dd239b539.jpg" style="width:100px;height:100px;">
+
+	<div id="img_list">
+		<!--这里的内容在下面设置-->
+	</div>
 	<div class="chat_list  navbar-fixed-bottom">
-		  <button style="float:left;margin: 2px;" type="button" class="btn btn-success">图片</button>     
+		  <button style="float:left;margin: 2px;" type="button" class="btn btn-success" id="publish_img">图片</button>     
 		  <button style="float:left;margin: 2px;" type="button" class="btn btn-success">表情</button>     
 		  <button style="float:left;margin: 2px;" type="button" class="btn btn-success">投票</button>     
-		  <button style="float:left;margin: 2px;" type="button" class="btn btn-success">语音</button>     
+		  <button style="float:left;margin: 2px;" type="button" class="btn btn-success" id="publish_audio">语音</button>     
 		  <button style="float:right;margin: 10px;" type="button" class="btn btn-success" id="publish_button">发表</button>     
 	</div>
 </div>
 
 <script language="javascript" type="text/javascript">
+var local_img = [];
+var success_img = [];
+var flag_img = 0;
+var flag_img_count = 9;
+$(document).ready(function(){
+	wx.config({
+		debug: false,
+		appId: 'wx88cb5d33bbbe9e75',
+		timestamp: '<%= timestamp%>',
+		nonceStr: '<%= nonceStr%>',
+		signature: '<%= signature%>',
+		jsApiList: ['chooseImage','uploadImage']});
+	$("#publish_img").click(function(){
+		window.console.log("..............................");
+		alert(flag_img_count);
+		if (flag_img_count>0){
+			wx.chooseImage({
+					count:flag_img_count,
+					sizeType:['original','compressed'],
+					sourceType:['album','camera'],
+					success:function(res){
+						window.console.log("bbbbbbbb");
+						var localIds = res.localIds;
+						
+						for (var i = 0; i < localIds.length; i++) {
+							local_img.push(localIds[i]);
+						}
+						flag_img_count = flag_img_count - localIds.length;
+
+						$("#img_list").html("");
+						for (var i = 0; i < local_img.length; i++) {
+							var local_url = local_img[i];
+							$("#img_list").html($("#img_list").html()+"<img src=\""+local_url+"\" style=\"width:100px;height:100px;\">");
+						}
+						flag_img = 1;
+					}
+			});
+		} else{
+			alert("最多上传9张图片");
+		}
+	});
+})
 $(function(){
 $("#publish_button").click(function(){
 	window.console.log(".....................");
 	$(".form_publish_username").val("<%= username %>");
-	$(".form_publish_feedType").val("text");
+	if (flag_img==0) {
+		$(".form_publish_feedType").val("text");
+	}else{
+		$(".form_publish_feedType").val("imgtext");
+	}
 	$(".form_publish_groupObjId").val("<%=groupObjIdGotInto%>");
-	$("#publish_form").submit();
-})
+    var j=0;
+    syncUpload(local_img);
+	/*for(var i=0;i<local_img.length;i++){
+		//alert(local_img.length);
+		wx.uploadImage({
+					    localId: local_img[i], // 需要上传的图片的本地ID，由chooseImage接口获得
+					    isShowProgressTips: 1, // 默认为1，显示进度提示
+					    success: function (res) {
+					        var serverId = res.serverId; // 返回图片的服务器端ID
+					        success_img.push(serverId);
+					        j++;
+					        alert(j);
+					        alert(i);
+					        if(j===1){
+								var post_json = {"serverId":success_img};
+								var string_json = JSON.stringify(post_json);
+								alert(string_json);
+								$(".form_publish_img").val(string_json);
+								$("#publish_form").submit();
+
+							}
+					    }
+		});  
+	}*/
+	
+});
+
+var syncUpload = function(localIds_id){
+	var localId_id = localIds_id.pop();
+	wx.uploadImage({
+		localId: localId_id, // 需要上传的图片的本地ID，由chooseImage接口获得
+					    isShowProgressTips: 1, // 默认为1，显示进度提示
+					    success: function (res) {
+					        var serverId = res.serverId;
+					        success_img.push(serverId);
+					        if (localIds_id.length>0) {
+					        	syncUpload(localIds_id);
+					        }else{
+					        	var post_json = {"serverId":success_img};
+								var string_json = JSON.stringify(post_json);
+					        	$(".form_publish_img").val(string_json);
+								$("#publish_form").submit();
+					        }
+					    }
+	})
+}
+
 })
 </script>
 </body>

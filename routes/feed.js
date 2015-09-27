@@ -49,8 +49,8 @@ router.get('/', function(req, res, next) {
     query.include("feedImgArray");
     query.find({
     success: function(feeds) {
-	   url = (feeds[0].get('feedImgArray'))[0];
-	  console.log('url:'+url);
+	   //url = (feeds[0].get('feedImgArray'))[0];
+	  //console.log('url:'+url);
       res.render('feed', {
         title: 'Feed 列表',
         groupObjIdGotInto:groupObjIdGotInto,
@@ -147,11 +147,17 @@ router.post('/post', function(req, res, next) {
   var groupObjId=req.body.groupObjId;
   var feedContent=req.body.feedContent;
   var serverId = req.body.serverId;
+  //var iid = req.body.iid;
   var feedType = req.body.feedType;
   var username = req.body.username;
   username = username.trim();
   var feedclass = new FeedClass(); 
-  console.log('...postfeed'+username);
+  //console.log('...postfeed....'+iid);
+  serverId=JSON.parse(serverId).serverId;
+  //iid = JSON.parse(iid);
+
+  //console.log('jjd length:'+iid.serverId.length);
+  //console.log('jjd[0]:'+iid.serverId[0]);
   /*var serverId = new Array();
   serverId[0] = 'GYLFX0KpquT3JV7-vC6ltS6qyVjCFmw9VDTeTfx6uWu0J2PZg08CZGyNXDi5LZOk';
   serverId[1] = 'rK1U_mqzU9B28TwbdXrItOC9Mn8yP6zDUSYcFfXprW9nXlMT7HDWFrAGaUeoCDH2';
@@ -165,6 +171,8 @@ router.post('/post', function(req, res, next) {
   //console.log('serverIdLength:'+server.length);
   //console.log('serverId:'+server);
  */ 
+  feedType = feedType.trim();
+  console.log('feedType'+feedType);
   if(feedType === 'text'){
 	  feedclass.postFeed_text(groupObjId,username,feedContent,function(){
 			res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
