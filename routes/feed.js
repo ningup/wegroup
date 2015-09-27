@@ -49,6 +49,8 @@ router.get('/', function(req, res, next) {
     query.include("feedImgArray");
     query.find({
     success: function(feeds) {
+	   url = (feeds[0].get('feedImgArray'))[0];
+	  console.log('url:'+url);
       res.render('feed', {
         title: 'Feed 列表',
         groupObjIdGotInto:groupObjIdGotInto,
@@ -149,15 +151,29 @@ router.post('/post', function(req, res, next) {
   username = username.trim();
   var feedclass = new FeedClass(); 
   console.log('...postfeed'+username);
-  /*if (feedType === 'text')
-  feedclass.postFeed_text(groupObjId,username,feedContent,function(){
-		res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
-   }); */
-  // if (feedType === 'imgtext')
-  //feedclass.postFeed_imgtext(groupObjId,username,feedContent,'1',function(){
-	//	res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
-  // }); 
+  var serverId = new Array();
+  serverId[0] = 'GYLFX0KpquT3JV7-vC6ltS6qyVjCFmw9VDTeTfx6uWu0J2PZg08CZGyNXDi5LZOk';
+  serverId[1] = 'rK1U_mqzU9B28TwbdXrItOC9Mn8yP6zDUSYcFfXprW9nXlMT7HDWFrAGaUeoCDH2';
+  serverId[2] = 'tCDcX2ZuSh3ZbvU5JDNEbe53uCzK05jfwUnFb-KvaCO3nkmduGWvC4DumpX-Zm1E';
+  serverId[3] = 'O2l5EfYfhs__TtNCM9MXE--ja6dhUBTF5lhzE2Ut6qc0vfd_hBGlLzsgLa9kMOIN';
+  serverId[4] = 'lf50DM_FsVO79xphxL1hkzneKdTgper2zMmZgwXozZFEGJdQk8bSebqaExc68GYC';
+  serverId[5] = '3gA0Oz3853S8H7A_nvNM5UoH8FFEHgB7D5L2Yy_E1hZlBpdmLHqRGXMz-7fTscYB';
+  serverId[6] = 'ES7JShKJgAn9kZU2VsRS4lwiapLuL3aqsjD78F5iov8xDXoEkkDOwtf2htKyUkdF';
+  serverId[7] = 'Zho_AlJuLkwXrMbGI3xao58MDgc56cSqIupbITtFsuuPeTTUQwiYGvmWhY71l790';
+  serverId[8] = 'YE94LDeVo4SOKoybRu1fxJ5M3SILOR05Hngmumo0qh1vf16j24r_WcFBp6-LwP-1';
+  //console.log('serverIdLength:'+server.length);
+  //console.log('serverId:'+server);
   
+  if(feedType === 'text'){
+	  feedclass.postFeed_text(groupObjId,username,feedContent,function(){
+			res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
+	   }); 
+  }
+  if (feedType === 'imgtext'){
+		feedclass.postFeed_imgtext(groupObjId,username,feedContent,serverId,function(){
+			res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
+	   }); 
+  }
 })
 
 
