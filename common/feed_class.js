@@ -151,6 +151,9 @@ function FeedClass()
 		
 		
 	};
+	this.postFeed_vote = function(groupObjId,username,cb){
+		
+	};
 
 };
 module.exports = FeedClass;

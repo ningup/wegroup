@@ -6,6 +6,8 @@ var sign=require('../common/sign.js');
 var WechatAPI = require('wechat-api');
 var fs = require('fs');
 var path= require('path');
+var OAuth = require('wechat-oauth');
+var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 //var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
   // 传入一个获取全局token的方法
@@ -43,16 +45,24 @@ var Group = AV.Object.extend('Group');
 
 // 搜索 Groups 结果
 router.get('/', function(req, res, next) {
-    var username = req.query.username;
-    var userclass = new UserClass();
-    userclass.getUserAllGroup(username,function(err,results){
+	 client.getAccessToken(req.query.code, function (err, result) {
+		 if(err){
+			 res.send('请从微信进入');
+		}else{ 
+			var username = result.data.openid;
+		    //var username = req.query.username;
+			var userclass = new UserClass();
+			userclass.getUserAllGroup(username,function(err,results){
 			res.render('group', {
 					//title: 'Groups 列表',
 					username: username,
 					groups: results
 		    });
 		
-	});
+	     });
+	    }
+	 });
+    
 	//console.log((req.AV.user).get('nickname'));
     						
 });

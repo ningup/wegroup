@@ -1,0 +1,67 @@
+{
+"voteContent":{
+	"votePeopleNum":"投票人数，默认为0",
+	"itemNum":"有多少要投票的条目",
+	"voteItemContent":[
+	  {
+			"title":"titleContent",
+			"choiceNum":"该条目的选项个数",
+			"choiceItem":[
+				{
+					"choiceTitle":"选项题目",
+					"choiceValue":"选项值，默认为0"	
+				},
+				{
+					"choiceTitle":"选项题目",
+					"choiceValue":"选项值，默认为0"
+				},
+				{
+					"choiceTitle":"选项题目",
+					"choiceValue":"选项值，默认为0"
+				}
+			],
+			"itemResults":[
+				{
+					"username":"1111111",
+					"choice":"1"
+				},
+				{
+					"username":"2222222",
+					"choice":"2"
+				}
+			]
+	    },
+	    
+	    {
+			"title":"titleContent",
+			"choiceNum":"该条目的选项个数",
+			"choiceItem":[
+				{
+					"choiceTitle":"选项题目",
+					"choiceValue":"选项值，默认为0"	
+				},
+				{
+					"choiceTitle":"选项题目",
+					"choiceValue":"选项值，默认为0"
+				},
+				{
+					"choiceTitle":"选项题目",
+					"choiceValue":"选项值，默认为0"
+				}
+			],
+			"itemResults":[
+				{
+					"username":"1111111",
+					"choice":"3"
+				},
+				{
+					"username":"2222222",
+					"choice":"1"
+				}
+			]
+
+	    }
+	]
+  }
+}
+

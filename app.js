@@ -13,9 +13,9 @@ var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
 var wechat = require('wechat');
 var fs = require('fs');
-var path = require('path');
 var AV = require('leanengine');
-//WechatAPI.mixin(require('/home/ning/liaoqu/wegroup/node_modules/wechat-api/lib/api_media.js'));
+var OAuth = require('wechat-oauth');
+var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
   // 传入一个获取全局token的方法
    var query = new AV.Query('WechatToken');
@@ -48,8 +48,6 @@ var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c'
    
 });
 //var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
-var OAuth = require('wechat-oauth');
-var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
 api.getAccessToken(function(){});
 //var UserClass = require('./common/user_class.js'); 
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
@@ -86,54 +84,52 @@ app.use('/wechat', wechat(config, function (req, res, next) {
      {
 		  api.getLatestToken(function(){});
           api.getUser({openid:message.FromUserName, lang: 'zh_CN'}, function (err, data, userres){
-                        var newUser = new AV.User();
-                        newUser.set("username", data.openid);
-                        newUser.set("password", "A00000000~");
-                        newUser.set("openid", data.openid);
-                        newUser.set("nickname", data.nickname);
-                        newUser.set("sex", data.sex);
-                        newUser.set("headimgurl", data.headimgurl);
-                        newUser.set("subscribe", 1);
-                        newUser.set("country", data.country);
-                        newUser.set("province", data.province);
-                        newUser.set("city", data.city);
-                        newUser.signUp(null, {
-                                success: function(newUser) {
-                                // 注册成功，可以使用了.
-					res.reply({type: "text", content: '感谢您找到了我，注册成功！！！'});
-                                },
-                                error: function(newUser, error) {
-						var query = new AV.Query(AV.User);
-          					query.equalTo("username", message.FromUserName);
-          					query.first({
-                				success: function(queryUser) {
-                        				queryUser.set('subscribe', 1 );
-                        				queryUser.save();
-                        				res.reply({type: "text", content: '您已经注册过了，欢迎再次回来！！！'}); 
-                				},
-                				error: function(error) {
-                                		} });
+				var newUser = new AV.User();
+				newUser.set("username", data.openid);
+				newUser.set("password", "A00000000~");
+				newUser.set("openid", data.openid);
+				newUser.set("nickname", data.nickname);
+				newUser.set("sex", data.sex);
+				newUser.set("headimgurl", data.headimgurl);
+				newUser.set("subscribe", 1);
+				newUser.set("country", data.country);
+				newUser.set("province", data.province);
+				newUser.set("city", data.city);
+				newUser.signUp(null, {
+				   success: function(newUser) {
+						// 注册成功，可以使用了.
+						  res.reply({type: "text", content: '感谢您找到了我，注册成功！！！'});
+				   },
+				   error: function(newUser, error) {
+					var query = new AV.Query(AV.User);
+					query.equalTo("username", message.FromUserName);
+					query.first({
+						success: function(queryUser) {
+								queryUser.set('subscribe', 1 );
+								queryUser.save();
+								res.reply({type: "text", content: '您已经注册过了，欢迎再次回来！！！'}); 
+						},
+						error: function(error) {
+								} });
 					}
-                    			});
+						});
 
-                            
-                        });
-		
+				});		
                  
      }
      else if(message.Event === 'unsubscribe')
      {
         var query = new AV.Query(AV.User);
-	query.equalTo("username", message.FromUserName);
-	query.first({
-  		success: function(queryUser) {
+	    query.equalTo("username", message.FromUserName);
+	    query.first({
+		 success: function(queryUser) {
 			queryUser.set('subscribe', 0 );
-      			queryUser.save();
-  		},
-  		error: function(error) {
-    			//alert("Error: " + error.code + " " + error.message);
-  		}
-	});
+				queryUser.save();
+		 },
+  		 error: function(error) {
+    		//alert("Error: " + error.code + " " + error.message);
+  		 }
+	   });
      } 
      else if (message.Event === 'CLICK' && message.EventKey === 'V1001_Recieve_Msg')
      {
@@ -160,7 +156,7 @@ api.getMenu(function(err,results){
 
 //var userclass  = new UserClass();
 //userclass.followedUserRegister();
-//var status = new AV.Status('视频url', '我喜欢了视频xxxx.');
+
 // 未处理异常捕获 middleware
 app.use(function(req, res, next) {
   var d = domain.create();
@@ -186,10 +182,8 @@ app.get('/', function(req, res) {
 	  //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
 	  AV.User.logIn(openid, "A00000000~", {
 		  success: function(user) {
-			// 成功了，现在可以做其他事情了.
-			//res.render('index', { openid: openid });
-			//if(err)
-			res.redirect('/group?username='+openid);
+			//res.redirect('/group?username='+openid);
+			res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wctest.avosapps.com/group&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
 		  },
 		  error: function(user, error) {
 			// 失败了.
