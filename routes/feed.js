@@ -59,20 +59,21 @@ router.get('/', function(req, res, next) {
 		 var queryFeed = relation.query();
 		 queryFeed.find().then(function(feeds){
 			 var j =0;
-			    //var comments = new Array();
+			    var comments = new Array();
 			    for(var i = 0 ; i< feeds.length; i++){
 					(function(i){
 						var relationC = feeds[i].relation("feedComment");
 						relation.targetClassName = 'comment';
 						var queryComment = relationC.query();
 						queryComment.find().then(function(comments){
-						    feeds[i].comments = new Array();
-							feeds[i].comments = comments;
+						    comments[i] = new Array();
+							comments[i] = comments;
 							j++;
 							if(j === feeds.length){
 							   res.render('feed', {
 								groupObjIdGotInto:groupObjIdGotInto,
 								feeds: feeds,
+								comments:comments,
 								username: username
 							  });
 						
