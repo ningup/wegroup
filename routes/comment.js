@@ -9,10 +9,18 @@ var Feed = AV.Object.extend('Feed');
 var Comment = AV.Object.extend('Comment');
 
 //  feed 结果
-router.get('/', function(req, res, next) {
+router.post('/', function(req, res, next) {
+	var username = req.body.username;
+	var content = req.body.content;
+	var toWhom = req.body.toWhom;
+	var feedObjId = req.body.feedObjId;
 	var commentclass = new CommentClass();
-	commentclass.addComment('55fc293860b21fbf5733ec7d','first comment','orSEhuNxAkianv5eFOpTJ3LXWADE','orSEhuNxAkianv5eFOpTJ3LXWADE');
-	res.send('comment success');
+	username = username.trim();
+	commentclass.addComment(feedObjId,content,username,toWhom,function(nickname,headimgurl){
+		res.json({"nickname":nickname,"headimgurl":headimgurl,"content":content,"username":username,"toWhom":toWhom});
+		return ;
+	});
+	
 	
 });
 
@@ -27,7 +35,7 @@ router.post('/like', function(req, res, next) {
 	username = username.trim();
 	var likeclass = new LikeClass();
 	likeclass.like(feedObjId,username,function(err, feedObj){
-		res.json({"status":1,"msg":"like successful","likeNum":feedObj.get('likeNum')});
+		res.json({"status":1,"msg":"like successful","likeNum":feedObj.get('likeNum'),"feedObjId":feedObj.getObjectId()});
 		return ;
 	});
 	

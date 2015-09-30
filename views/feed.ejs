@@ -63,7 +63,7 @@
         <!--<for start="1" end="5">-->
         <% for(var i=0; i<feeds.length; i++) {%>
         
-      <li class="media" data-looktype="bandLook" data-read="0" data-skin="skin9" style="margin-top:18px">
+      <li class="media" data-looktype="bandLook" data-read="0" data-skin="skin9" style="margin-top:18px" data-feedid="<%= feeds[i].getObjectId()%>">
         <div class="media_content">
           <div class="media-heading">
             <div class="media-left media-middle"><img class="media-object img-circle" data-src="holder.js/46x46" alt="46x46" src="http://coresos.phinf.naver.net/a/2g61f4_4/g89Ud0158aic1exyaq1q_8u3vvy.jpg" data-holder-rendered="true" style="width: 46px; height: 46px;"></div>
@@ -82,34 +82,42 @@
           </div>
         </div>
                 <div class="media_btn">
-                  <span class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border-right: solid 1px #fff;"><i class="glyphicon glyphicon-thumbs-up"></i> 赞</span>
+                  <span class="col-xs-6 col-sm-6 col-md-6 col-lg-6 button_like" style="border-right: solid 1px #fff;" data-feedid="<%= feeds[i].getObjectId()%>"><i class="glyphicon glyphicon-thumbs-up"></i> 赞<span class="like"><%=feeds[i].get('likeNum')%></span></span>
                     <span class="col-xs-6 col-sm-6 col-md-6 col-lg-6 pubcomentbtn" style="border-left: solid 1px #DDD;"><i class="glyphicon glyphicon-comment"></i> 发表评论</span>
                 </div>
-            <div class="media_content pinglunkuang hidden" style="background: #F4F4F4;border-bottom: solid 1.2px #DBDBDB;">
-              <div class="media-heading">
-                <div class="media-left_content media-middle container-fluid"><textarea class="form-control" rows="3" class="container-fluid"></textarea></div>
-                <div class="media-right-conbtn"><button type="button" class="btn btn-success">评论</button></div>
-              </div>
-            </div>
+
         
         <ul class="comment list-unstyled">
-          <for name="k" start="1" end="4">
+          <!--<for name="k" start="1" end="4">-->
+          <% for(var j=0; j<conments.length; j++) {%>
             <li class="media_content" style="background: #F4F4F4;border-bottom: solid 1.2px #DBDBDB;">
-              <div class="media-heading">
+              <div class="media-heading user_comment" data-whoid="conments[j].get('who')" > 
                 <div class="media-left media-middle"><img class="media-object img-circle" data-src="holder.js/46x46" alt="46x46" src="http://coresos.phinf.naver.net/a/2g61f4_4/g89Ud0158aic1exyaq1q_8u3vvy.jpg" data-holder-rendered="true" style="width: 46px; height: 46px;"></div>
                 <div class="media-body media-middle"><h5 class="media-heading" data-textover="1" style="margin-top: 6px;color:#000;"><strong>姓名</strong><small class="pull-right">{$i}分钟前</small></h5><div class="media-bottom media-middle"><p>测试内容，测试内容</p></div></div>
               </div>
             </li>
-          </for>
+          <% } %>
+          <!--</for>-->
         </ul>
             </li>
 
     <% } %>
     <!--</for>-->
         </ul>
+
+            <div class="media_content pinglunkuang hidden" style="background: #F4F4F4;border-bottom: solid 1.2px #DBDBDB;position:fixed;left:0px;bottom:0px;">
+              <div class="media-heading">
+                <div class="media-left_content media-middle container-fluid"><textarea class="form-control" rows="3" class="container-fluid" id="content-comment"></textarea></div>
+                <div class="media-right-conbtn"><button type="button" class="btn btn-success button_commit">评论</button></div>
+              </div>
+            </div>
+
   </div>
   
 <script>
+var who_flag = 0;
+var feed_id_flag = "";
+var toUsername = "";
 $('.glyphicon-edit').click(function(){
   if($('#gonggaoedit').hasClass('hidden')){
     $('#gonggaoedit').removeClass('hidden');
@@ -124,10 +132,27 @@ $('.glyphicon-edit').click(function(){
 $('.pubcomentbtn').click(function(){
   if($('.pinglunkuang').hasClass('hidden')){
     $('.pinglunkuang').removeClass('hidden');
+    feed_id_flag = $(this).closest("li[data-looktype='bandLook']").attr('data-feedid');
+    who_flag = 1;
   }else{
     $('.pinglunkuang').addClass('hidden');
+    feed_id_flag = "";
+    who_flag = 0;
   }
   })
+$(".user_comment").click(function(){
+  if($('.pinglunkuang').hasClass('hidden')){
+    $('.pinglunkuang').removeClass('hidden');
+    feed_id_flag = $(this).closest("li[data-looktype='bandLook']").attr('data-feedid');
+    who_flag = 2;
+    toUsername = $(this).attr('data-whoid');
+  }else{
+    $('.pinglunkuang').addClass('hidden');
+    feed_id_flag = "";
+    who_flag = 0;
+    toUsername = "";
+  }
+})
 $('[data-link=user]').click(function(){
   window.open("/feed/groupMember?groupObjIdGotInto=<%= groupObjIdGotInto%>&username=<%= username %>");
 })
@@ -142,6 +167,89 @@ $('[data-link=file]').click(function(){
 })
 $('[data-link=comment]').click(function(){
   window.open("{:U('Group/message')}","_self");
+})
+$('.button_like').click(function(){
+  window.console.log("进来了");
+  //var feed_id = $(this).attr('data-feedid');
+  var feed_id = $(this).closest("li[data-looktype='bandLook']").attr('data-feedid');
+  var aj = $.ajax({
+    url:'/comment/like',
+    data:{
+      "username":"<%=username%>",
+      "feedObjId":feed_id
+    },
+    type:'post',
+    dataType:'json',
+    success:function(data){
+        window.console.log(data);
+        
+        var likeNum = data.likeNum;
+        var feedObjId = data.feedObjId;
+        var find_id = "span[data-feedid='" + feedObjId + "']";
+        window.console.log(likeNum);
+        window.console.log(find_id);
+        $(find_id).find('span.like').html(likeNum);
+    },
+    error:function(){
+      alert('出错了');
+    }
+  });
+})
+$('.button_commit').click(function(){
+    //var feed_id = $(this).closest("li[data-looktype='bandLook']").attr('data-feedid');
+    var content =  $("#content-comment").val();
+    if (who_flag==1) {
+        var aj_commit = $.ajax({
+        url:'/comment',
+        data:{
+          "username":"<%=username%>",
+          "feedObjId":feed_id_flag,
+          "content":content
+        },
+        type:'post',
+        dataType:'json',
+        success:function(data){
+            window.console.log("评论已经成功");
+            window.console.log(data);
+            
+            var likeNum = data.likeNum;
+            var feedObjId = data.feedObjId;
+            var find_id = "span[data-feedid='" + feedObjId + "']";
+            window.console.log(likeNum);
+            window.console.log(find_id);
+            $(find_id).find('span.like').html(likeNum);
+        },
+        error:function(){
+          alert('出错了');
+        }
+      });
+    }else if (who_flag==2) {
+        var aj_commit = $.ajax({
+        url:'/comment',
+        data:{
+          "username":"<%=username%>",
+          "feedObjId":feed_id_flag,
+          "content":content,
+          "toUsername":toUsername
+        },
+        type:'post',
+        dataType:'json',
+        success:function(data){
+            window.console.log("评论已经成功");
+            window.console.log(data);
+            
+            var likeNum = data.likeNum;
+            var feedObjId = data.feedObjId;
+            var find_id = "span[data-feedid='" + feedObjId + "']";
+            window.console.log(likeNum);
+            window.console.log(find_id);
+            $(find_id).find('span.like').html(likeNum);
+        },
+        error:function(){
+          alert('出错了');
+        }
+      });
+    }
 })
 </script>
 </body>
