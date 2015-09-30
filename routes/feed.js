@@ -66,7 +66,7 @@ router.get('/', function(req, res, next) {
 						relation.targetClassName = 'comment';
 						var queryComment = relationC.query();
 						queryComment.find().then(function(comments){
-							//var feeds[i].comments = new Array();
+						    feeds[i].comments = new Array();
 							feeds[i].comments = comments;
 							j++;
 							if(j === feeds.length){
