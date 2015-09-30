@@ -17,7 +17,7 @@ router.post('/', function(req, res, next) {
 	var commentclass = new CommentClass();
 	username = username.trim();
 	commentclass.addComment(feedObjId,content,username,toWhom,function(nickname,headimgurl){
-		res.json({"nickname":nickname,"headimgurl":headimgurl,"content":content,"username":username,"toWhom":toWhom});
+		res.json({"nickname":nickname,"headimgurl":headimgurl,"content":content,"username":username,"toWhom":toWhom,"feedObjId":feedObjId});
 		return ;
 	});
 	
