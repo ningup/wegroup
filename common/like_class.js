@@ -4,7 +4,7 @@ var Feed = AV.Object.extend('Feed');
 
 function LikeClass()
 {
-	this.like = function(feedObjId,username){
+	this.like = function(feedObjId,username,cb){
 		var queryFeed=new AV.Query(Feed);
 		queryFeed.get(feedObjId,{
 				success: function(feed){
@@ -19,10 +19,13 @@ function LikeClass()
 						queryUser.equalTo("username",username);
 						queryUser.first({
 							success:function(queryUser){
-								
+								console.log('like user'+queryUser.get('nickname'));
 								var relation = feed.relation('likeUsers');
 								relation.add(queryUser);
-								feed.save();
+								feed.save().then(function(feedObj){
+										cb(null,feedObj);
+								});
+								
 				
 							},
 							error:function(error){

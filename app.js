@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var todos = require('./routes/todos');
+var groupPhotos = require('./routes/groupPhotos');
 var user = require('./routes/user');
 var group = require('./routes/group');
 var feed = require('./routes/feed');
@@ -180,15 +181,19 @@ app.get('/', function(req, res) {
 	  //var accessToken = result.data.access_token;
 	  var openid = result.data.openid;
 	  //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
-	  AV.User.logIn(openid, "A00000000~", {
-		  success: function(user) {
-			//res.redirect('/group?username='+openid);
-			res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wctest.avosapps.com/group&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
-		  },
-		  error: function(user, error) {
-			// 失败了.
-		  }
-	  });
+	  if(err){
+		  res.send('请从微信进入');
+	  }else{
+		  AV.User.logIn(openid, "A00000000~", {
+			  success: function(user) {
+				//res.redirect('/group?username='+openid);
+				res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wctest.avosapps.com/group&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
+			  },
+			  error: function(user, error) {
+				// 失败了.
+			  }
+		  });
+	 }
   });
   
 });
@@ -200,6 +205,8 @@ app.use('/group', group);
 app.use('/feed', feed);
 app.use('/comment', comment);
 app.use('/user', user);
+app.use('/groupPhotos', groupPhotos);
+
 
 // 如果任何路由都没匹配到，则认为 404
 // 生成一个异常让后面的 err handler 捕获
