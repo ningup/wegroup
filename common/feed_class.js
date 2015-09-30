@@ -68,6 +68,7 @@ function FeedClass()
 		queryUser.first({
 			success:function(queryUser){
 				feed.set('nicknameOfPUser',queryUser.get('nickname'));
+				feed.set('userHeadImgUrl',queryUser.get('headimgurl'));
 				feed.save().then(function(feed){
 						redirect();
 					});
@@ -132,6 +133,7 @@ function FeedClass()
 								queryUser.first({
 								success:function(queryUser){
 										feed.set('nicknameOfPUser',queryUser.get('nickname'));
+										feed.set('userHeadImgUrl',queryUser.get('headimgurl'));
 										feed.save().then(function(feed){
 												cb();
 											});

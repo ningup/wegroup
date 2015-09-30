@@ -58,11 +58,35 @@ router.get('/', function(req, res, next) {
 		 relation.targetClassName = 'Feed';
 		 var queryFeed = relation.query();
 		 queryFeed.find().then(function(feeds){
-				res.render('feed', {
-				groupObjIdGotInto:groupObjIdGotInto,
-				feeds: feeds,
-				username: username
-			  });
+			 var j =0;
+			    //var comments = new Array();
+			    for(var i = 0 ; i< feeds.length; i++){
+					(function(i){
+						var relationC = feeds[i].relation("feedComment");
+						relation.targetClassName = 'comment';
+						var queryComment = relationC.query();
+						queryComment.find().then(function(comments){
+							//var feeds[i].comments = new Array();
+							feeds[i].comments = comments;
+							j++;
+							if(j === feeds.length){
+							   res.render('feed', {
+								groupObjIdGotInto:groupObjIdGotInto,
+								feeds: feeds,
+								username: username
+							  });
+						
+							}
+							
+					  });
+						
+					})(i);
+					
+						
+				}
+			    
+			     
+				
 		
 		 });
 		

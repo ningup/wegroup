@@ -74,7 +74,61 @@ function GroupAlbumClass()
 		
 	};
 	this.upload = function(groupAlbumObjId,username,serverId,cb){
+		var photosArray = new Array();
+		var query = new AV.Query(GroupAlbum);
+		query.get(groupAlbumObjId, {
+		  success: function(groupalbum) {
+			  photosArray = groupalbum.get('photosArray');
+			  var length = photosArray.length;
+			  var j=0;
+			  for(var i=photosArray.length ; i< (photosArray.length+serverId.length); i++){
+					(function(i){
+							api.getLatestToken(function(){});
+						api.getMedia(serverId[i], function (err, imgData, res) {
+							var feedimgfile = new AV.File('test.jpg', imgData);  //,res.headers['content-type']);
+							feedimgfile.save().then(function(feedimgfile){
+							photosArray[i] = new Object();	
+							photosArray[i].username = username;
+							photosArray[i].url = feedimgfile.url();
+							photosArray[i].urlSmall = feedimgfile.thumbnailURL(640,480);
+							j++;
+							if(j===(photosArray.length+serverId.length))
+							{
+						
+								var queryUser = new AV.Query(AV.User);
+								queryUser.equalTo("username",username);
+								queryUser.first({
+								success:function(queryUser){
+									    for(var m=length ; m< (length+serverId.length); m++ ){
+											(function(m){
+												photosArray[m].nickname = queryUser.get('nickname');
+												groupalbum.set('photosArray',photosArray);
+												groupalbum.save().then(function(groupalbum){
+													cb();
+												});
+											})(m);
+											
+										}
+									},
+									error:function(error){
+										
+									}
+								});
+							}
+						});
+
+					 });
+						
+					
+					})(i);
+		      
+		      }
+
+		  },
+		  error: function(object, error) {
 		
+		  }
+		});
 	};
 	this.removePhotos = function(feedObjId,username){
 		
