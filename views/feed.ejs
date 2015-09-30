@@ -129,7 +129,7 @@ $('.pubcomentbtn').click(function(){
   }
   })
 $('[data-link=user]').click(function(){
-  window.open("{:U('Group/member')}","_self");
+  window.open("/feed/groupMember?groupObjIdGotInto=<%= groupObjIdGotInto%>&username=<%= username %>");
 })
 $('[data-link=picture]').click(function(){
   window.open("{:U('Group/album')}","_self");

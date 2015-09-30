@@ -132,14 +132,14 @@ router.get('/publish', function(req, res, next) {
 router.get('/groupMember', function(req, res, next) {
 	var username = req.query.username;
 	var groupObjIdGotInto = req.query.groupObjIdGotInto;
-	username = username.trim();
+	//username = username.trim();
 	var query = new AV.Query('Group');
 	query.get(groupObjIdGotInto, {
 	  success: function(group) {
 		// 成功获得实例
 		 console.log('you get into the '+ group.get('nickname'));
-		 var relation = group.relation("followers");
-		 relation.targetClassName = AV.User;
+		 var relation = group.relation('followers');
+		 //relation.targetClassName = AV.User;
 		 var queryFollowers = relation.query();
 		 queryFollowers.find().then(function(users){
 				res.render('feed_member', {
