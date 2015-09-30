@@ -5,7 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var todos = require('./routes/todos');
-var groupPhotos = require('./routes/groupPhotos');
+var groupAlbum = require('./routes/groupAlbum');
 var user = require('./routes/user');
 var group = require('./routes/group');
 var feed = require('./routes/feed');
@@ -205,7 +205,7 @@ app.use('/group', group);
 app.use('/feed', feed);
 app.use('/comment', comment);
 app.use('/user', user);
-app.use('/groupPhotos', groupPhotos);
+app.use('/groupAlbum', groupAlbum);
 
 
 // 如果任何路由都没匹配到，则认为 404
