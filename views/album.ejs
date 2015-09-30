@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>群列表</title>
+  </head>
+  <body>
+    <head>username:<%= username %></head>
+    <h1><%= title %></h1>
+    <form action="/group/create?username=<%= username %>" method="POST">
+      群名称：
+      <input type="text" name="nickName" />      
+      <input type="submit" value="创建群" />
+    </form>
+    <form action="/group/follow?username=<%= username %>" method="POST">
+	输入群名称：
+      <input type="text" name="targetGroup" />
+      <input type="submit" value="加群" />
+    </form>
+    <ul>
+      <% for(var i=0; i<groups.length; i++) {%>
+      <li><%= groups[i].get('nickname') %> &nbsp;&nbsp;&nbsp;&nbsp;建群者<%= groups[i].get('nicknameOfCUser') %></li>
+      <% } %>
+    </ul>
+  </body>
+</html>
