@@ -78,8 +78,9 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
 				userclass.groupChat_text(message.FromUserName,user.get('whichGroupNow'),message.Content,function(){
-					res.reply('');      //回复空串
+					//res.reply('');      //回复空串
 				});
+				res.reply('');      //回复空串
 				
 			}	
 			else{
