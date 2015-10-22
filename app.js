@@ -1,39 +1,40 @@
-'use strict';
+//'use strict';
 var domain = require('domain');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var todos = require('./routes/todos');
-var groupAlbum = require('./routes/groupAlbum');
-var user = require('./routes/user');
+//var groupAlbum = require('./routes/groupAlbum');
+//var user = require('./routes/user');
 var group = require('./routes/group');
-var feed = require('./routes/feed');
-var comment = require('./routes/comment');
+//var feed = require('./routes/feed');
+//var comment = require('./routes/comment');
 var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
 var wechat = require('wechat');
 var fs = require('fs');
 var AV = require('leanengine');
 var OAuth = require('wechat-oauth');
-var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
-var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
+var UserClass = require('./common/user_class.js');
+var GroupClass = require('./common/group_class.js');
+var userclass  = new UserClass();
+var groupclass = new GroupClass();
+var Group=AV.Object.extend('Group');
+var config = require('./config/config.js');	
+var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
+var client = new OAuth(config.appid, config.appsecret);
+var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
   // 传入一个获取全局token的方法
    var query = new AV.Query('WechatToken');
    query.get("5606afe9ddb2e44a47769124", {
   success: function(obj) {
-    // 成功获得实例
     callback(null, JSON.parse(obj.get('accessToken')));
   },
   error: function(object, error) {
-    // 失败了.
   }
 });
   
 }, function (token, callback) {
   // 请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等
-  // 这样才能在cluster模式及多机情况下使用，以下为写入到文件的示例
-  //fs.writeFile('access_token.txt', JSON.stringify(token), callback);
 	  var query = new AV.Query('WechatToken');
 	   query.get("5606afe9ddb2e44a47769124", {
 	  success: function(wechatToken) {
@@ -48,16 +49,7 @@ var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c'
 	});
    
 });
-//var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
-api.getAccessToken(function(){});
-//var UserClass = require('./common/user_class.js'); 
-var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var app = express();
-var config = {          //微信服务号相关数据
-  token: 'ontheway',
-  appid: 'wx88cb5d33bbbe9e75',
-  encodingAESKey: 'dUpASyLHyc2X6ie3K5ZWBrbZHiFFJfYjXpfnNKaUud6'
-};
 
 // 设置 view 引擎
 app.set('views', path.join(__dirname, 'views'));
@@ -66,97 +58,166 @@ app.use(express.static('public'));
 
 // 加载云代码方法
 app.use(cloud);
+app.use(AV.Cloud.CookieSession({secret: 'wegroup', maxAge: 3600000,fetchUser: false}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.query());
-app.use(AV.Cloud.CookieSession({ secret: 'my secret', fetchUser: true }));
+
 app.use('/wechat', wechat(config, function (req, res, next) {
-	api.getLatestToken(function(){});
   // 微信输入信息都在req.weixin上
   var message = req.weixin;
-  if(message.MsgType === 'text')
-  {
-     res.reply({type: "text", content: '你发的信息是'+message.Content});
+  var create_timeout;
+  if(message.MsgType === 'text'){
+	  userclass.getUserObj(message.FromUserName,function(err,user){
+			if(user.get('whichStatus')==='wegroup_create'){
+				user.set('tempGroupName',message.Content);
+				user.save().then(function(userObj){
+					res.reply({type: "text", content: '您是否要创建微群'+'「'+message.Content+'」。'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/create&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击创建</a>'});
+				});
+				
+			}
+			else if(user.get('whichStatus')==='wegroup_chat'){
+				userclass.groupChat_text(message.FromUserName,user.get('whichGroupNow'),message.Content,function(){
+					res.reply('');      //回复空串
+				});
+				
+			}	
+			else{
+				res.reply({type: "text", content: '你发的信息是'+message.Content});
+			}		
+	  });
+     //res.reply({type: "text", content: '你发的信息是'+message.Content});
   }
-  else if(message.MsgType === 'event')
-  {
-     if(message.Event === 'subscribe')
-     {
-		  api.getLatestToken(function(){});
-          api.getUser({openid:message.FromUserName, lang: 'zh_CN'}, function (err, data, userres){
-				var newUser = new AV.User();
-				newUser.set("username", data.openid);
-				newUser.set("password", "A00000000~");
-				newUser.set("openid", data.openid);
-				newUser.set("nickname", data.nickname);
-				newUser.set("sex", data.sex);
-				newUser.set("headimgurl", data.headimgurl);
-				newUser.set("subscribe", 1);
-				newUser.set("country", data.country);
-				newUser.set("province", data.province);
-				newUser.set("city", data.city);
-				newUser.signUp(null, {
-				   success: function(newUser) {
-						// 注册成功，可以使用了.
-						  res.reply({type: "text", content: '感谢您找到了我，注册成功！！！'});
-				   },
-				   error: function(newUser, error) {
-					var query = new AV.Query(AV.User);
-					query.equalTo("username", message.FromUserName);
-					query.first({
-						success: function(queryUser) {
-								queryUser.set('subscribe', 1 );
-								queryUser.save();
-								res.reply({type: "text", content: '您已经注册过了，欢迎再次回来！！！'}); 
-						},
-						error: function(error) {
-								} });
-					}
-						});
-
-				});		
-                 
+  else if(message.MsgType === 'event'){
+     if(message.Event === 'subscribe'){
+          userclass.signUp(message.FromUserName,function(err,result){
+				if(err)
+					res.reply({type: "text", content: '您已经注册过了，快来看看你错过了什么！'})
+				else
+					res.reply({type: "text", content: '感谢您找到了我，注册成功，开启便捷群生活！'});
+		  });
+            
      }
-     else if(message.Event === 'unsubscribe')
-     {
+     else if(message.Event === 'unsubscribe'){
         var query = new AV.Query(AV.User);
 	    query.equalTo("username", message.FromUserName);
 	    query.first({
 		 success: function(queryUser) {
 			queryUser.set('subscribe', 0 );
-				queryUser.save();
+			queryUser.save();
 		 },
   		 error: function(error) {
     		//alert("Error: " + error.code + " " + error.message);
   		 }
 	   });
      } 
-     else if (message.Event === 'CLICK' && message.EventKey === 'V1001_Recieve_Msg')
-     {
-         res.reply({type: "text", content:'您点击了接受消息这个按钮'});
+     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SWITCH'){
+		 userclass.getUserObj(message.FromUserName,function(err,user){
+				user.set('whichStatus','wegroup_chat');
+				user.set('tempGroupName','');
+				user.save().then(function(userObj){
+					
+				});
+				
+		 });
+		 userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+			 if(err){
+				 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
+			 }
+			 else{
+				     
+				userclass.getUserAllGroup(message.FromUserName,function(err,results){
+						 var content = '';
+						 content = '当前所在群是:'+'<'+whichGroupNameNow+'>\n'; 
+						 content += '所有群群如下：\n';
+						 var j=0;
+						 for(var i=0; i<results.length; i++){
+							 j++;
+							 content += '<a href=\"'+'dev.wegroup.avosapps.com/group/switchPre?id='+results[i].getObjectId()+'\">'+'「'+results[i].get('nickname')+'」'+'<\/a>';	
+							 if(j===results.length){
+								  res.reply({type: "text", content: content});
+				
+							 }
+								
+						 }
+				}); 	 
+			 }
+		 
+		 });
+       
      }
-     else{}
+     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_CREATE'){
+		 userclass.getUserObj(message.FromUserName,function(err,user){
+				user.set('whichStatus','wegroup_create');
+				user.set('tempGroupName','');
+				user.save().then(function(userObj){
+					res.reply({type: "text", content: '进入创建群功能，群聊功能关闭，请输入你想创建的群名'});
+				});
+				
+		 });
+       
+     }
+     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SETTING'){
+       
+     }
+     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_GROUP_CHAT'){
+		 userclass.getUserObj(message.FromUserName,function(err,user){
+				user.set('whichStatus','wegroup_chat');
+				user.set('tempGroupName','');
+				user.save().then(function(userObj){
+					res.reply({type: "text", content: '群聊功能开启，可以在'+'「'+user.get('whichGroupNameNow')+'」群中与大家聊天了'});
+				});
+				
+		 });
+       
+     }
+     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SHARE_JOIN'){
+		 userclass.getUserObj(message.FromUserName,function(err,user){
+				var whichGroupNow = user.get('whichGroupNow');
+				var whichGroupNameNow = user.get('whichGroupNameNow');
+				res.reply([
+			    {
+				title: '群名：'+whichGroupNameNow+' 点击加入',
+				description: '微群帮',
+				picurl: user.get('headimgurl'),
+				url: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/join?id='+whichGroupNow+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect'
+			    }
+			]);
+				
+		 });
+
+     }
+     else{
+	 
+	 }
    }
    else {} 
 }));
+
 /*
 api.getTicket(function(err,results){
 	 //console.log(JSON.stringify(results));
 	 console.log(results);
 	
 });*/
-//api.createMenu(menu, function (err, result){});
+/*
+api.createMenu(menu, function (err, result){
+	//if(err)
+		console.log(JSON.stringify(result));
+});
+*/
 /*
 api.getMenu(function(err,results){
+	
 	console.log(JSON.stringify(results));
-});  */
+	
+}); 
+*/
 /*api.removeMenu(function(err,results){
         console.log(JSON.stringify(results));
 });*/
 
-//var userclass  = new UserClass();
-//userclass.followedUserRegister();
+
 
 // 未处理异常捕获 middleware
 app.use(function(req, res, next) {
@@ -179,15 +240,43 @@ app.get('/', function(req, res) {
   
   client.getAccessToken(req.query.code, function (err, result) {
 	  //var accessToken = result.data.access_token;
-	  var openid = result.data.openid;
+	  //var openid = result.data.openid;
 	  //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
 	  if(err){
-		  res.send('请从微信进入');
+		  //userclass.followedUserRegister();
+		  /*
+		  var text = '这条消息是公众号主动发给你的，前提是48小时之内，用户主动发消息给公众号（包括发送信息、点击\
+		  自定义菜单、订阅事件、扫描二维码事件、支付成功事件、用户维权）。'
+		  api.sendText('orSEhuBllBij-g3Ayx2jujBuuPNY', text, function(err,results){
+			  console.log(JSON.stringify(results));
+		  });
+		  api.sendText('orSEhuNxAkianv5eFOpTJ3LXWADE', text, function(err,results){
+			  console.log(JSON.stringify(results));
+		  });
+		  res.send('请从微信进入'); */
+		  var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+		  var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
+		  var whichGroupNow='5623455c00b07c4da7091eef'; 
+		  //userclass.groupChat_text(username,whichGroupNow,'text',function(){});
+				/*
+				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
+				var whichGroupNow='5623455c00b07c4da7091eef';  
+				userclass.isGroupJoined(username,whichGroupNow,function(status,obj){
+					  if(status === 1)
+							res.send('已加入');
+					  else if (status === 2)
+							res.send('未加入');
+					  else if (status === 0)
+							res.send('未关注');
+				});*/
+
+
 	  }else{
 		  AV.User.logIn(openid, "A00000000~", {
 			  success: function(user) {
 				//res.redirect('/group?username='+openid);
-				res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wctest.avosapps.com/group&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
+				//res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wctest.avosapps.com/group&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
 			  },
 			  error: function(user, error) {
 				// 失败了.
@@ -202,10 +291,10 @@ app.get('/', function(req, res) {
 // 可以将一类的路由单独保存在一个文件中
 //app.use('/todos', todos);
 app.use('/group', group);
-app.use('/feed', feed);
-app.use('/comment', comment);
-app.use('/user', user);
-app.use('/groupAlbum', groupAlbum);
+//app.use('/feed', feed);
+//app.use('/comment', comment);
+//app.use('/user', user);
+//app.use('/groupAlbum', groupAlbum);
 
 
 // 如果任何路由都没匹配到，则认为 404

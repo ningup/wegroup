@@ -1,8 +1,8 @@
 var AV = require('leanengine');
 var WechatAPI = require('wechat-api');
 var fs = require('fs');
-//var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
-var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
+var config = require('../config/config.js');
+var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
   // 传入一个获取全局token的方法
    var query = new AV.Query('WechatToken');
    query.get("5606afe9ddb2e44a47769124", {
@@ -33,41 +33,50 @@ var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c'
 	});
    
 });
+var Group = AV.Object.extend('Group');
 function userFollowed()
 {
-    var count;
+    
     this.followedUserRegister = function(){
-      api.getFollowers(function (err, data, resf){
-        count = data.count;
-         api.batchGetUsers(data.data.openid, function (err, datalist, res){
+	  var count;
+      api.getFollowers(function (err, dataF, resf){
+        count = dataF.count;
+        console.log('count'+count);	
+        var openids = dataF.data.openid;
 	    for(var i=0 ; i < count ; i++){
-                //console.log(datalist.user_info_list[i].nickname);	     
-             var user = new AV.User();
-	     user.set("username", datalist.user_info_list[i].openid);
-	     user.set("password", "A00000000~");
+			(function(i){
+				     //console.log("datalist"+datalist.user_info_list.length);	     
+					 var newUser = new AV.User();
+					 api.getUser({openid:openids[i], lang: 'zh_CN'}, function (err, data, userres){
+									var newUser = new AV.User();
+									newUser.set("username", data.openid);
+									newUser.set("password", "A00000000~");
+									newUser.set("openid", data.openid);
+									newUser.set("nickname", data.nickname);
+									newUser.set("sex", data.sex);
+									newUser.set("headimgurl", data.headimgurl);
+									newUser.set("subscribe", 1);
+									newUser.set("country", data.country);
+									newUser.set("province", data.province);
+									newUser.set("city", data.city);
+									newUser.signUp(null, {
+									   success: function(newUser) {
+											// 注册成功，可以使用了.
+											 
+									   },
+									   error: function(newUser, error) {
+										
+										}
+									});
 
-	     // other fields can be set just like with AV.Object
-	     user.set("openid", datalist.user_info_list[i].openid);
-             user.set("nickname", datalist.user_info_list[i].nickname);
-	     user.set("sex", datalist.user_info_list[i].sex);
-	     user.set("headimgurl", datalist.user_info_list[i].headimgurl);
-	     user.set("subscribe", datalist.user_info_list[i].subscribe);
-	     user.set("country", datalist.user_info_list[i].country);
-	     user.set("province", datalist.user_info_list[i].province);
-	     user.set("city", datalist.user_info_list[i].city);
-	     user.signUp(null, {
-		success: function(user) {
-    		// 注册成功，可以使用了.
-  		},
-  		error: function(user, error) {
-    		// 失败了
-    			//alert("Error: " + error.code + " " + error.message);
-  		}			
-	     });	     
+					});	
+				
+			})(i);
+	     
 
-           }
+          }
                             
-         });
+     
       });
     }
     this.config_lastAccessTime = function(username){
@@ -178,6 +187,178 @@ function userFollowed()
 				
 			}
 		});
+	};
+	this.signUp = function(username,cb){
+		 api.getUser({openid:username, lang: 'zh_CN'}, function (err, data, userres){
+				var newUser = new AV.User();
+				newUser.set("username", data.openid);
+				newUser.set("password", "A00000000~");
+				newUser.set("openid", data.openid);
+				newUser.set("nickname", data.nickname);
+				newUser.set("sex", data.sex);
+				newUser.set("headimgurl", data.headimgurl);
+				newUser.set("subscribe", 1);
+				newUser.set("country", data.country);
+				newUser.set("province", data.province);
+				newUser.set("city", data.city);
+				newUser.signUp(null, {
+				   success: function(newUser) {
+						// 注册成功，可以使用了.
+						  cb(0,newUser);
+						  
+				   },
+				   error: function(newUser, error) {
+						var query = new AV.Query(AV.User);
+						query.equalTo("username", username);
+						query.first({
+							success: function(queryUser) {
+									queryUser.set('subscribe', 1 );
+									queryUser.save();
+									cb(1,queryUser);
+									
+							},
+							error: function(error) {
+							} 
+						});
+					}
+				});
+
+		});	
+	};
+	this.getCurrentGroup = function(username,cb){
+		var query = new AV.Query(AV.User);
+		query.equalTo("username", username);
+		query.first({
+			success: function(queryUser) {
+				var whichGroupNow = queryUser.get('whichGroupNow');
+				console.log('whichGroupNow:'+whichGroupNow);
+				if(whichGroupNow != '0'){
+					var whichGroupNameNow = queryUser.get('whichGroupNameNow');
+				    cb(0,whichGroupNow,whichGroupNameNow);
+				}else{
+					cb(1,null,null);
+			    }
+					
+			},
+			error: function(error) {
+			} 
+		});
+	};
+	this.getUserObj = function(username,cb){
+		var query = new AV.Query(AV.User);
+		query.equalTo("username", username);
+		query.first({
+			success: function(queryUser) {
+				cb(null,queryUser);
+			},
+			error: function(error) {
+			} 
+		});
+	
+	};
+	this.isGroupJoined = function(username,groupObjId,cb){
+		var queryUser = new AV.Query(AV.User);
+		var status = 1; //1 joined 2 isnot joined 0 unsubscribe
+		//console.log('username'+username);
+		queryUser.equalTo("username",username);
+		queryUser.first({
+			success:function(queryUser){
+				if(queryUser.get('subscribe')===0){
+					status = 0;
+					cb(status,null);
+				}
+				else{
+					console.log('find '+ queryUser.get('nickname'));
+					var relation = queryUser.relation("groupCreated");
+					relation.targetClassName = 'Group';
+					var query = relation.query();
+					query.equalTo('objectId',groupObjId);
+					query.find({
+					  success: function(results) {
+							console.log('find relation group:'+ results.length);
+							if(results.length != 0)
+								cb(status,results);
+							else{
+								var relationJ = queryUser.relation("groupJoined");
+								relationJ.targetClassName = 'Group';
+								var queryJ = relationJ.query();
+								queryJ.equalTo('objectId',groupObjId);
+								queryJ.find({
+								  success: function(resultsJ) {
+										if(resultsJ.length != 0)
+											cb(status,resultsJ);
+										else{
+											status = 2;   //isnot joined
+											cb(status,null);
+										}
+									},
+									error: function(error) {	
+										
+									}
+								 });
+						
+							}
+					  },
+					  error: function(error) {	
+
+					  }
+					});	
+				}
+
+			},
+			error:function(error){
+
+			}
+		});
+	};
+	this.groupChat_text = function(username,groupid,text,cb){
+		var query = new AV.Query(AV.User);
+		query.equalTo("username", username);
+		query.first({
+			success: function(queryUser){
+				console.log('find '+ queryUser.get('nickname'));
+				var queryG = new AV.Query(Group);
+				queryG.get(groupid,{
+					success: function(group) {
+						console.log('find '+ group.get('nickname'));
+						var relation = group.relation("followers");
+						//relation.targetClassName = 'AV.User';
+						var query = relation.query();
+						//query.equalTo('objectId',groupObjId);
+						query.find({
+						  success: function(results) {
+							// 处理返回的结果数据
+							for (var i = 0; i < results.length; i++) {
+							  (function(i){
+								    var object = results[i];
+								    console.log('find obj'+ object.get('nickname'));
+									if(object.get('whichGroupNow')===groupid){
+										api.sendText(object.get('username'), queryUser.get('nickname')+'说：'+text, function(err,results){
+											  cb();
+											  console.log(JSON.stringify(results));
+										});	
+									}
+								  
+							   })(i);
+							
+							}
+						  },
+						  error: function(error) {
+							//alert("Error: " + error.code + " " + error.message);
+						  }
+						});
+						
+					},
+					error: function(object, error) {
+					  
+					}
+				});
+				
+			},
+			error: function(error) {
+			} 
+		});
+	
 	};
 }
 module.exports = userFollowed;

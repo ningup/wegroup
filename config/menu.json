@@ -1,19 +1,44 @@
 {
   "button":[
     {
-      "type":"view",
-      "name":"群生活",
-      "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wctest.avosapps.com&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
+      "name":"创建加入",
+      "sub_button":[
+	   {	
+		   "type":"click",
+		   "name":"切换微群",
+		   "key":"WEGROUP_SWITCH"
+		},
+		{
+		   "type":"click",
+		   "name":"创建微群",
+		   "key":"WEGROUP_CREATE"
+		},
+		{
+		   "type":"click",
+		   "name":"分享与加入",
+		   "key":"WEGROUP_SHARE_JOIN"
+		},
+		{
+		   "type":"click",
+		   "name":"成员与设置",
+		   "key":"WEGROUP_SETTING"
+		},
+		{
+		   "type":"click",
+		   "name":"群聊模式",
+		   "key":"WEGROUP_GROUP_CHAT"
+		}]
+      
     },
     {
      "type":"click",
-     "name":"接受消息",
-     "key":"V1001_Recieve_Msg"
+     "name":"群功能",
+     "key":"WEGROUP_FEATURE"
     },
     {
-      "type":"view",
-      "name":"我的云盘",
-      "url":"http://v.qq.com/"
+     "type":"click",
+     "name":"更多功能",
+     "key":"WEGROUP_MORE"
     }
   ]
 }

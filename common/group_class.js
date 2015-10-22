@@ -23,6 +23,11 @@ function GroupClass()
 			{
 				var groupJoinedNum = queryUser.get('groupJoinedNum');
 				groupJoinedNum ++;
+				//var whichGroupNow = queryUser.get('whichGroupNow');
+				//if(whichGroupNow == '0'){
+					queryUser.set('whichGroupNow',group.getObjectId());
+					queryUser.set('whichGroupNameNow',nickname);
+				//}
 				queryUser.set('groupJoinedNum',groupJoinedNum);
 				var relationUser = queryUser.relation('groupCreated');
 				relationUser.add(group);
@@ -75,6 +80,8 @@ function GroupClass()
 						var groupJoinedNum = queryUser.get('groupJoinedNum');
 						groupJoinedNum ++;
 						queryUser.set('groupJoinedNum',groupJoinedNum);
+						queryUser.set('whichGroupNow',group.getObjectId());
+						queryUser.set('whichGroupNameNow',group.get('nickname'));
 						console.log('加群者是：'+queryUser.get('nickname'));
 						var relationUser = queryUser.relation('groupJoined');
                         relationUser.add(group);
@@ -140,6 +147,22 @@ function GroupClass()
 		   })(i);
 	     }
     };
+    this.groupSwitch = function(username,whichGroupNow,whichGroupNameNow,cb){
+		 var queryUser = new AV.Query(AV.User);
+        queryUser.equalTo("username",username);
+        queryUser.first({
+            success:function(queryUser){
+                   queryUser.set('whichGroupNow',whichGroupNow);
+				   queryUser.set('whichGroupNameNow',whichGroupNameNow);
+				   queryUser.save().then(function(user){
+					    cb(null,user);
+				   });
+            },
+            error:function(error){
+            }
+        });
+		
+	};
 
 };
 module.exports = GroupClass;

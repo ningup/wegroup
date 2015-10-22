@@ -68,107 +68,100 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/create', function(req, res, next) {
-  var nickName=req.body.nickName;
-  var ticket;
   var groupclass = new GroupClass();
-  var query = new AV.Query('WechatTicket');
-   query.get("5606be0760b294604924a0c5", {
-	   success: function(obj) {
-		// 成功获得实例
-		if((new Date().getTime()) < (JSON.parse(obj.get('ticket')).expireTime)){
-				ticket = JSON.parse(obj.get('ticket')).ticket;
-				var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/group/create?username='+req.query.username);
-				console.log('not exoired'+ticket);
-				console.log('.............'+jsapi.nonceStr);
-				res.render('group_create', {
-					//title: 'Groups 列表',
-					username: req.query.username,
-					nonceStr: jsapi.nonceStr,
-					timestamp: jsapi.timestamp,
-					signature: jsapi.signature
-					//groups: results
-				});
-			}
-			else{
-				api.getLatestToken(function(){});
-				api.getTicket(function(err,results){
-					//console.log(JSON.stringify(results));
-					console.log('guoqi?');
-					ticket = results.ticket;
-					obj.set('ticket',JSON.stringify(results));
-					obj.save().then(function(obj){
-								console.log('ticket expire time'+results.expireTime);
-								var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/group/create?username='+req.query.username);
-								//console.log('.............'+jsapi.nonceStr);
-								res.render('group_create', {
-									//title: 'Groups 列表',
-									username: req.query.username,
-									nonceStr: jsapi.nonceStr,
-									timestamp: jsapi.timestamp,
-									signature: jsapi.signature
-									//groups: results
+  var nickname;
+  var userclass = new UserClass();
+  client.getAccessToken(req.query.code, function (err, result) {
+		if(err){
+			 res.send('请从微信进入');
+		}else{ 
+			var username = result.data.openid;
+			  userclass.getUserObj(username,function(err,user){
+			  nickname = user.get('tempGroupName'); 
+			  var ticket;
+			  var groupclass = new GroupClass();
+			  var query = new AV.Query('WechatTicket');
+			   query.get("5606be0760b294604924a0c5", {
+				   success: function(obj) {
+					// 成功获得实例
+					if((new Date().getTime()) < (JSON.parse(obj.get('ticket')).expireTime)){
+							ticket = JSON.parse(obj.get('ticket')).ticket;
+							var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/create?code='+req.query.code+'&state=123');
+							console.log('not exoired'+ticket);
+							console.log('.............'+jsapi.nonceStr);
+							if((user.get('tempGroupName')!='') && (user.get('whichStatus')==='wegroup_create')){
+								groupclass.create('flagImg','serverId','groupColor',nickname,username,function(err,group){
+									user.set('tempGroupName','');
+									user.set('whichStatus','wegroup_chat');
+									user.save().then(function(userObj){
+										var text = '成功创建,已切换到「'+nickname+'」群中。'
+										  api.sendText(username, text, function(err,results){
+											  console.log(JSON.stringify(results));
+										  });
+										res.render('group_create_new', {
+										nonceStr: jsapi.nonceStr,
+										timestamp: jsapi.timestamp,
+										signature: jsapi.signature
+									   });
+									});	
+								});
+							}	
+							else{
+									res.send('没有群可创建或者该群已经被创建');
+							}
+						}
+						else{
+							api.getLatestToken(function(){});
+							api.getTicket(function(err,results){
+								//console.log(JSON.stringify(results));
+								console.log('guoqi?');
+								ticket = results.ticket;
+								obj.set('ticket',JSON.stringify(results));
+								obj.save().then(function(obj){
+										console.log('ticket expire time'+results.expireTime);
+										var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/create?code='+req.query.code+'&state=123');
+										//console.log('.............'+jsapi.nonceStr);
+											if((user.get('tempGroupName')!='') && (user.get('whichStatus')==='wegroup_create')){
+												groupclass.create('flagImg','serverId','groupColor',nickname,username,function(err,group){
+													user.set('tempGroupName','');
+													user.set('whichStatus','wegroup_chat');
+													user.save().then(function(userObj){
+														var text = '成功创建「'+nickname+'」群'
+														  api.sendText(username, text, function(err,results){
+															  console.log(JSON.stringify(results));
+														  });
+														res.render('group_create_new', {
+														nonceStr: jsapi.nonceStr,
+														timestamp: jsapi.timestamp,
+														signature: jsapi.signature
+													   });
+													});	
+												});
+											}	
+											else{
+													res.send('没有群可创建或者该群已经被创建');
+											}
+									
+								
+								});
+
 							});
-						
 					
-					});
+						}
+				  },
+				  error: function(object, error) {
+					// 失败了.
+				  }
+			}); 
+			 });
 
-				});
-		
-			}
-	  },
-	  error: function(object, error) {
-		// 失败了.
-	  }
+
+	    }
+	 });
+  
+
 });
 
-});
-
-// 新增 Group
-router.post('/create', function(req, res, next) {
-  var nickName=req.body.nickName;
-  var groupColor = req.body.groupColor;
-  var username=req.query.username;
-  var flagImg = req.body.flagImg;
-  var serverId = req.body.serverId;
-  console.log("serverid="+serverId+' flagImg='+flagImg); 
-  var groupclass = new GroupClass();
-  console.log('color'+groupColor);
-  groupclass.create(flagImg,serverId,groupColor,nickName,username,function(err,group){
-     if(flagImg === '1'){
-	api.getLatestToken(function(){
-			
-		});
-	api.getMedia(serverId, function (err, data, res) {
-             console.log(data);
-             //fs.writeFile('test.jpg',data,function(err){});
-             var file = new AV.File(serverId, data,res.headers['content-type']);
-             file.save().then(function(file){
-                //console.log('上传成功！'+file.getObjectId());
-                 //res.send('uploadchenggong');
-		group.set('headImgFile',file);
-		group.set('groupHeadImgUrl',file.url());
-	     	group.set('groupHeadImgUrl',file.url());
-		group.set('groupHeadImgUrlHomePage',file.thumbnailURL(640,480));
-		group.set('groupHeadImgUrlSearchPage',file.thumbnailURL(64,64));	
-		group.save().then(function(){
-		});	
-		//res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
-             });
- 	});
-     }else{
-	//group.set('serverId',serverId);
-	group.set('groupHeadImgUrl',serverId);
-	group.set('groupHeadImgUrlHomePage',serverId);
-	group.set('groupHeadImgUrlSearchPage',serverId);
-	group.save().then(function(){
-		//res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
-
-	});
-     }	
-	res.redirect('/group/createSet?username='+req.query.username+'&groupObjId='+group.getObjectId());
- });
-	
-});
 
 router.get('/createSet', function(req, res, next) {
   console.log('get createset');
@@ -266,34 +259,158 @@ router.post('/search',function(req,res,next){
 })
 
 //加入群
-router.post('/joinGroup',function(req,res,next){
-	var username = req.body.username;
-	var groupObjIdJoined = req.body.groupObjIdJoined;
+router.get('/join',function(req,res,next){
+	 client.getAccessToken(req.query.code, function (err, result) {
+		 if(err){
+			 res.send('请从微信进入');
+		}else{ 
+			var username = result.data.openid;
+		    var groupObjIdJoined = req.query.id;
+			var userclass = new UserClass();
+			userclass.isGroupJoined(username,groupObjIdJoined,function(status,obj){
+					  if(status === 1)
+							res.send('已加入');
+					  else if (status === 2){
+							var groupclass = new GroupClass();
+							groupclass.joinGroup(groupObjIdJoined,username,function(err,queryUser){
+								var query = new AV.Query(Group);
+								query.get(groupObjIdJoined,{
+									 success:function(group){
+											var followersNum = group.get('followersNum');
+												followersNum ++;
+												group.set('followersNum',followersNum);
+											var relation = group.relation('followers');
+											relation.add(queryUser);
+											group.save().then(function(group){
+												var text = '成功加入并切换到「'+group.get('nickname')+'」群'
+														  api.sendText(username, text, function(err,results){
+															  console.log(JSON.stringify(results));
+												});
+												res.send('加入成功');
+											},function(err){});;
+
+									 },
+									  error:function(error){
+									 }
+								});
+							}); 
+					  }
+							
+					  else if (status === 0)
+							res.send('未关注');
+			});
+	    }
+	 });
+
+});
+
+//切换微群
+router.get('/switchPre',function(req,res,next){
+	var whichGroupNow=req.query.id;
+	res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/switch?id='+whichGroupNow+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
+});
+router.get('/switch',function(req,res,next){
+ 	var whichGroupNow=req.query.id;
+	var whichGroupNameNow;
 	var groupclass = new GroupClass();
-  username = username.trim();
-	console.log('get into join group');
-  console.log('joined group'+ groupObjIdJoined);
-  console.log('joined group username'+username);
-	groupclass.joinGroup(groupObjIdJoined,username,function(err,queryUser){
-		var query = new AV.Query(Group);
-	    query.get(groupObjIdJoined,{
-			 success:function(group){
-					var followersNum = group.get('followersNum');
-						followersNum ++;
-						group.set('followersNum',followersNum);
-					var relation = group.relation('followers');
-					relation.add(queryUser);
-					group.save().then(function(group){
-						res.redirect('/group/search?username='+username);
-					},function(err){});;
+	var userclass = new UserClass();
+  	client.getAccessToken(req.query.code, function (err, result) {
+		if(err){
+			 res.send('请从微信进入');
+		}else{
+			var username = result.data.openid;
+			userclass.isGroupJoined(username,whichGroupNow,function(status,obj){
+					  if(status === 1){
+						 var ticket;
+						//var username = result.data.openid;
+						  var query = new AV.Query('WechatTicket');
+						   query.get("5606be0760b294604924a0c5", {
+							   success: function(obj) {
+								// 成功获得实例
+								if((new Date().getTime()) < (JSON.parse(obj.get('ticket')).expireTime)){
+										ticket = JSON.parse(obj.get('ticket')).ticket;
+										var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/switch?id='+whichGroupNow+'&code='+req.query.code+'&state=123');
+										
+										var query = new AV.Query(Group);
+										query.get(whichGroupNow,{
+											success: function(group) {
+												console.log(group.get('nickname'));
+												whichGroupNameNow = group.get('nickname');
+												groupclass.groupSwitch(username,whichGroupNow,whichGroupNameNow,function(err,user){
+												var text = '切换到微群「'+whichGroupNameNow+'」。'
+												  api.sendText(username, text, function(err,results){
+													  console.log(JSON.stringify(results));
+												  });
+												//res.send('test');
+												 res.render('group_switch', {
+													nonceStr: jsapi.nonceStr,
+													timestamp: jsapi.timestamp,
+													signature: jsapi.signature
+												   });
+											
+											  });
+											},
+											error: function(object, error) {
+											  
+											}
+										});
+											
+								
+									}
+									else{
+										api.getLatestToken(function(){});
+										api.getTicket(function(err,results){
+											ticket = results.ticket;
+											obj.set('ticket',JSON.stringify(results));
+											obj.save().then(function(obj){
+													console.log('ticket expire time'+results.expireTime);
+													var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/switch?id='+whichGroupNow+'&code='+req.query.code+'&state=123');
+													var query = new AV.Query(Group);
+													query.get(whichGroupNow,{
+														success: function(group) {
+															console.log(group.get('nickname'));
+															whichGroupNameNow = group.get('nickname');
+															groupclass.groupSwitch(username,whichGroupNow,whichGroupNameNow,function(err,user){
+															var text = '切换到微群「'+whichGroupNameNow+'」。'
+															  api.sendText(username, text, function(err,results){
+																  console.log(JSON.stringify(results));
+															  });
+															//res.send('test');
+															 res.render('group_switch', {
+																nonceStr: jsapi.nonceStr,
+																timestamp: jsapi.timestamp,
+																signature: jsapi.signature
+															   });
+														
+														  });
+														},
+														error: function(object, error) {
+														  
+														}
+													});
+											
+											});
 
-			 },
-			  error:function(error){
-			 }
-	    });
-	});      //添加群成员 
-	//groupclass.joinGroup(groupObjId,username);       //在用户groupJoined添加群信息
-})
+										});
+								
+									}
+							  },
+							  error: function(object, error) {
+								// 失败了.
+							  }
+						}); 
+			
+					 }
+					  else if (status === 2)
+							res.send('你没有加入此群');
+					  else if (status === 0)
+							res.send('未关注');
+				});
 
+		}
+		
+	});
+    
+});
 
 module.exports = router;
