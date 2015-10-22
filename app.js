@@ -77,10 +77,53 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
+				res.reply('');      //回复空串
 				userclass.groupChat_text(message.FromUserName,user.get('whichGroupNow'),message.Content,function(){
 					//res.reply('');      //回复空串
 				});
+				
+				
+			}	
+			else{
+				res.reply({type: "text", content: '你发的信息是'+message.Content});
+			}		
+	  });
+     //res.reply({type: "text", content: '你发的信息是'+message.Content});
+  }
+  else if(message.MsgType === 'image' || message.MsgType === 'voice'){
+	  userclass.getUserObj(message.FromUserName,function(err,user){
+			if(user.get('whichStatus')==='wegroup_create'){
+				
+			 res.reply({type: "text", content: '群名字只能是文字哦'});
+	
+			}
+			else if(user.get('whichStatus')==='wegroup_chat'){
 				res.reply('');      //回复空串
+				userclass.groupChat_media(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,function(){
+					//res.reply('');      //回复空串
+				});
+				
+				
+			}	
+			else{
+				res.reply({type: "text", content: '你发的信息是'+message.Content});
+			}		
+	  });
+     //res.reply({type: "text", content: '你发的信息是'+message.Content});
+  }
+  else if(message.MsgType === 'video'){
+	  userclass.getUserObj(message.FromUserName,function(err,user){
+			if(user.get('whichStatus')==='wegroup_create'){
+				
+			 res.reply({type: "text", content: '群名字只能是文字哦'});
+	
+			}
+			else if(user.get('whichStatus')==='wegroup_chat'){
+				res.reply('');      //回复空串
+				userclass.groupChat_media(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,message.thumb_media_id,function(){
+					//res.reply('');      //回复空串
+				});
+				
 				
 			}	
 			else{

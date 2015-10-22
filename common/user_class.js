@@ -360,5 +360,122 @@ function userFollowed()
 		});
 	
 	};
+	this.groupChat_media = function(username,groupid,MediaId,type,cb){
+		var query = new AV.Query(AV.User);
+		query.equalTo("username", username);
+		query.first({
+			success: function(queryUser){
+				console.log('find '+ queryUser.get('nickname'));
+				var queryG = new AV.Query(Group);
+				queryG.get(groupid,{
+					success: function(group) {
+						console.log('find '+ group.get('nickname'));
+						var relation = group.relation("followers");
+						//relation.targetClassName = 'AV.User';
+						var query = relation.query();
+						//query.equalTo('objectId',groupObjId);
+						query.find({
+						  success: function(results) {
+							// 处理返回的结果数据
+							for (var i = 0; i < results.length; i++) {
+							  (function(i){
+								    var object = results[i];
+								    console.log('find obj'+ object.get('nickname'));
+									if(object.get('whichGroupNow')===groupid){
+										if(type === 'image'){
+											api.sendText(object.get('username'), queryUser.get('nickname')+'发了一张图片', function(err,results){
+														api.sendImage(object.get('username'), MediaId, function(err,results){
+														  cb();
+														  console.log(JSON.stringify(results));
+														});	
+											});	
+											
+									    }
+									    else if(type === 'voice'){
+											api.sendText(object.get('username'), queryUser.get('nickname')+'发了一条语音', function(err,results){
+														api.sendVoice(object.get('username'), MediaId, function(err,results){
+														  cb();
+														  console.log(JSON.stringify(results));
+														});	
+											});	
+											
+										}									
+									}
+								  
+							   })(i);
+							
+							}
+						  },
+						  error: function(error) {
+							//alert("Error: " + error.code + " " + error.message);
+						  }
+						});
+						
+					},
+					error: function(object, error) {
+					  
+					}
+				});
+				
+			},
+			error: function(error) {
+			} 
+		});
+	
+	};
+	this.groupChat_media = function(username,groupid,MediaId,type,thumb_media_id,cb){
+		var query = new AV.Query(AV.User);
+		query.equalTo("username", username);
+		query.first({
+			success: function(queryUser){
+				console.log('find '+ queryUser.get('nickname'));
+				var queryG = new AV.Query(Group);
+				queryG.get(groupid,{
+					success: function(group) {
+						console.log('find '+ group.get('nickname'));
+						var relation = group.relation("followers");
+						//relation.targetClassName = 'AV.User';
+						var query = relation.query();
+						//query.equalTo('objectId',groupObjId);
+						query.find({
+						  success: function(results) {
+							// 处理返回的结果数据
+							for (var i = 0; i < results.length; i++) {
+							  (function(i){
+								    var object = results[i];
+								    console.log('find obj'+ object.get('nickname'));
+									if(object.get('whichGroupNow')===groupid){
+										if(type === 'video'){
+											api.sendText(object.get('username'), queryUser.get('nickname')+'发了一个视频', function(err,results){
+														api.sendVideo(object.get('username'), MediaId,thumb_media_id, function(err,results){
+														  cb();
+														  console.log(JSON.stringify(results));
+														});	
+											});	
+											
+									    }								
+									}
+								  
+							   })(i);
+							
+							}
+						  },
+						  error: function(error) {
+							//alert("Error: " + error.code + " " + error.message);
+						  }
+						});
+						
+					},
+					error: function(object, error) {
+					  
+					}
+				});
+				
+			},
+			error: function(error) {
+			} 
+		});
+	
+	};
 }
 module.exports = userFollowed;
