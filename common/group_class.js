@@ -1,6 +1,39 @@
 var AV = require('leanengine');
 var Group=AV.Object.extend('Group');
-
+var WechatAPI = require('wechat-api');
+var fs = require('fs');
+var config = require('../config/config.js');
+var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
+  // 传入一个获取全局token的方法
+   var query = new AV.Query('WechatToken');
+   query.get("5606afe9ddb2e44a47769124", {
+  success: function(obj) {
+    // 成功获得实例
+    callback(null, JSON.parse(obj.get('accessToken')));
+  },
+  error: function(object, error) {
+    // 失败了.
+  }
+});
+  
+}, function (token, callback) {
+  // 请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等
+  // 这样才能在cluster模式及多机情况下使用，以下为写入到文件的示例
+  //fs.writeFile('access_token.txt', JSON.stringify(token), callback);
+	  var query = new AV.Query('WechatToken');
+	   query.get("5606afe9ddb2e44a47769124", {
+	  success: function(wechatToken) {
+		// 成功获得实例
+			   wechatToken.set('accessToken',JSON.stringify(token));
+			   wechatToken.save().then(function(obj){});
+		
+	  },
+	  error: function(object, error) {
+		// 失败了.
+	  }
+	});
+   
+});
 function GroupClass()
 {
 	this.create = function(flagImg,serverId,groupColor,nickname,username,cb){
@@ -147,16 +180,55 @@ function GroupClass()
 		   })(i);
 	     }
     };
-    this.groupSwitch = function(username,whichGroupNow,whichGroupNameNow,cb){
+    this.groupSwitch = function(username,numS){
 		 var queryUser = new AV.Query(AV.User);
         queryUser.equalTo("username",username);
         queryUser.first({
             success:function(queryUser){
-                   queryUser.set('whichGroupNow',whichGroupNow);
-				   queryUser.set('whichGroupNameNow',whichGroupNameNow);
-				   queryUser.save().then(function(user){
-					    cb(null,user);
-				   });
+				   num = parseInt(numS);
+				   console.log(isNaN(numS));
+				   console.log((queryUser.get('tempGroupSwitch')).length);
+				   if(isNaN(num)){
+						var text = '不是数字，请重新输入。'
+									api.sendText(username, text, function(err,results){
+									console.log(JSON.stringify(results));
+						 });
+				   }
+				   else if(isNaN(numS)){
+						var text = '不是数字，请重新输入。'
+									api.sendText(username, text, function(err,results){
+									console.log(JSON.stringify(results));
+						 });
+				   }
+				   else if(num >= (queryUser.get('tempGroupSwitch')).length || num<0){
+						var text = '超出范围，请重新输入。'
+									api.sendText(username, text, function(err,results){
+									console.log(JSON.stringify(results));
+						 });
+					}else if(queryUser.get('whichStatus')!='wegroup_switch'){
+						var text = '不是切换模式'
+									api.sendText(username, text, function(err,results){
+									console.log(JSON.stringify(results));
+						 });
+					}
+					else{
+						   queryUser.set('whichGroupNow',(queryUser.get('tempGroupSwitch'))[num].gid);
+						   queryUser.set('whichGroupNameNow',(queryUser.get('tempGroupSwitch'))[num].nickname);
+						   //queryUser.set('whichStatus','wegroup_chat');
+						   //queryUser.set('tempGroupSwitch',[]);
+						   queryUser.save().then(function(user){
+									var text = '切换到微群「'+(queryUser.get('tempGroupSwitch'))[num].nickname+'」。'
+														  api.sendText(username, text, function(err,results){
+															  console.log(JSON.stringify(results));
+															  
+									 });
+									 queryUser.set('whichStatus','wegroup_chat');
+									 queryUser.set('tempGroupSwitch',[]);
+									 queryUser.save();
+							   // cb(null,user,(queryUser.get('tempGroupSwitch'))[num].nickname);
+						   });
+					}
+
             },
             error:function(error){
             }

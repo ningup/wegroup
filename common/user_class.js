@@ -423,7 +423,7 @@ function userFollowed()
 		});
 	
 	};
-	this.groupChat_media = function(username,groupid,MediaId,type,thumb_media_id,cb){
+	this.groupChat_video = function(username,groupid,MediaId,type,thumb_media_id,cb){
 		var query = new AV.Query(AV.User);
 		query.equalTo("username", username);
 		query.first({

@@ -76,6 +76,12 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				});
 				
 			}
+			else if(user.get('whichStatus')==='wegroup_switch'){
+				res.reply('');      //回复空串
+				groupclass.groupSwitch(message.FromUserName,message.Content);
+				
+				
+			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
 				res.reply('');      //回复空串
 				userclass.groupChat_text(message.FromUserName,user.get('whichGroupNow'),message.Content,function(){
@@ -120,7 +126,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
 				res.reply('');      //回复空串
-				userclass.groupChat_media(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,message.thumb_media_id,function(){
+				userclass.groupChat_video(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,message.thumb_media_id,function(){
 					//res.reply('');      //回复空串
 				});
 				
@@ -157,37 +163,44 @@ app.use('/wechat', wechat(config, function (req, res, next) {
      } 
      else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SWITCH'){
 		 userclass.getUserObj(message.FromUserName,function(err,user){
-				user.set('whichStatus','wegroup_chat');
+				user.set('whichStatus','wegroup_switch');
 				user.set('tempGroupName','');
 				user.save().then(function(userObj){
-					
+							 userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+							 if(err){
+								 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
+							 }
+							 else{
+									 
+								userclass.getUserAllGroup(message.FromUserName,function(err,results){
+										 var tempGroupSwitch = new Array();
+										 var content = '';
+										 content = '当前所在群是:'+'<'+whichGroupNameNow+'>\n'; 
+										 content += '所有群群如下,输入序号切换。\n';
+										 var j=0;
+										 for(var i=0; i<results.length; i++){
+											 j++;
+											 //content += '<a href=\"'+'dev.wegroup.avosapps.com/group/switchPre?id='+results[i].getObjectId()+'\">'+'「'+results[i].get('nickname')+'」'+'<\/a>';	
+											 content +='['+i+']'+results[i].get('nickname')+'\n';
+											 tempGroupSwitch[i]=new Object();
+											 tempGroupSwitch[i].gid = results[i].getObjectId();
+											 tempGroupSwitch[i].nickname = results[i].get('nickname');
+											 if(j===results.length){
+												  user.set('tempGroupSwitch',tempGroupSwitch);
+												  user.save();
+												  res.reply({type: "text", content: content});
+								
+											 }
+												
+										 }
+								}); 	 
+							 }
+						 
+						 });
 				});
 				
 		 });
-		 userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
-			 if(err){
-				 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
-			 }
-			 else{
-				     
-				userclass.getUserAllGroup(message.FromUserName,function(err,results){
-						 var content = '';
-						 content = '当前所在群是:'+'<'+whichGroupNameNow+'>\n'; 
-						 content += '所有群群如下：\n';
-						 var j=0;
-						 for(var i=0; i<results.length; i++){
-							 j++;
-							 content += '<a href=\"'+'dev.wegroup.avosapps.com/group/switchPre?id='+results[i].getObjectId()+'\">'+'「'+results[i].get('nickname')+'」'+'<\/a>';	
-							 if(j===results.length){
-								  res.reply({type: "text", content: content});
-				
-							 }
-								
-						 }
-				}); 	 
-			 }
-		 
-		 });
+
        
      }
      else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_CREATE'){
@@ -208,6 +221,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 		 userclass.getUserObj(message.FromUserName,function(err,user){
 				user.set('whichStatus','wegroup_chat');
 				user.set('tempGroupName','');
+				user.set('tempGroupSwitch',[]);
 				user.save().then(function(userObj){
 					res.reply({type: "text", content: '群聊功能开启，可以在'+'「'+user.get('whichGroupNameNow')+'」群中与大家聊天了'});
 				});
@@ -314,6 +328,7 @@ app.get('/', function(req, res) {
 					  else if (status === 0)
 							res.send('未关注');
 				});*/
+				//groupclass.groupSwitch(username,'.1');
 
 
 	  }else{
