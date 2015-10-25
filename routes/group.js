@@ -96,7 +96,11 @@ router.get('/create', function(req, res, next) {
 									user.save().then(function(userObj){
 										var text = '成功创建,已切换到「'+nickname+'」群中。'
 										  api.sendText(username, text, function(err,results){
-											  console.log(JSON.stringify(results));
+											  //console.log(JSON.stringify(results));
+											  if(err){
+													api.sendText(username, text, function(err,results){
+													});
+											  }
 										  });
 										res.render('group_create_new', {
 										nonceStr: jsapi.nonceStr,
@@ -128,7 +132,10 @@ router.get('/create', function(req, res, next) {
 													user.save().then(function(userObj){
 														var text = '成功创建「'+nickname+'」群'
 														  api.sendText(username, text, function(err,results){
-															  console.log(JSON.stringify(results));
+															  if(err){
+																	api.sendText(username, text, function(err,results){
+																	});
+															  }
 														  });
 														res.render('group_create_new', {
 														nonceStr: jsapi.nonceStr,
@@ -284,7 +291,10 @@ router.get('/join',function(req,res,next){
 											group.save().then(function(group){
 												var text = '成功加入并切换到「'+group.get('nickname')+'」群'
 														  api.sendText(username, text, function(err,results){
-															  console.log(JSON.stringify(results));
+															  if(err){
+																	api.sendText(username, text, function(err,results){
+																	});
+															  }
 												});
 												res.send('加入成功');
 											},function(err){});;
@@ -304,113 +314,5 @@ router.get('/join',function(req,res,next){
 
 });
 
-//切换微群
-router.get('/switchPre',function(req,res,next){
-	var whichGroupNow=req.query.id;
-	res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/switch?id='+whichGroupNow+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
-});
-router.get('/switch',function(req,res,next){
- 	var whichGroupNow=req.query.id;
-	var whichGroupNameNow;
-	var groupclass = new GroupClass();
-	var userclass = new UserClass();
-  	client.getAccessToken(req.query.code, function (err, result) {
-		if(err){
-			 res.send('请从微信进入');
-		}else{
-			var username = result.data.openid;
-			userclass.isGroupJoined(username,whichGroupNow,function(status,obj){
-					  if(status === 1){
-						 var ticket;
-						//var username = result.data.openid;
-						  var query = new AV.Query('WechatTicket');
-						   query.get("5606be0760b294604924a0c5", {
-							   success: function(obj) {
-								// 成功获得实例
-								if((new Date().getTime()) < (JSON.parse(obj.get('ticket')).expireTime)){
-										ticket = JSON.parse(obj.get('ticket')).ticket;
-										var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/switch?id='+whichGroupNow+'&code='+req.query.code+'&state=123');
-										
-										var query = new AV.Query(Group);
-										query.get(whichGroupNow,{
-											success: function(group) {
-												console.log(group.get('nickname'));
-												whichGroupNameNow = group.get('nickname');
-												groupclass.groupSwitch(username,whichGroupNow,whichGroupNameNow,function(err,user){
-												var text = '切换到微群「'+whichGroupNameNow+'」。'
-												  api.sendText(username, text, function(err,results){
-													  console.log(JSON.stringify(results));
-												  });
-												//res.send('test');
-												 res.render('group_switch', {
-													nonceStr: jsapi.nonceStr,
-													timestamp: jsapi.timestamp,
-													signature: jsapi.signature
-												   });
-											
-											  });
-											},
-											error: function(object, error) {
-											  
-											}
-										});
-											
-								
-									}
-									else{
-										api.getLatestToken(function(){});
-										api.getTicket(function(err,results){
-											ticket = results.ticket;
-											obj.set('ticket',JSON.stringify(results));
-											obj.save().then(function(obj){
-													console.log('ticket expire time'+results.expireTime);
-													var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/switch?id='+whichGroupNow+'&code='+req.query.code+'&state=123');
-													var query = new AV.Query(Group);
-													query.get(whichGroupNow,{
-														success: function(group) {
-															console.log(group.get('nickname'));
-															whichGroupNameNow = group.get('nickname');
-															groupclass.groupSwitch(username,whichGroupNow,whichGroupNameNow,function(err,user){
-															var text = '切换到微群「'+whichGroupNameNow+'」。'
-															  api.sendText(username, text, function(err,results){
-																  console.log(JSON.stringify(results));
-															  });
-															//res.send('test');
-															 res.render('group_switch', {
-																nonceStr: jsapi.nonceStr,
-																timestamp: jsapi.timestamp,
-																signature: jsapi.signature
-															   });
-														
-														  });
-														},
-														error: function(object, error) {
-														  
-														}
-													});
-											
-											});
-
-										});
-								
-									}
-							  },
-							  error: function(object, error) {
-								// 失败了.
-							  }
-						}); 
-			
-					 }
-					  else if (status === 2)
-							res.send('你没有加入此群');
-					  else if (status === 0)
-							res.send('未关注');
-				});
-
-		}
-		
-	});
-    
-});
 
 module.exports = router;

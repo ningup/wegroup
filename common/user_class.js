@@ -258,7 +258,7 @@ function userFollowed()
 	};
 	this.isGroupJoined = function(username,groupObjId,cb){
 		var queryUser = new AV.Query(AV.User);
-		var status = 1; //1 joined 2 isnot joined 0 unsubscribe
+		var status = 1; //1 joined  2 isnot joined 0 unsubscribe 
 		//console.log('username'+username);
 		queryUser.equalTo("username",username);
 		queryUser.first({
@@ -335,7 +335,10 @@ function userFollowed()
 									if(object.get('whichGroupNow')===groupid){
 										api.sendText(object.get('username'), queryUser.get('nickname')+'说：'+text, function(err,results){
 											  cb();
-											  console.log(JSON.stringify(results));
+											  if(err){
+												api.sendText(object.get('username'), queryUser.get('nickname')+'说：'+text, function(err,results){
+												});	
+											 }
 										});	
 									}
 								  
@@ -384,18 +387,36 @@ function userFollowed()
 									if(object.get('whichGroupNow')===groupid){
 										if(type === 'image'){
 											api.sendText(object.get('username'), queryUser.get('nickname')+'发了一张图片', function(err,results){
+												        if(err){
+															api.sendText(object.get('username'), queryUser.get('nickname')+'发了一张图片', function(err,results){
+																
+															});	
+														}
 														api.sendImage(object.get('username'), MediaId, function(err,results){
-														  cb();
-														  console.log(JSON.stringify(results));
+															  cb();
+															  if(err){
+																api.sendImage(object.get('username'), MediaId, function(err,results){
+															
+																});	
+															  }
 														});	
 											});	
 											
 									    }
 									    else if(type === 'voice'){
 											api.sendText(object.get('username'), queryUser.get('nickname')+'发了一条语音', function(err,results){
+														 if(err){
+															api.sendText(object.get('username'), queryUser.get('nickname')+'发了一条语音', function(err,results){
+																
+															});	
+														}
 														api.sendVoice(object.get('username'), MediaId, function(err,results){
-														  cb();
-														  console.log(JSON.stringify(results));
+																cb();
+															  if(err){
+																api.sendVoice(object.get('username'), MediaId, function(err,results){
+															
+																});	
+															  }
 														});	
 											});	
 											

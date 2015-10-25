@@ -111,6 +111,10 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				
 				
 			}	
+			else if(user.get('whichStatus')==='wegroup_switch'){
+				res.reply('是数字，请重新输入：');     
+		
+			}
 			else{
 				res.reply({type: "text", content: '你发的信息是'+message.Content});
 			}		
@@ -125,12 +129,16 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 	
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
-				res.reply('');      //回复空串
-				userclass.groupChat_video(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,message.thumb_media_id,function(){
+				res.reply('目前还不支持视频！');      //回复空串
+				//userclass.groupChat_video(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,message.thumb_media_id,function(){
 					//res.reply('');      //回复空串
-				});
+				//});
 				
 				
+			}	
+			else if(user.get('whichStatus')==='wegroup_switch'){
+				res.reply('是数字，请重新输入：');      
+		
 			}	
 			else{
 				res.reply({type: "text", content: '你发的信息是'+message.Content});
@@ -319,7 +327,7 @@ app.get('/', function(req, res) {
 				/*
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
-				var whichGroupNow='5623455c00b07c4da7091eef';  
+				var whichGroupNow='5624652bddb24819b84456d6';  
 				userclass.isGroupJoined(username,whichGroupNow,function(status,obj){
 					  if(status === 1)
 							res.send('已加入');
@@ -328,7 +336,11 @@ app.get('/', function(req, res) {
 					  else if (status === 0)
 							res.send('未关注');
 				});*/
-				//groupclass.groupSwitch(username,'.1');
+				var whichGroupNow='561e73c060b227b7f4b39fc8'; 
+				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+				groupclass.quitGroup(whichGroupNow,username,function(){
+					res.send('退出成功');
+				});
 
 
 	  }else{

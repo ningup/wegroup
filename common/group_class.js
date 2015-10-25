@@ -191,24 +191,36 @@ function GroupClass()
 				   if(isNaN(num)){
 						var text = '不是数字，请重新输入。'
 									api.sendText(username, text, function(err,results){
-									console.log(JSON.stringify(results));
+									if(err){
+										api.sendText(username, text, function(err,results){
+										});
+									 }
 						 });
 				   }
 				   else if(isNaN(numS)){
 						var text = '不是数字，请重新输入。'
 									api.sendText(username, text, function(err,results){
-									console.log(JSON.stringify(results));
+									if(err){
+										api.sendText(username, text, function(err,results){
+										});
+									 }
 						 });
 				   }
 				   else if(num >= (queryUser.get('tempGroupSwitch')).length || num<0){
 						var text = '超出范围，请重新输入。'
 									api.sendText(username, text, function(err,results){
-									console.log(JSON.stringify(results));
+									if(err){
+										api.sendText(username, text, function(err,results){
+										});
+									 }
 						 });
 					}else if(queryUser.get('whichStatus')!='wegroup_switch'){
 						var text = '不是切换模式'
 									api.sendText(username, text, function(err,results){
-									console.log(JSON.stringify(results));
+									if(err){
+										api.sendText(username, text, function(err,results){
+										});
+									 }
 						 });
 					}
 					else{
@@ -235,6 +247,88 @@ function GroupClass()
         });
 		
 	};
+	this.quitGroup = function(groupObjId,username,cb){
+		var queryUser = new AV.Query(AV.User);
+        queryUser.equalTo("username",username);
+        queryUser.first({
+            success:function(queryUser){
+                     var query = new AV.Query(Group);
+                     //query.equalTo("nickname",groupName);
+                     query.get(groupObjId,{
+                         success:function(group){
+							    if(group.get('createdBy')===username){
+									var relationC = queryUser.relation('groupCreated');
+									var num = queryUser.get('groupJoinedNum');
+									relationC.remove(group);
+									if(num>=1)
+									num = num-1
+									queryUser.set('groupJoinedNum',num);
+									queryUser.save().then(function(user){
+											var relationG = group.relation('followers');
+											var numf = group.get('followersNum');
+											relationG.remove(user);
+											if(numf>=1)
+											numf = numf - 1;
+											group.set('followersNum',numf);
+											if(numf === 0){
+												group.set('createdBy','');
+												group.set('nicknameOfCUser','');
+												group.save().then(function(g){
+														cb();
+												});
+											}
+											else{
+												group.save().then(function(group2){
+														var relationf = group2.relation('followers');
+														var queryFollowers = relationf.query();
+														queryFollowers.find().then(function(users){
+																group2.set('createdBy',users[0].get('username'));
+																group2.set('nicknameOfCUser',users[0].get('nickname'));
+																group.save().then(function(g){
+																		cb();
+																});
+														});
+													
+												});
+												
+											}
+											
+											
+									});
+								}
+								else{
+									var relationJ = queryUser.relation('groupJoined');
+									var num = queryUser.get('groupJoinedNum');
+									relationJ.remove(group);
+									if(num>=1)
+									num = num-1
+									queryUser.set('groupJoinedNum',num);
+									queryUser.save().then(function(user){
+											var relationG = group.relation('followers');
+											var numf = group.get('followersNum');
+											relationG.remove(user);
+											if(numf>=1)
+											numf = numf - 1;
+											group.set('followersNum',numf);
+											group.save().then(function(g){
+													cb();
+											});
+											
+									});
+									
+								}
+                                
+
+                         },
+                          error:function(error){
+                         }
+                     });
+
+            },
+            error:function(error){
+            }
+        });
+    };
 
 };
 module.exports = GroupClass;
