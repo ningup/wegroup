@@ -314,5 +314,72 @@ router.get('/join',function(req,res,next){
 
 });
 
+router.get('/notice', function(req, res, next) {
+  client.getAccessToken(req.query.code, function (err, result) {
+		 if(err){
+			 res.send('请从微信进入');
+		}else{ 
+			var username = result.data.openid;
+			res.render('notice', {
+					username: username
+		    });
+	    }
+	 });
+});
+router.post('/notice', function(req, res, next) {
+	var groupNotice=req.body.groupNotice;
+	var username = req.body.username;
+	var userclass = new UserClass();
+	userclass.setGroupNotice(username,groupNotice,function(queryUser,groupSaved){
+		var text = '群公告已经更新，可点击群公告查看'
+				  api.sendText(username, text, function(err,results){
+					  if(err){
+					api.sendText(username, text, function(err,results){
+					});
+			  }
+		});
+		res.redirect('/group/notice_fini');
+	});
+
+					
+			
+});
+router.get('/notice_fini', function(req, res, next) {
+	var ticket;
+	var query = new AV.Query('WechatTicket');
+	query.get("5606be0760b294604924a0c5", {
+	   success: function(obj) {
+		// 成功获得实例
+			if((new Date().getTime()) < (JSON.parse(obj.get('ticket')).expireTime)){
+				ticket = JSON.parse(obj.get('ticket')).ticket;
+				var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/notice_fini');
+						res.render('notice_fini', {
+						nonceStr: jsapi.nonceStr,
+						timestamp: jsapi.timestamp,
+						signature: jsapi.signature
+					   });		
+			}
+			else{
+				api.getLatestToken(function(){});
+				api.getTicket(function(err,results){
+					ticket = results.ticket;
+					obj.set('ticket',JSON.stringify(results));
+					obj.save().then(function(obj){
+						var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/notice_fini');
+						res.render('notice_fini', {
+						nonceStr: jsapi.nonceStr,
+						timestamp: jsapi.timestamp,
+						signature: jsapi.signature
+					   });
+					});
+
+				});
+			}
+	  },
+	  error: function(object, error) {
+		// 失败了.
+	  }
+	}); 
+});
 
 module.exports = router;

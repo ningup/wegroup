@@ -274,6 +274,43 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 			 }
 			 else{
 				 res.reply('');
+				 userclass.getGroupNotice(message.FromUserName,function(isOwner,queryUser,group,groupNotice){
+					if(isOwner===1){  //是群主
+						var text='' ;
+						
+						if(groupNotice ==='void'){
+							console.log('notice',groupNotice);
+							text = '你还没有设置群公告';
+						}
+						else{
+						  text = groupNotice;
+						}
+						text += '\n';
+						text+='<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/notice&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击编辑群公告</a>';
+						api.sendText(message.FromUserName, text, function(err,results){
+							if(err){
+								api.sendText(message.FromUserName, text, function(err,results){
+								});
+							}							  
+						 });
+					}
+					else{				//不是群主
+						var text='';
+						if(groupNotice==='void'){
+							text += '群主还没有设置群公告';
+						}
+						else{
+						  text = groupNotice;
+						}
+						
+						api.sendText(message.FromUserName, text, function(err,results){
+							if(err){
+								api.sendText(message.FromUserName, text, function(err,results){
+								});
+							}							  
+						 });
+					}
+				});
 			 }
 		});
      }
@@ -359,7 +396,7 @@ app.get('/', function(req, res) {
 				});*/
 				var whichGroupNow='5624636e00b07c4da719f74a'; 
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
+				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';/*
 				userclass.getGroupNotice(username,function(isOwner,queryUser,group,groupNotice){
 					if(isOwner===1){  //是群主
 						var text='' ;
@@ -396,7 +433,7 @@ app.get('/', function(req, res) {
 							}							  
 						 });
 					}
-				});
+				}); */
 				/*
 					userclass.isGroupJoined(username,whichGroupNow,function(status,obj){
 						if(status === 1){

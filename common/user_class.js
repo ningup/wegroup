@@ -526,5 +526,31 @@ function userFollowed()
 			} 
 		});
 	};
+	this.setGroupNotice = function(username,notice,cb){
+		var query = new AV.Query(AV.User);
+		query.equalTo("username", username);
+		query.first({
+			success: function(queryUser) {
+				var whichGroupNow = queryUser.get('whichGroupNow');
+				var query = new AV.Query(Group);
+				query.get(whichGroupNow, {
+				success: function(group) {
+					// 成功获得实例
+					group.set('groupNotice',notice);
+					group.save().then(function(g){
+						cb(queryUser,g);
+					});
+					
+
+				},
+				error: function(object, error) {
+				}
+			  });
+					
+			},
+			error: function(error) {
+			} 
+		});
+	};
 }
 module.exports = userFollowed;
