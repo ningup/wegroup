@@ -171,7 +171,7 @@ function userFollowed()
 						  console.log('find relation group:'+ objectJ.get('nickname')+ '创建者是:' +objectJ.get('nicknameOfCUser'));
 							j++;					
 						}
-						cb(null, queryUser,results);
+						cb(null, results);
 
 	
 						}});
@@ -497,6 +497,34 @@ function userFollowed()
 			} 
 		});
 	
+	};
+	this.getGroupNotice = function(username,cb){
+		var query = new AV.Query(AV.User);
+		var isOwner = 0; //0不是群主，1是群主
+		query.equalTo("username", username);
+		query.first({
+			success: function(queryUser) {
+				var whichGroupNow = queryUser.get('whichGroupNow');
+				var query = new AV.Query(Group);
+				query.get(whichGroupNow, {
+				success: function(group) {
+					// 成功获得实例
+					if(group.get('createdBy')===username){
+						isOwner = 1;
+						cb(isOwner,queryUser,group,group.get('groupNotice'));
+					}
+					else{
+						cb(isOwner,queryUser,group,group.get('groupNotice'));
+					}
+				},
+				error: function(object, error) {
+				}
+			  });
+					
+			},
+			error: function(error) {
+			} 
+		});
 	};
 }
 module.exports = userFollowed;

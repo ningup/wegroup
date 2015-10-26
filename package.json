@@ -21,6 +21,7 @@
     "wechat-api": "1.11.0",
     "wechat": "2.0.1",
     "wechat-oauth": "1.1.0",
-    "jssha": "^1.5.0"
+    "jssha": "^1.5.0",
+    "weui": "0.2.0"
   }
 }

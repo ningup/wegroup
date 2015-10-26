@@ -31,9 +31,28 @@
       
     },
     {
-     "type":"click",
      "name":"群功能",
-     "key":"WEGROUP_FEATURE"
+      "sub_button":[
+	   {	
+		   "type":"click",
+		   "name":"群公告",
+		   "key":"WEGROUP_NOTICE"
+		},
+		{
+		   "type":"view",
+		   "name":"群话题",
+		   "url":"http://www.soso.com/"
+		},
+		{
+		   "type":"view",
+		   "name":"群投票",
+		   "url":"http://www.soso.com/"
+		},
+		{
+		   "type":"view",
+		   "name":"群投票",
+		   "url":"http://www.soso.com/"
+		}]
     },
     {
      "type":"click",

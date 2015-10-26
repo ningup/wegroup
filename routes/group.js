@@ -292,9 +292,9 @@ router.get('/join',function(req,res,next){
 												var text = '成功加入并切换到「'+group.get('nickname')+'」群'
 														  api.sendText(username, text, function(err,results){
 															  if(err){
-																	api.sendText(username, text, function(err,results){
-																	});
-															  }
+															api.sendText(username, text, function(err,results){
+															});
+													  }
 												});
 												res.send('加入成功');
 											},function(err){});;
