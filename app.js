@@ -320,9 +320,6 @@ app.get('/', function(req, res) {
 			  console.log(JSON.stringify(results));
 		  });
 		  res.send('请从微信进入'); */
-		  var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-		  var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
-		  var whichGroupNow='5623455c00b07c4da7091eef'; 
 		  //userclass.groupChat_text(username,whichGroupNow,'text',function(){});
 				/*
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
@@ -336,9 +333,10 @@ app.get('/', function(req, res) {
 					  else if (status === 0)
 							res.send('未关注');
 				});*/
-				var whichGroupNow='561e73c060b227b7f4b39fc8'; 
+				var whichGroupNow='5623455c00b07c4da7091eef'; 
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-				groupclass.quitGroup(whichGroupNow,username,function(){
+				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
+				groupclass.quitGroup(whichGroupNow,username1,function(){
 					res.send('退出成功');
 				});
 

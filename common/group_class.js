@@ -229,9 +229,13 @@ function GroupClass()
 						   //queryUser.set('whichStatus','wegroup_chat');
 						   //queryUser.set('tempGroupSwitch',[]);
 						   queryUser.save().then(function(user){
-									var text = '切换到微群「'+(queryUser.get('tempGroupSwitch'))[num].nickname+'」。'
-														  api.sendText(username, text, function(err,results){
-															  console.log(JSON.stringify(results));
+									var text = '切换到微群「'+(queryUser.get('tempGroupSwitch'))[num].nickname+'」。';
+									api.sendText(username, text, function(err,results){
+										if(err){
+											api.sendText(username, text, function(err,results){
+											});
+										}	
+															  
 															  
 									 });
 									 queryUser.set('whichStatus','wegroup_chat');
@@ -256,11 +260,12 @@ function GroupClass()
                      //query.equalTo("nickname",groupName);
                      query.get(groupObjId,{
                          success:function(group){
-							    if(group.get('createdBy')===username){
+								var groupNickname=group.get('nickname');
+							    if(group.get('createdBy')===username){      //退群者是群主
 									var relationC = queryUser.relation('groupCreated');
-									var num = queryUser.get('groupJoinedNum');
+									var num = queryUser.get('groupJoinedNum'); //退群者参加群数目
 									relationC.remove(group);
-									if(num>=1)
+									if(num>=1)	
 									num = num-1
 									queryUser.set('groupJoinedNum',num);
 									queryUser.save().then(function(user){
@@ -270,22 +275,44 @@ function GroupClass()
 											if(numf>=1)
 											numf = numf - 1;
 											group.set('followersNum',numf);
-											if(numf === 0){
+											if(numf === 0){			//若是最后一个成员
 												group.set('createdBy','');
 												group.set('nicknameOfCUser','');
 												group.save().then(function(g){
+														var text = '成功退出「'+groupNickname+'」群,该群没有成员了';
+														api.sendText(username, text, function(err,results){
+															if(err){
+																api.sendText(username, text, function(err,results){
+																});
+															}							  
+														 });
 														cb();
 												});
 											}
-											else{
+											else{						//不是最后一个人成员
 												group.save().then(function(group2){
 														var relationf = group2.relation('followers');
 														var queryFollowers = relationf.query();
 														queryFollowers.find().then(function(users){
+																var newOwner = users[0];
 																group2.set('createdBy',users[0].get('username'));
 																group2.set('nicknameOfCUser',users[0].get('nickname'));
 																group.save().then(function(g){
-																		cb();
+																		var relationJJ = newOwner.relation('groupJoined');
+																		var relationCC = newOwner.relation('groupCreated');
+																		relationJJ.remove(g);
+																		relationCC.add(g);
+																		newOwner.save().then(function(userMove){
+																			var text = '成功退出「'+groupNickname+'」群,群主变为'+userMove.get('nickname');
+																			api.sendText(username, text, function(err,results){
+																				var text1 = '你成为「'+groupNickname+'」群的群主 ';
+																				api.sendText(userMove.get('username'), text1, function(err,results){
+																				});
+																											  
+																			 });
+																			cb();
+																		});
+																		
 																});
 														});
 													
@@ -296,7 +323,7 @@ function GroupClass()
 											
 									});
 								}
-								else{
+								else{				//退群者非群主
 									var relationJ = queryUser.relation('groupJoined');
 									var num = queryUser.get('groupJoinedNum');
 									relationJ.remove(group);
@@ -311,6 +338,13 @@ function GroupClass()
 											numf = numf - 1;
 											group.set('followersNum',numf);
 											group.save().then(function(g){
+													var text = '成功退出「'+groupNickname+'」群';
+													api.sendText(username, text, function(err,results){
+														if(err){
+															api.sendText(username, text, function(err,results){
+															});
+														}							  
+													 });
 													cb();
 											});
 											
