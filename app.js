@@ -112,7 +112,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				
 			}	
 			else if(user.get('whichStatus')==='wegroup_switch'){
-				res.reply('是数字，请重新输入：');     
+				res.reply('不是数字，请重新输入：');     
 		
 			}
 			else{
@@ -137,7 +137,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				
 			}	
 			else if(user.get('whichStatus')==='wegroup_switch'){
-				res.reply('是数字，请重新输入：');      
+				res.reply('不是数字，请重新输入：');      
 		
 			}	
 			else{
@@ -333,12 +333,49 @@ app.get('/', function(req, res) {
 					  else if (status === 0)
 							res.send('未关注');
 				});*/
-				var whichGroupNow='5623455c00b07c4da7091eef'; 
+				var whichGroupNow='5624636e00b07c4da719f74a'; 
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
-				groupclass.quitGroup(whichGroupNow,username1,function(){
-					res.send('退出成功');
-				});
+					userclass.isGroupJoined(username,whichGroupNow,function(status,obj){
+						if(status === 1){
+							groupclass.quitGroup(whichGroupNow,username,function(){
+								
+								userclass.getUserAllGroup(username,function(err,queryUser,results){
+									if(results[0].length === 0){
+											queryUser.set('whichGroupNow','');
+											queryUser.set('whichGroupNameNow','');
+											queryUser.save().then(function(){});
+									}
+									else{
+										var newUser = results[0]
+										queryUser.set('whichGroupNow',newUser.getObjectId());
+										queryUser.set('whichGroupNameNow',newUser.get('nickname'));
+										queryUser.save().then(function(){
+											var text = '切换到「'+newUser.get('nickname')+'」群';
+											api.sendText(username, text, function(err,results){
+												if(err){
+													api.sendText(username, text, function(err,results){
+													});
+												}							  
+											 });
+										});
+										
+									}
+									
+									res.send('退出成功');
+									
+								});
+								
+							});
+						}
+						else if(status ===2){
+							res.send('你已不在这个群里');
+						}
+						else if(status===0){
+							res.send('你还没有关注');
+						}
+					});
+				
 
 
 	  }else{
