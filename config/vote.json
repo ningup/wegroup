@@ -2,22 +2,17 @@
 "voteContent":{
 	"voteTitle":"投票标题",
 	"voteDecription":"投票描述",
-	"voteItemContent":
-	  {
-			"title":"titleContent",
-			"choiceNum":"该条目的选项个数",
-			"choiceItem":[
+	"choiceItem": [
 				{
-					"choiceTitle":"选项题目",	
+					"choiceTitle":"选项题目1"
+				},	
+				{	
+					"choiceTitle":"选项题目2"
 				},
 				{
-					"choiceTitle":"选项题目",
-				},
-				{
-					"choiceTitle":"选项题目",
+					"choiceTitle":"选项题目3"
 				}
-			]
-	  }	
+	]	
   }
 }
 

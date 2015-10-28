@@ -1,0 +1,20 @@
+{
+"voteResultsWithoutUser":{
+	"votePeopleNum":0,
+	"voteItemContent":
+	  {
+				"choiceItem":[
+				{
+					"choiceValue":0	
+				},
+				{
+					"choiceValue":0
+				},
+				{
+					"choiceValue":0
+				}
+			]		
+	  }
+  }
+}
+

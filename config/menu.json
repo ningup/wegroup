@@ -46,11 +46,11 @@
 		{
 		   "type":"view",
 		   "name":"群投票",
-		   "url":"http://www.soso.com/"
+		   "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/getVote&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
 		},
 		{
 		   "type":"view",
-		   "name":"群投票",
+		   "name":"群文件",
 		   "url":"http://www.soso.com/"
 		}]
     },

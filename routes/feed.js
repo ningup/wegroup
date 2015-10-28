@@ -5,6 +5,9 @@ var GroupClass = require('../common/group_class.js'); //引入group_class.js
 var FeedClass = require('../common/feed_class.js');   //引入Feed_class.js
 var LikeClass = require('../common/like_class.js');
 var UserClass = require('../common/user_class.js'); 
+//var voteResults = require('../config/voteResults.json');
+var vote = require('../config/vote.json');
+//var voteResultsWithoutUser = require('../config/voteResultsWithoutUser.json');
 var fs = require('fs');
 var path= require('path');
 var OAuth = require('wechat-oauth');
@@ -51,6 +54,7 @@ router.get('/', function(req, res, next) {
 	var groupObjIdGotInto = req.query.groupObjIdGotInto;
 	username = username.trim();
 	var query = new AV.Query('Group');
+	query.descending('createdAt');
 	query.get(groupObjIdGotInto, {
 	  success: function(group) {
 		// 成功获得实例
@@ -195,6 +199,9 @@ router.get('/getVote', function(req, res, next) {
 	client.getAccessToken(req.query.code, function (err, result) {
 		 if(err){
 			 res.send('请从微信进入');
+			 //res.render('vote', {
+							//username: username
+			 //});
 		}else{ 
 			 var username = result.data.openid;
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -202,35 +209,55 @@ router.get('/getVote', function(req, res, next) {
 					 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
 				 }
 				 else{
-					 	res.render('vote', {
-							username: username
+						var groupObjId = whichGroupNow;
+						var query = new AV.Query('Group');
+						query.descending('createdAt');
+						query.get(groupObjId, {
+						  success: function(group) {
+							// 成功获得实例
+							 //console.log('you get into the '+ group.get('nickname'));
+							 var relation = group.relation("feedPosted");
+							 relation.targetClassName = 'Feed';
+							 var queryFeed = relation.query();
+							 queryFeed.find().then(function(feeds){
+								 res.render('vote', {
+									username: username,
+									feeds:feeds
+								 });
+
+							 });
+							
+						  },
+						  error: function(object, error) {
+							// 失败了.
+						  }
 						});
-						 
 				 }
 			});
 		
 	    }
 	 });
-	
 });
 //进行投票
 router.post('/vote', function(req, res, next) {
 	var username = req.body.username;
-	var userclass = new UserClass();
+	var feedObjId = req.body.feedObjId;
+	var choiceId = req.body.choiceId;
+	var feedclass = new FeedClass(); 
+	feedclass.set_vote(username,feedObjId,choiceId,function(err,feed,voteResultsWithoutUser){
+		res.json(voteResultsWithoutUser);
+		return ;
+	});
 	
 });
-//渲染发起投票页面
-router.get('/postVote', function(req, res, next) {
-	var username = req.body.username;
-	var userclass = new UserClass();
-});
+
 // 新增 feed
 router.post('/post', function(req, res, next) {
   var userclass = new UserClass();
   var feedType = req.body.feedType;
-  feedType = feedType.trim();
   var username = req.body.username;
   //username = username.trim();
+  //username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
   var feedclass = new FeedClass(); 
   console.log('feedType'+feedType);
   userclass.getUserObj(username,function(err,queryUser){
@@ -252,9 +279,52 @@ router.post('/post', function(req, res, next) {
 	  }
 	  else if (feedType === 'vote'){
 			var voteContent = req.body.voteContent;
-			feedclass.postFeed_vote(groupObjId,username,voteContent,function(){
-				
-			});
+			//voteContent = vote;
+			voteContent=JSON.parse(voteContent);
+			var choiceNum = voteContent.voteContent.choiceItem.length;
+			var voteResults = new Object();
+			var voteResultsWithoutUser = new Object();
+			voteResults = 
+			      {
+					"voteResults":
+					{
+						"votePeopleNum":0,
+						"voteItemContent":
+						  {
+								"choiceItem":[
+								],
+								"itemResults":[
+								]
+						  }
+					  }
+				  };
+			voteResultsWithoutUser = 
+			{
+				"voteResultsWithoutUser":
+				 {
+					"votePeopleNum":0,
+					"voteItemContent":
+					  {
+								"choiceItem":[
+								]		
+					  }
+				  }
+			};
+			var j =0;
+			for(var i=0 ; i<choiceNum ; i++){
+					voteResults.voteResults.voteItemContent.choiceItem[i] = new Object();
+					voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[i] = new Object();
+					voteResults.voteResults.voteItemContent.choiceItem[i].choiceValue=0;
+					voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[i].choiceValue = 0;
+					j++;
+					if(j===choiceNum){
+						console.log(voteResults);
+						feedclass.postFeed_vote(groupObjId,username,voteContent,voteResults,voteResultsWithoutUser,function(){
+							res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/getVote&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+						});
+					}
+			}
+			
 	  }
 	  else{}
   });

@@ -327,19 +327,19 @@ api.getTicket(function(err,results){
 	 console.log(results);
 	
 });*/
-/*
-api.createMenu(menu, function (err, result){
-	//if(err)
-		console.log(JSON.stringify(result));
-});
 
-/*
-api.getMenu(function(err,results){
+//api.createMenu(menu, function (err, result){
+	////if(err)
+		//console.log(JSON.stringify(result));
+//});
+
+
+//api.getMenu(function(err,results){
 	
-	console.log(JSON.stringify(results));
+	//console.log(JSON.stringify(results));
 	
-}); 
-*/
+//}); 
+
 /*api.removeMenu(function(err,results){
         console.log(JSON.stringify(results));
 });*/

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta name="Keywords" content="微群助手－主页" />
+    <meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>微群帮手测试</title>
+
+    <!-- Bootstrap -->
+    <!--<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">-->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/weui.css">
+    <script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
+    <!--<script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>-->
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+    body {background-color: #FBFBFB;}
+    .vote-feed {background-color: #FFFFFF;margin-top: 10px;}
+    .vote-user {position: relative;width: 100%;height: 50px;}
+    .vote-user img{position: absolute;top: 10px;left: 10px;width: 30px;height: 30px;border-radius: 15px;}
+    .vote-user .username {position: absolute;top: 10px;left: 45px;font-size: 10px;color: #0080FF;}
+    .vote-user .time {position: absolute;top: 25px;left: 45px;font-size: 5px;color: #7A7A7A;}
+    .vote-content .content {width: 100%;padding-left: 10px;padding-right: 10px;padding-top: 10px;padding-bottom: 10px; position: relative;font-size: 14px;line-height: 18px;}
+    .vote-content .xuanxiang div {color: #0080FF;text-align: center;position: relative;height: 40px;font-size: 10px;line-height: 40px;}
+    .vote-content .content:before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 1px;
+        border-top: 1px solid #ECECEC;
+        transform-origin: 0 100%;
+        transform:scaleY(0.5);
+    }
+    .vote-content .xuanxiang div:before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 1px;
+        border-top: 1px solid #ECECEC;
+        transform-origin: 0 100%;
+        transform:scaleY(0.5);
+    }
+    .vote-feed .vote-info .sum {font-size: 7px;color: #7A7A7A;margin-top: 5px;width: 100%;margin-left: 10px;margin-right: 10px;}
+    .vote-new {position: fixed;left: 0px;bottom: 0px; width: 100%;height: 40px; background-color: #dedede;font-size:20px;
+        text-align: center;line-height:40px;color: #7A7A7A;border-width: 0 0 0 0;}
+    .ok .vote-content .xuanxiang div {position: relative;color: #7A7A7A;}
+    .ok .vote-content .xuanxiang div .n{position: absolute;top:0;left: 0; height: 40px;font-size: 10px;line-height: 40px;width: 100%;text-align: center;}
+    .ok .vote-content .xuanxiang div .b{position: absolute;top:0; right: 10px; height: 40px;font-size: 10px;line-height: 40px;}
+    .ok .vote-content .xuanxiang .user-click {color: #000000;font-weight: 900;}
+    .ok .vote-content .xuanxiang div .percent {position: relative;height: 100%;background-color: #dedede;}
+    .ok .vote-content .xuanxiang .user-click .percent{position: relative;height: 100%;background-color: #00ccff;}
+    .modal .modal-dialog .modal-content .header{position: relative;width: 100%;height: 30px;}
+    .modal .modal-dialog .modal-content .header .vote-close {position: absolute;top: 0px;left: 0px;height: 100%;line-height: 30px;padding-left: 10px;}
+    .modal .modal-dialog .modal-content .header .vote-ok {position: absolute;top: 0px;right: 0px;height: 100%;line-height: 30px;padding-right: 10px;}
+    .modal .modal-dialog .modal-content .body textarea {width: 100%; height: 150px;border-width: 0;margin-top: 10px;margin-bottom: 10px;}
+    .modal .modal-dialog .modal-content .body input {width: 100%; height: 40px;border-width: 0;background-color: #dedede;color: #7A7A7A;text-align: center;line-height: 40px;margin-bottom: 1px;}
+    .modal .modal-dialog .modal-content .footer button {width: 100%;height: 40px;font-size:20px;text-align: center;line-height:40px;color: #0080FF;border-width: 0;background-color: #FFFFFF;}
+    </style>
+
+  </head>
+  <body>
+    <div class="vote-feed">
+        <div class="vote-user">
+            <img src="/images/test_touxiang.jpg">
+            <div class="username">球球虎牙</div>
+            <div class="time">15分钟前</div>
+        </div>
+        <div class="vote-content">
+            <div class="content">第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？</div>
+            <div class="xuanxiang">
+                <div class="">
+                    <span>能过</span>
+                </div>
+                <div class="">
+                    <span>不能过</span>
+                </div>
+                <div class="">
+                    <span>宁儿肯定不能过</span>
+                </div>
+            </div>
+        </div>
+        <div class="vote-info">
+            <div class="sum">24人参与</div>
+        </div>
+    </div>
+    <div class="vote-feed ok">
+        <div class="vote-user">
+            <img src="/images/test_touxiang.jpg">
+            <div class="username">球球虎牙</div>
+            <div class="time">15分钟前</div>
+        </div>
+        <div class="vote-content">
+            <div class="content">第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？</div>
+            <div class="xuanxiang">
+                <div class="">
+                    <div class="percent" style="width:20%;"></div>
+                    <span class="n">能过</span>
+                    <span class="b">20%</span>
+                </div>
+                <div class="user-click">
+                    <div class="percent" style="width:50%;"></div>
+                    <span class="n">不能过</span>
+                    <span class="b">50%</span>
+                </div>
+                <div class="">
+                    <div class="percent" style="width:60%;"></div>
+                    <span class="n">宁儿肯定不能过</span>
+                    <span class="b">60%</span>
+                </div>
+            </div>
+        </div>
+        <div class="vote-info">
+            <div class="sum">24人参与</div>
+        </div>
+    </div>
+    <button class="vote-new" type="button" data-toggle="modal" data-target="#myModal">发起投票</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="header">
+            <span class="vote-close" data-dismiss="modal" aria-label="Close">关闭</span>
+            <span class="vote-ok" id="myModalLabel">完成</span>
+          </div>
+          <div class="body">
+            <textarea placeholder="请填写你的问题..." autofocus></textarea>
+            <input type="text" class="" placeholder="选项1" id="1" />
+            <input type="text" class="" placeholder="选项2" id="2" />
+          </div>
+          <div class="footer">
+            <button type="button" class="">增加一个选项</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function(){
+            $(".modal .modal-dialog .modal-content .footer button").click(function(){
+                var max = 2;
+                var i = 0;
+                $(".modal .modal-dialog .modal-content .body input").each(function(){
+                    var temp = $(this).attr("id");
+                    if (temp>max) {max = temp;};
+                    i++;
+                });
+                if (i<10) {
+                    max++;
+                    var str = "<input type=\"text\" class=\"\" placeholder=\"选项"+ max +"\" "+" id=\"" + max + "\" "+" />";
+                    $(".modal .modal-dialog .modal-content .body").append(str);
+                }else {alert("最多只有10个选项");}
+            });
+            $("#myModal").on('hidden.bs.modal',function(){
+                var tempstr = "<textarea placeholder=\"请填写你的问题...\" autofocus></textarea><input type=\"text\" class=\"\" placeholder=\"选项1\" id=\"1\" /><input type=\"text\" class=\"\" placeholder=\"选项2\" id=\"2\" />";
+                $(".modal .modal-dialog .modal-content .body").html(tempstr);
+
+            });
+            $(".modal .modal-dialog .modal-content .header .vote-ok").click(function(){
+                $('#myModal').modal('hide');
+            });
+        });
+    </script>
+  </body>
+</html>

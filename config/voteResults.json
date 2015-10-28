@@ -1,31 +1,27 @@
 {
-"voteContent":{
-	"votePeopleNum":"投票人数，默认为0",
-	"voteItemContent":[
+"voteResults":{
+	"votePeopleNum":0,
+	"voteItemContent":
 	  {
-			"choiceNum":"该条目的选项个数",
-			"choiceItem":
+			"choiceItem":[
 				{
-					"choiceTitle":"选项题目",
-					"choiceValue":"选项值，默认为0"	
+					"choiceValue":0	
 				},
 				{
-					"choiceTitle":"选项题目",
-					"choiceValue":"选项值，默认为0"
+					"choiceValue":0
 				},
 				{
-					"choiceTitle":"选项题目",
-					"choiceValue":"选项值，默认为0"
+					"choiceValue":0
 				}
 			],
 			"itemResults":[
 				{
 					"username":"1111111",
-					"choice":"1"
+					"choice":0
 				},
 				{
 					"username":"2222222",
-					"choice":"2"
+					"choice":1
 				}
 			]
 	  }

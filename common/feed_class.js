@@ -153,11 +153,13 @@ function FeedClass()
 		
 		
 	};
-	this.postFeed_vote = function(groupObjId,username,voteContent,cb){
+	this.postFeed_vote = function(groupObjId,username,voteContent,voteResults,voteResultsWithoutUser,cb){
 		var feed=new Feed();
 		feed.set('postedBy',username);
 		feed.set('feedType','vote');
 		feed.set('voteContent',voteContent);
+		feed.set('voteResults',voteResults);
+		feed.set('voteResultsWithoutUser',voteResultsWithoutUser);
 		feed.set('inWhichGroup',groupObjId);
 		feed.save().then(function(feed) {
 			//对象保存成功
@@ -193,6 +195,34 @@ function FeedClass()
 				
 			}
 		});
+	};
+	this.set_vote = function(username,feedObjId,choiceId,cb){
+		var query = new AV.Query(Feed);
+		console.log(feedObjId);
+		query.get(feedObjId, {
+  		success: function(feed) {
+    		// 成功获得实例
+    		var voteResults = feed.get('voteResults');
+    		var voteResultsWithoutUser = feed.get('voteResultsWithoutUser');
+    		voteResults.voteResults.voteItemContent.choiceItem[choiceId].choiceValue +=1;
+    		voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[choiceId].choiceValue +=1;
+    		voteResults.voteResults.votePeopleNum += 1;
+    		voteResultsWithoutUser.voteResultsWithoutUser.votePeopleNum +=1;
+    		var num = voteResults.voteResults.voteItemContent.itemResults.length;
+    		voteResults.voteResults.voteItemContent.itemResults[num] = new Object();
+    		voteResults.voteResults.voteItemContent.itemResults[num].username = username;
+    		voteResults.voteResults.voteItemContent.itemResults[num].choice = choiceId;
+    		feed.set('voteResults',voteResults);
+    		feed.set('voteResultsWithoutUser',voteResultsWithoutUser);
+    		feed.save().then(function(feed){
+					cb(null,feed,voteResultsWithoutUser);
+			});
+    		
+  		},
+  		error: function(object, error) {
+    		// 失败了.
+  		}
+      });
 	};
 
 };
