@@ -153,8 +153,46 @@ function FeedClass()
 		
 		
 	};
-	this.postFeed_vote = function(groupObjId,username,cb){
-		
+	this.postFeed_vote = function(groupObjId,username,voteContent,cb){
+		var feed=new Feed();
+		feed.set('postedBy',username);
+		feed.set('feedType','vote');
+		feed.set('voteContent',voteContent);
+		feed.set('inWhichGroup',groupObjId);
+		feed.save().then(function(feed) {
+			//对象保存成功
+		var queryG = new AV.Query(Group);
+		queryG.get(groupObjId, {
+		 success: function(group) {
+			// 成功获得实例
+			console.log("found the "+group.get('nickname'));
+			var relation = group.relation('feedPosted');
+            relation.add(feed);
+            group.save();
+		 },
+		 error: function(feed, error) {
+			// 失败了.
+		 }
+		});
+			
+		}, function(error) {
+			//对象保存失败，处理 error
+		});
+		var queryUser = new AV.Query(AV.User);
+		queryUser.equalTo("username",username);
+		queryUser.first({
+			success:function(queryUser){
+				feed.set('nicknameOfPUser',queryUser.get('nickname'));
+				feed.set('userHeadImgUrl',queryUser.get('headimgurl'));
+				feed.save().then(function(feed){
+						cb();
+					});
+				
+			},
+			error:function(error){
+				
+			}
+		});
 	};
 
 };

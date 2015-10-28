@@ -313,7 +313,69 @@ router.get('/join',function(req,res,next){
 	 });
 
 });
-
+router.get('/set', function(req, res, next) {
+	 client.getAccessToken(req.query.code, function (err, result) {
+		 if(err){
+			 //res.send('请从微信进入');
+			 res.render('group_set_new', {
+				//title: 'Groups 列表',
+				});
+		}
+		else{ 
+			res.render('group_set_new', {
+				//title: 'Groups 列表',
+				});
+	    }
+	 });
+    
+	//console.log((req.AV.user).get('nickname'));
+    						
+});
+router.get('/quit_group', function(req, res, next) {
+	 client.getAccessToken(req.query.code, function (err, result) {
+		 if(err){
+			 res.send('请从微信进入');
+			
+		}
+		else{ 
+			var userclass = new UserClass();
+			var groupclass = new GroupClass();
+			var username = result.data.openid;
+			groupclass.quitGroup(username,function(){
+								
+				userclass.getUserAllGroup(username,function(err,queryUser,results){
+					if(results[0].length === 0){
+							queryUser.set('whichGroupNow','');
+							queryUser.set('whichGroupNameNow','');
+							queryUser.save().then(function(){});
+					}
+					else{
+						var newUser = results[0]
+						queryUser.set('whichGroupNow',newUser.getObjectId());
+						queryUser.set('whichGroupNameNow',newUser.get('nickname'));
+						queryUser.save().then(function(){
+							var text = '切换到「'+newUser.get('nickname')+'」群';
+							api.sendText(username, text, function(err,results){
+								if(err){
+									api.sendText(username, text, function(err,results){
+									});
+								}							  
+							 });
+						});
+						
+					}
+					
+					res.redirect('/group/notice_fini');
+					
+				});
+				
+			});
+	    }
+	 });
+    
+	//console.log((req.AV.user).get('nickname'));
+    						
+});
 router.get('/notice', function(req, res, next) {
   client.getAccessToken(req.query.code, function (err, result) {
 		 if(err){

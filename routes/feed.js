@@ -4,6 +4,7 @@ var WechatAPI = require('wechat-api');
 var GroupClass = require('../common/group_class.js'); //引入group_class.js
 var FeedClass = require('../common/feed_class.js');   //引入Feed_class.js
 var LikeClass = require('../common/like_class.js');
+var UserClass = require('../common/user_class.js'); 
 var fs = require('fs');
 var path= require('path');
 var OAuth = require('wechat-oauth');
@@ -188,34 +189,76 @@ router.get('/groupMember', function(req, res, next) {
 	
 
 });
-
+//显示投票
+router.get('/getVote', function(req, res, next) {
+	var userclass = new UserClass();
+	client.getAccessToken(req.query.code, function (err, result) {
+		 if(err){
+			 res.send('请从微信进入');
+		}else{ 
+			 var username = result.data.openid;
+			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				 if(err){
+					 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
+				 }
+				 else{
+					 	res.render('vote', {
+							username: username
+						});
+						 
+				 }
+			});
+		
+	    }
+	 });
+	
+});
+//进行投票
+router.post('/vote', function(req, res, next) {
+	var username = req.body.username;
+	var userclass = new UserClass();
+	
+});
+//渲染发起投票页面
+router.get('/postVote', function(req, res, next) {
+	var username = req.body.username;
+	var userclass = new UserClass();
+});
 // 新增 feed
 router.post('/post', function(req, res, next) {
-  var groupObjId=req.body.groupObjId;
-  var feedContent=req.body.feedContent;
+  var userclass = new UserClass();
   var feedType = req.body.feedType;
   feedType = feedType.trim();
   var username = req.body.username;
-  username = username.trim();
+  //username = username.trim();
   var feedclass = new FeedClass(); 
-  if(feedType != 'text'){
-  	var serverId = req.body.serverId;
-  	serverId=JSON.parse(serverId).serverId;
-  }
   console.log('feedType'+feedType);
-  if(feedType === 'text'){
-  	  console.log('into the text post');
-	  feedclass.postFeed_text(groupObjId,username,feedContent,function(){
-			res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
-	   }); 
-  }else if (feedType === 'imgtext'){
-		feedclass.postFeed_imgtext(groupObjId,username,feedContent,serverId,function(){
-			res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
-	   }); 
-  }else if (feedType === 'vote'){
+  userclass.getUserObj(username,function(err,queryUser){
+	  var groupObjId = queryUser.get('whichGroupNow');
+	  if(feedType === 'text'){
+		  console.log('into the text post');
+		  var feedContent=req.body.feedContent;
+		  feedclass.postFeed_text(groupObjId,username,feedContent,function(){
+				res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
+		   }); 
+	  }
+	  else if (feedType === 'imgtext'){
+			var feedContent=req.body.feedContent;
+			var serverId = req.body.serverId;
+			serverId=JSON.parse(serverId).serverId;
+			feedclass.postFeed_imgtext(groupObjId,username,feedContent,serverId,function(){
+				res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
+		   }); 
+	  }
+	  else if (feedType === 'vote'){
+			var voteContent = req.body.voteContent;
+			feedclass.postFeed_vote(groupObjId,username,voteContent,function(){
+				
+			});
+	  }
+	  else{}
+  });
   
-  
-  }
   
 });
 

@@ -251,14 +251,14 @@ function GroupClass()
         });
 		
 	};
-	this.quitGroup = function(groupObjId,username,cb){
+	this.quitGroup = function(username,cb){
 		var queryUser = new AV.Query(AV.User);
         queryUser.equalTo("username",username);
         queryUser.first({
             success:function(queryUser){
                      var query = new AV.Query(Group);
                      //query.equalTo("nickname",groupName);
-                     query.get(groupObjId,{
+                     query.get(queryUser.get('whichGroupNow'),{
                          success:function(group){
 								var groupNickname=group.get('nickname');
 							    if(group.get('createdBy')===username){      //退群者是群主

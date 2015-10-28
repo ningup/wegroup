@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 //var groupAlbum = require('./routes/groupAlbum');
 //var user = require('./routes/user');
 var group = require('./routes/group');
-//var feed = require('./routes/feed');
+var feed = require('./routes/feed');
 //var comment = require('./routes/comment');
 var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
@@ -180,7 +180,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 							 }
 							 else{
 									 
-								userclass.getUserAllGroup(message.FromUserName,function(err,results){
+								userclass.getUserAllGroup(message.FromUserName,function(err,queryUser,results){
 										 var tempGroupSwitch = new Array();
 										 var content = '';
 										 content = '当前所在群是:'+'<'+whichGroupNameNow+'>\n'; 
@@ -332,7 +332,7 @@ api.createMenu(menu, function (err, result){
 	//if(err)
 		console.log(JSON.stringify(result));
 });
-*/
+
 /*
 api.getMenu(function(err,results){
 	
@@ -435,9 +435,7 @@ app.get('/', function(req, res) {
 					}
 				}); */
 				/*
-					userclass.isGroupJoined(username,whichGroupNow,function(status,obj){
-						if(status === 1){
-							groupclass.quitGroup(whichGroupNow,username,function(){
+						groupclass.quitGroup(username,function(){
 								
 								userclass.getUserAllGroup(username,function(err,queryUser,results){
 									if(results[0].length === 0){
@@ -465,15 +463,8 @@ app.get('/', function(req, res) {
 									
 								});
 								
-							});
-						}
-						else if(status ===2){
-							res.send('你已不在这个群里');
-						}
-						else if(status===0){
-							res.send('你还没有关注');
-						}
-					}); */
+							});*/
+				
 				
 
 
@@ -496,7 +487,7 @@ app.get('/', function(req, res) {
 // 可以将一类的路由单独保存在一个文件中
 //app.use('/todos', todos);
 app.use('/group', group);
-//app.use('/feed', feed);
+app.use('/feed', feed);
 //app.use('/comment', comment);
 //app.use('/user', user);
 //app.use('/groupAlbum', groupAlbum);

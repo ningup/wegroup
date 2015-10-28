@@ -171,7 +171,7 @@ function userFollowed()
 						  console.log('find relation group:'+ objectJ.get('nickname')+ '创建者是:' +objectJ.get('nicknameOfCUser'));
 							j++;					
 						}
-						cb(null, results);
+						cb(null, queryUser,results);
 
 	
 						}});

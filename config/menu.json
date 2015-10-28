@@ -19,9 +19,9 @@
 		   "key":"WEGROUP_SHARE_JOIN"
 		},
 		{
-		   "type":"click",
+		   "type":"view",
 		   "name":"成员与设置",
-		   "key":"WEGROUP_SETTING"
+		   "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/set&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
 		},
 		{
 		   "type":"click",
