@@ -106,25 +106,31 @@ function GroupClass()
   		query.get(groupObjId,{
   			success: function(group) {
   				console.log('jiaru de qun'+group.get('nickname'));
-				var queryUser = new AV.Query(AV.User);
-				queryUser.equalTo("username",username);
-				queryUser.first({
-					success:function(queryUser){
-						var groupJoinedNum = queryUser.get('groupJoinedNum');
-						groupJoinedNum ++;
-						queryUser.set('groupJoinedNum',groupJoinedNum);
-						queryUser.set('whichGroupNow',group.getObjectId());
-						queryUser.set('whichGroupNameNow',group.get('nickname'));
-						console.log('加群者是：'+queryUser.get('nickname'));
-						var relationUser = queryUser.relation('groupJoined');
-                        relationUser.add(group);
-						queryUser.save().then(function(user){
-							cb(null,user);
-						},function(err){});
-					},
-					error:function(error){
-					}
-				});
+  				if(group.get('followersNum')===0){
+					cb(1,null);
+				}
+				else{
+					var queryUser = new AV.Query(AV.User);
+					queryUser.equalTo("username",username);
+					queryUser.first({
+						success:function(queryUser){
+							var groupJoinedNum = queryUser.get('groupJoinedNum');
+							groupJoinedNum ++;
+							queryUser.set('groupJoinedNum',groupJoinedNum);
+							queryUser.set('whichGroupNow',group.getObjectId());
+							queryUser.set('whichGroupNameNow',group.get('nickname'));
+							console.log('加群者是：'+queryUser.get('nickname'));
+							var relationUser = queryUser.relation('groupJoined');
+							relationUser.add(group);
+							queryUser.save().then(function(user){
+								cb(null,user);
+							},function(err){});
+						},
+						error:function(error){
+						}
+					});	
+				}	
+				
   			},
   			error: function(object, error) {
   			}

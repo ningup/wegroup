@@ -385,12 +385,12 @@ app.get('/', function(req, res) {
 				/*
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
-				var whichGroupNow='5624652bddb24819b84456d6';  
+				var whichGroupNow='5630392260b26267d31b4db8';  
 				userclass.isGroupJoined(username,whichGroupNow,function(status,obj){
 					  if(status === 1)
 							res.send('已加入');
 					  else if (status === 2)
-							res.send('未加入');
+							res.send('未加入');			  
 					  else if (status === 0)
 							res.send('未关注');
 				});*/

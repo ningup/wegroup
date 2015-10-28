@@ -277,32 +277,41 @@ router.get('/join',function(req,res,next){
 			userclass.isGroupJoined(username,groupObjIdJoined,function(status,obj){
 					  if(status === 1)
 							res.send('已加入');
+					  else if (status === 3){
+						  res.send('该群已经解散了');
+					  }
 					  else if (status === 2){
 							var groupclass = new GroupClass();
 							groupclass.joinGroup(groupObjIdJoined,username,function(err,queryUser){
-								var query = new AV.Query(Group);
-								query.get(groupObjIdJoined,{
-									 success:function(group){
-											var followersNum = group.get('followersNum');
-												followersNum ++;
-												group.set('followersNum',followersNum);
-											var relation = group.relation('followers');
-											relation.add(queryUser);
-											group.save().then(function(group){
-												var text = '成功加入并切换到「'+group.get('nickname')+'」群'
-														  api.sendText(username, text, function(err,results){
-															  if(err){
-															api.sendText(username, text, function(err,results){
-															});
-													  }
-												});
-												res.send('加入成功');
-											},function(err){});;
+								if(err){
+									res.send('该群解散了');
+								}
+								else{
+									var query = new AV.Query(Group);
+									query.get(groupObjIdJoined,{
+										 success:function(group){
+												var followersNum = group.get('followersNum');
+													followersNum ++;
+													group.set('followersNum',followersNum);
+												var relation = group.relation('followers');
+												relation.add(queryUser);
+												group.save().then(function(group){
+													var text = '成功加入并切换到「'+group.get('nickname')+'」群'
+															  api.sendText(username, text, function(err,results){
+																  if(err){
+																api.sendText(username, text, function(err,results){
+																});
+														  }
+													});
+													res.send('加入成功');
+												},function(err){});;
 
-									 },
-									  error:function(error){
-									 }
-								});
+										 },
+										  error:function(error){
+										 }
+									});
+								}
+								
 							}); 
 					  }
 							

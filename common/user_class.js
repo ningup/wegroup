@@ -258,7 +258,7 @@ function userFollowed()
 	};
 	this.isGroupJoined = function(username,groupObjId,cb){
 		var queryUser = new AV.Query(AV.User);
-		var status = 1; //1 joined  2 isnot joined 0 unsubscribe 
+		var status = 1; //1 joined  2 isnot joined 0 unsubscribe
 		//console.log('username'+username);
 		queryUser.equalTo("username",username);
 		queryUser.first({
@@ -276,8 +276,9 @@ function userFollowed()
 					query.find({
 					  success: function(results) {
 							console.log('find relation group:'+ results.length);
-							if(results.length != 0)
+							if(results.length != 0){
 								cb(status,results);
+							}
 							else{
 								var relationJ = queryUser.relation("groupJoined");
 								relationJ.targetClassName = 'Group';
@@ -285,8 +286,9 @@ function userFollowed()
 								queryJ.equalTo('objectId',groupObjId);
 								queryJ.find({
 								  success: function(resultsJ) {
-										if(resultsJ.length != 0)
+										if(resultsJ.length != 0){
 											cb(status,resultsJ);
+										}
 										else{
 											status = 2;   //isnot joined
 											cb(status,null);
