@@ -198,10 +198,10 @@ router.get('/getVote', function(req, res, next) {
 	var userclass = new UserClass();
 	client.getAccessToken(req.query.code, function (err, result) {
 		 if(err){
-			 res.send('请从微信进入');
-			 //res.render('vote', {
-							//username: username
-			 //});
+			 //res.send('请从微信进入');
+			 res.render('vote', {
+							username: username
+			 });
 		}else{ 
 			 var username = result.data.openid;
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -278,14 +278,20 @@ router.post('/post', function(req, res, next) {
 		   }); 
 	  }
 	  else if (feedType === 'vote'){
-			var voteContent = req.body.voteContent;
-			//voteContent = vote;
-			voteContent=JSON.parse(voteContent);
+			var voteDecription = req.body.voteDecription;
+			var choiceTitle = req.body.choiceTitle;
+			//console.log(choiceTitle);
+			var voteContent = new Object();
+			voteContent={
+				"voteContent":{
+				"voteDecription":voteDecription,
+				"choiceItem": choiceTitle
+			  }	
+			};
 			var choiceNum = voteContent.voteContent.choiceItem.length;
 			var voteResults = new Object();
 			var voteResultsWithoutUser = new Object();
-			voteResults = 
-			      {
+			voteResults = {
 					"voteResults":
 					{
 						"votePeopleNum":0,
@@ -298,8 +304,7 @@ router.post('/post', function(req, res, next) {
 						  }
 					  }
 				  };
-			voteResultsWithoutUser = 
-			{
+			voteResultsWithoutUser = {
 				"voteResultsWithoutUser":
 				 {
 					"votePeopleNum":0,

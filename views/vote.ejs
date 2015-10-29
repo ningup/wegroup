@@ -121,6 +121,36 @@
             <div class="sum">24人参与</div>
         </div>
     </div>
+    <div class="vote-feed ok">
+        <div class="vote-user">
+            <img src="/images/test_touxiang.jpg">
+            <div class="username">球球虎牙</div>
+            <div class="time">15分钟前</div>
+        </div>
+        <div class="vote-content">
+            <div class="content">第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？</div>
+            <div class="xuanxiang">
+                <div class="">
+                    <div class="percent" style="width:20%;"></div>
+                    <span class="n">能过</span>
+                    <span class="b">20%</span>
+                </div>
+                <div class="user-click">
+                    <div class="percent" style="width:50%;"></div>
+                    <span class="n">不能过</span>
+                    <span class="b">50%</span>
+                </div>
+                <div class="">
+                    <div class="percent" style="width:60%;"></div>
+                    <span class="n">宁儿肯定不能过</span>
+                    <span class="b">60%</span>
+                </div>
+            </div>
+        </div>
+        <div class="vote-info">
+            <div class="sum">24人参与</div>
+        </div>
+    </div>
     <button class="vote-new" type="button" data-toggle="modal" data-target="#myModal">发起投票</button>
 
     <!-- Modal -->
@@ -132,9 +162,13 @@
             <span class="vote-ok" id="myModalLabel">完成</span>
           </div>
           <div class="body">
-            <textarea placeholder="请填写你的问题..." autofocus></textarea>
-            <input type="text" class="" placeholder="选项1" id="1" />
-            <input type="text" class="" placeholder="选项2" id="2" />
+            <form id="voteform" method="post" action="/feed/post">
+                <textarea placeholder="请填写你的问题..." autofocus name="voteDecription"></textarea>
+                <input type="text" class="" placeholder="选项1" id="1" name="choiceTitle" />
+                <input type="text" class="" placeholder="选项2" id="2" name="choiceTitle" />
+                <input type="hidden" value="<%=username%>" name="username" />
+                <input type="hidden" value="vote" name="feedType" >
+            </form>
           </div>
           <div class="footer">
             <button type="button" class="">增加一个选项</button>
@@ -155,16 +189,17 @@
                 });
                 if (i<10) {
                     max++;
-                    var str = "<input type=\"text\" class=\"\" placeholder=\"选项"+ max +"\" "+" id=\"" + max + "\" "+" />";
-                    $(".modal .modal-dialog .modal-content .body").append(str);
+                    var str = "<input type=\"text\" class=\"\" placeholder=\"选项"+ max +"\" "+" id=\"" + max + "\" "+" name=\"choiceTitle\" "+" />";
+                    $(".modal .modal-dialog .modal-content .body #voteform").append(str);
                 }else {alert("最多只有10个选项");}
             });
             $("#myModal").on('hidden.bs.modal',function(){
                 var tempstr = "<textarea placeholder=\"请填写你的问题...\" autofocus></textarea><input type=\"text\" class=\"\" placeholder=\"选项1\" id=\"1\" /><input type=\"text\" class=\"\" placeholder=\"选项2\" id=\"2\" />";
-                $(".modal .modal-dialog .modal-content .body").html(tempstr);
+                $(".modal .modal-dialog .modal-content .body #voteform").html(tempstr);
 
             });
             $(".modal .modal-dialog .modal-content .header .vote-ok").click(function(){
+                $("#voteform").submit();
                 $('#myModal').modal('hide');
             });
         });
