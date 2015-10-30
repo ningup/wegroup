@@ -374,7 +374,7 @@ router.get('/quit_group', function(req, res, next) {
 						
 					}
 					
-					res.redirect('/group/fini');
+					res.redirect('/group/fini?title=退群成功');
 					
 				});
 				
@@ -409,13 +409,14 @@ router.post('/notice', function(req, res, next) {
 					});
 			  }
 		});
-		res.redirect('/group/fini');
+		res.redirect('/group/fini?title=公告更新成功');
 	});
 
 					
 			
 });
 router.get('/fini', function(req, res, next) {
+	var title = req.query.title;
 	var ticket;
 	var query = new AV.Query('WechatTicket');
 	query.get("5606be0760b294604924a0c5", {
@@ -423,11 +424,12 @@ router.get('/fini', function(req, res, next) {
 		// 成功获得实例
 			if((new Date().getTime()) < (JSON.parse(obj.get('ticket')).expireTime)){
 				ticket = JSON.parse(obj.get('ticket')).ticket;
-				var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/fini');
+				var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/fini?title='+title);
 						res.render('fini', {
 						nonceStr: jsapi.nonceStr,
 						timestamp: jsapi.timestamp,
-						signature: jsapi.signature
+						signature: jsapi.signature,
+						title:title
 					   });		
 			}
 			else{
@@ -436,11 +438,12 @@ router.get('/fini', function(req, res, next) {
 					ticket = results.ticket;
 					obj.set('ticket',JSON.stringify(results));
 					obj.save().then(function(obj){
-						var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/fini');
+						var jsapi=sign(ticket, 'http://dev.wegroup.avosapps.com/group/fini?title='+title);
 						res.render('fini', {
 						nonceStr: jsapi.nonceStr,
 						timestamp: jsapi.timestamp,
-						signature: jsapi.signature
+						signature: jsapi.signature,
+						title:title
 					   });
 					});
 

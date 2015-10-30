@@ -204,19 +204,40 @@ function FeedClass()
     		// 成功获得实例
     		var voteResults = feed.get('voteResults');
     		var voteResultsWithoutUser = feed.get('voteResultsWithoutUser');
-    		voteResults.voteResults.voteItemContent.choiceItem[choiceId].choiceValue +=1;
-    		voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[choiceId].choiceValue +=1;
-    		voteResults.voteResults.votePeopleNum += 1;
-    		voteResultsWithoutUser.voteResultsWithoutUser.votePeopleNum +=1;
-    		var num = voteResults.voteResults.voteItemContent.itemResults.length;
-    		voteResults.voteResults.voteItemContent.itemResults[num] = new Object();
-    		voteResults.voteResults.voteItemContent.itemResults[num].username = username;
-    		voteResults.voteResults.voteItemContent.itemResults[num].choice = choiceId;
-    		feed.set('voteResults',voteResults);
-    		feed.set('voteResultsWithoutUser',voteResultsWithoutUser);
-    		feed.save().then(function(feed){
-					cb(null,feed,voteResultsWithoutUser);
-			});
+    		var userArray = voteResults.voteResults.voteItemContent.itemResults;
+    		var l = userArray.length;
+    		var isVoted = 0;
+    		//for(var i = 0 ; i < l ; i++){				//防止同一个用户 投票多次
+				//if(userArray[i].username === username){
+					//isVoted = 1;
+					//break;
+				//}
+				
+			//}
+			if(isVoted ===1){
+				cb(1,feed,voteResultsWithoutUser);
+			}
+			else{
+				voteResults.voteResults.voteItemContent.choiceItem[choiceId].choiceValue +=1;
+				voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[choiceId].choiceValue +=1;
+				voteResults.voteResults.votePeopleNum += 1;
+				voteResultsWithoutUser.voteResultsWithoutUser.votePeopleNum +=1;
+				for(var i=0 ; i< voteResults.voteResults.voteItemContent.choiceItem.length ;i++){
+					voteResults.voteResults.voteItemContent.choiceItem[i].percent = Math.round(100*(voteResults.voteResults.voteItemContent.choiceItem[i].choiceValue/voteResults.voteResults.votePeopleNum));
+					voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[i].percent = Math.round(100*(voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[i].choiceValue/voteResultsWithoutUser.voteResultsWithoutUser.votePeopleNum));
+				}
+				var num = voteResults.voteResults.voteItemContent.itemResults.length;
+				voteResults.voteResults.voteItemContent.itemResults[num] = new Object();
+				voteResults.voteResults.voteItemContent.itemResults[num].username = username;
+				voteResults.voteResults.voteItemContent.itemResults[num].choice = choiceId;
+				feed.set('voteResults',voteResults);
+				feed.set('voteResultsWithoutUser',voteResultsWithoutUser);
+				feed.save().then(function(feed){
+						cb(null,feed,voteResultsWithoutUser);
+				});
+				
+			}
+    		
     		
   		},
   		error: function(object, error) {

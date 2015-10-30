@@ -198,10 +198,8 @@ router.get('/getVote', function(req, res, next) {
 	var userclass = new UserClass();
 	client.getAccessToken(req.query.code, function (err, result) {
 		 if(err){
-			 //res.send('请从微信进入');
-			 res.render('vote', {
-							username: username
-			 });
+			 res.redirect('/group/fini?title=');
+			 
 		}else{ 
 			 var username = result.data.openid;
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -211,7 +209,6 @@ router.get('/getVote', function(req, res, next) {
 				 else{
 						var groupObjId = whichGroupNow;
 						var query = new AV.Query('Group');
-						query.descending('createdAt');
 						query.get(groupObjId, {
 						  success: function(group) {
 							// 成功获得实例
@@ -219,10 +216,12 @@ router.get('/getVote', function(req, res, next) {
 							 var relation = group.relation("feedPosted");
 							 relation.targetClassName = 'Feed';
 							 var queryFeed = relation.query();
-							 queryFeed.find().then(function(feeds){
+							 queryFeed.descending('createdAt');
+							 queryFeed.equalTo("feedType", "vote");
+							 queryFeed.find().then(function(votes){
 								 res.render('vote', {
 									username: username,
-									feeds:feeds
+									votes:votes
 								 });
 
 							 });
@@ -244,8 +243,12 @@ router.post('/vote', function(req, res, next) {
 	var feedObjId = req.body.feedObjId;
 	var choiceId = req.body.choiceId;
 	var feedclass = new FeedClass(); 
+	//console.log('vote');
 	feedclass.set_vote(username,feedObjId,choiceId,function(err,feed,voteResultsWithoutUser){
-		res.json(voteResultsWithoutUser);
+		if(err)
+			res.json({"status":"1","feedObjId":feedObjId,"choiceId":choiceId,"voteResultsWithoutUser":voteResultsWithoutUser});
+		else
+			res.json({"status":"0","feedObjId":feedObjId,"choiceId":choiceId,"voteResultsWithoutUser":voteResultsWithoutUser});
 		return ;
 	});
 	
@@ -282,10 +285,18 @@ router.post('/post', function(req, res, next) {
 			var choiceTitle = req.body.choiceTitle;
 			//console.log(choiceTitle);
 			var voteContent = new Object();
+			var choiceTitleTem = new Array();
+			var j =0;
+			for(var i=0 ; i < choiceTitle.length ; i++){
+					if(choiceTitle[i] != ''){
+						choiceTitleTem[j++] = choiceTitle[i];
+					}
+			
+			}
 			voteContent={
 				"voteContent":{
 				"voteDecription":voteDecription,
-				"choiceItem": choiceTitle
+				"choiceItem": choiceTitleTem
 			  }	
 			};
 			var choiceNum = voteContent.voteContent.choiceItem.length;
@@ -320,7 +331,9 @@ router.post('/post', function(req, res, next) {
 					voteResults.voteResults.voteItemContent.choiceItem[i] = new Object();
 					voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[i] = new Object();
 					voteResults.voteResults.voteItemContent.choiceItem[i].choiceValue=0;
+					voteResults.voteResults.voteItemContent.choiceItem[i].percent=0;
 					voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[i].choiceValue = 0;
+					voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[i].percent = 0;
 					j++;
 					if(j===choiceNum){
 						console.log(voteResults);

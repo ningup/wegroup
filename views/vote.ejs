@@ -67,90 +67,95 @@
 
   </head>
   <body>
-    <div class="vote-feed">
+  	<% for(var i=0; i<votes.length; i++) {
+  		if(votes[i].get('voteResults').voteResults.voteItemContent.itemResults!=null){
+        var itemresults = votes[i].get('voteResults').voteResults.voteItemContent.itemResults;
+        var flag = 0;
+        var choicewhat ;
+        for(var j=0;j<itemresults.length;j++){
+        	if (itemresults[j].username==username) {
+        		flag = 1;
+        		choicewhat = itemresults[j].choice;
+        	}
+        } 
+ 
+        if(flag==0){ %>
+    <div class="vote-feed" data-feedid="<%= votes[i].getObjectId()%>">
         <div class="vote-user">
             <img src="/images/test_touxiang.jpg">
             <div class="username">球球虎牙</div>
             <div class="time">15分钟前</div>
         </div>
         <div class="vote-content">
-            <div class="content">第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？</div>
+            <div class="content"><%= votes[i].get('voteContent').voteContent.voteDecription%></div>
             <div class="xuanxiang">
+                <% for(var y=0;y<votes[i].get('voteContent').voteContent.choiceItem.length;y++){%>
                 <div class="">
-                    <span>能过</span>
+                    <span id="<%= y%>"><%= votes[i].get('voteContent').voteContent.choiceItem[y]%></span>
                 </div>
-                <div class="">
-                    <span>不能过</span>
-                </div>
-                <div class="">
-                    <span>宁儿肯定不能过</span>
-                </div>
+                <% } %>
             </div>
         </div>
         <div class="vote-info">
             <div class="sum">24人参与</div>
         </div>
     </div>
-    <div class="vote-feed ok">
+    <% } else{%>
+    <div class="vote-feed ok" data-feedid="<%= votes[i].getObjectId()%>">
         <div class="vote-user">
             <img src="/images/test_touxiang.jpg">
             <div class="username">球球虎牙</div>
             <div class="time">15分钟前</div>
         </div>
         <div class="vote-content">
-            <div class="content">第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？</div>
+            <div class="content"><%= votes[i].get('voteContent').voteContent.voteDecription%></div>
             <div class="xuanxiang">
-                <div class="">
-                    <div class="percent" style="width:20%;"></div>
-                    <span class="n">能过</span>
-                    <span class="b">20%</span>
-                </div>
+            	<% for(var y=0;y<votes[i].get('voteContent').voteContent.choiceItem.length;y++){
+            		if(choicewhat==y){ %>
                 <div class="user-click">
-                    <div class="percent" style="width:50%;"></div>
-                    <span class="n">不能过</span>
-                    <span class="b">50%</span>
+                    <div class="percent" style="width:<%= votes[i].get('voteResults').voteResults.voteItemContent.choiceItem[y].percent%>%;"></div>
+                    <span class="n" id="<%= y%>"><%= votes[i].get('voteContent').voteContent.choiceItem[y]%></span>
+                    <span class="b" id="<%= y%>"><%= votes[i].get('voteResults').voteResults.voteItemContent.choiceItem[y].percent%>%</span>
                 </div>
+                <% }else{%>
                 <div class="">
-                    <div class="percent" style="width:60%;"></div>
-                    <span class="n">宁儿肯定不能过</span>
-                    <span class="b">60%</span>
+                    <div class="percent" style="width:<%= votes[i].get('voteResults').voteResults.voteItemContent.choiceItem[y].percent%>%;"></div>
+                    <span class="n" id="<%= y%>"><%= votes[i].get('voteContent').voteContent.choiceItem[y]%></span>
+                    <span class="b" id="<%= y%>"><%= votes[i].get('voteResults').voteResults.voteItemContent.choiceItem[y].percent%>%</span>
                 </div>
+                <% } %>
+                <% } %>
             </div>
         </div>
         <div class="vote-info">
             <div class="sum">24人参与</div>
         </div>
     </div>
-    <div class="vote-feed ok">
-        <div class="vote-user">
-            <img src="/images/test_touxiang.jpg">
-            <div class="username">球球虎牙</div>
-            <div class="time">15分钟前</div>
-        </div>
-        <div class="vote-content">
-            <div class="content">第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？第八周要考试了，没有复习能过吗？</div>
-            <div class="xuanxiang">
-                <div class="">
-                    <div class="percent" style="width:20%;"></div>
-                    <span class="n">能过</span>
-                    <span class="b">20%</span>
-                </div>
-                <div class="user-click">
-                    <div class="percent" style="width:50%;"></div>
-                    <span class="n">不能过</span>
-                    <span class="b">50%</span>
-                </div>
-                <div class="">
-                    <div class="percent" style="width:60%;"></div>
-                    <span class="n">宁儿肯定不能过</span>
-                    <span class="b">60%</span>
-                </div>
-            </div>
-        </div>
-        <div class="vote-info">
-            <div class="sum">24人参与</div>
-        </div>
-    </div>
+    <% } %>
+    <% }else{ %>
+		<p>lalalalallalalalala</p>
+    	<div class="vote-feed" data-feedid="<%= votes[i].getObjectId()%>">
+	        <div class="vote-user">
+	            <img src="/images/test_touxiang.jpg">
+	            <div class="username">球球虎牙</div>
+	            <div class="time">15分钟前</div>
+	        </div>
+	        <div class="vote-content">
+	            <div class="content"><%= votes[i].get('voteContent').voteContent.voteDecription%></div>
+	            <div class="xuanxiang">
+	                <% for(var y=0;y<votes[i].get('voteContent').voteContent.choiceItem.length;y++){%>
+	                <div class="">
+	                    <span id="<%= y%>"><%= votes[i].get('voteContent').voteContent.choiceItem[y]%></span>
+	                </div>
+	                <% } %>
+	            </div>
+	        </div>
+	        <div class="vote-info">
+	            <div class="sum">24人参与</div>
+	        </div>
+	    </div>
+    <% } %>
+    <% } %>
     <button class="vote-new" type="button" data-toggle="modal" data-target="#myModal">发起投票</button>
 
     <!-- Modal -->
@@ -184,8 +189,10 @@
                 var i = 0;
                 $(".modal .modal-dialog .modal-content .body input").each(function(){
                     var temp = $(this).attr("id");
-                    if (temp>max) {max = temp;};
-                    i++;
+                    if (temp!=null) {
+                        if (temp>max) {max = temp;};
+                        i++;
+                    }
                 });
                 if (i<10) {
                     max++;
@@ -199,8 +206,85 @@
 
             });
             $(".modal .modal-dialog .modal-content .header .vote-ok").click(function(){
-                $("#voteform").submit();
-                $('#myModal').modal('hide');
+            	var i = 0;
+                var flag = 0;
+                var texttemp = $(".modal .modal-dialog .modal-content .body textarea").val();
+                //alert(texttemp);
+                if (texttemp.length!=0) {flag=1;}
+                //alert(flag);
+                $(".modal .modal-dialog .modal-content .body input").each(function(){
+                	var temptemp = $(this).attr("id");
+                	if (temptemp!=null) {
+	                    var temp = $(this).val();
+	                    //alert(temp);
+	                    if (temp.length!=0) {i++;}
+                	}
+                });
+                if((i>=2)&&flag){
+                    $("#voteform").submit();
+                    $('#myModal').modal('hide');
+                }else{
+                    if (flag==0) {
+                        alert("投票内容不能为空");
+                    }else{
+                        alert("最少需要填写两个选项");
+                    }
+                }
+            });
+            $(".vote-content .xuanxiang > div").click(function(){
+				//alert("click OK");
+            	var feed = $(this).closest(".vote-feed");
+            	var flag = 0;
+            	var clicknum;
+            	var feedid = feed.attr("data-feedid");
+            	if(feed.hasClass("ok")){
+						flag=1;alert("已经点过了");
+				}
+            	if (flag==0) {
+            		clicknum = $(this).children("span").attr("id");
+            		$.ajax({
+            			url:"/feed/vote",
+            			data:{
+            				"username":"<%= username%>",
+            				"feedObjId":feedid,
+            				"choiceId":clicknum
+            			},
+            			type:"post",
+            			dataType:"json",
+            			success:function(data){
+            				var feedObjId = data.feedObjId;
+            				var choiceId = data.choiceId;
+            				var cw = 0;
+            				$(".vote-feed").each(function(){
+            					if (feedObjId==$(this).attr("data-feedid")) {
+									//alert("匹配");
+            						var choicesum = $(this).find(".vote-content .xuanxiang>div");
+            						$(this).addClass("ok");
+            						//alert($(this).attr("class"));
+            						choicesum.each(function(){
+										
+            							if ($(this).find("span").attr("id")==choiceId) {
+            								$(this).addClass("user-click");
+            								$(this).find("span").addClass("n");
+            								var idb = $(this).find("span").attr("id");
+            								var spanstr = "<span class=\"b\" id=\""+idb+"\">"+data.voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[cw].percent+"%</span>";
+            								$(this).prepend("<div class=\"percent\" style=\"width:"+data.voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[cw].percent+"%;\"></div>");
+            								$(this).append(spanstr);
+            							}else{
+            								$(this).find("span").addClass("n");
+            								var idb = $(this).find("span").attr("id");
+            								var spanstr = "<span class=\"b\" id=\""+idb+"\">"+data.voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[cw].percent%>+"%</span>";
+            								$(this).prepend("<div class=\"percent\" style=\"width:"+data.voteResultsWithoutUser.voteResultsWithoutUser.voteItemContent.choiceItem[cw].percent+"%;\"></div>");
+            								$(this).append(spanstr);
+            							}
+            							cw++;
+            						});
+            					}
+            				});
+            			},
+            			error:function(){alert("敢run进来让你死");}
+            		});
+            	}
             });
         });
     </script>
