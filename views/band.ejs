@@ -486,7 +486,7 @@
                 </ul>
             </div>
         </div>
-        <form id="publish-form" method="post" action="">
+        <form id="publish-form" method="post" action="/feed/post">
             <input type="hidden" name="feedType" id="form-feedType" value="">
             <input type="hidden" name="username" id="form-username" value="">
             <input type="hidden" name="feedTitle" id="form-feedTitle" value="">
@@ -500,8 +500,10 @@
         $(".pub-publish").click(function(){
             var img_arr = [];
             var img_str = "";
+            alert("发布");
             $(".pub-pics").find("li.up-pic img").each(function(){
-                img_arr.append(this.attr("src"));
+                var str = this.getAttribute("src");
+                img_arr.push(str);
             });
             img_str = img_arr.toString();
             $("#form-feedType").val("imgtext");
