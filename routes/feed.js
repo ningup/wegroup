@@ -363,6 +363,7 @@ router.post('/vote', function(req, res, next) {
 router.post('/post', function(req, res, next) {
   var userclass = new UserClass();
   var feedType = req.body.feedType;
+  var feedTitle = req.body.feedTitle;
   var username = req.body.username;
   //username = username.trim();
   //username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
@@ -374,16 +375,20 @@ router.post('/post', function(req, res, next) {
 		  console.log('into the text post');
 		  var feedContent=req.body.feedContent;
 		  feedclass.postFeed_text(groupObjId,username,feedContent,function(err,date,feed){
-				feed.save('updateTime',date);
+				feed.set('updateTime',date);
+				feed.set('feedTitle',feedTitle);
+				feed.save();
 				res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
 		   }); 
 	  }
 	  else if (feedType === 'imgtext'){
 			var feedContent=req.body.feedContent;
-			var serverId = req.body.serverId;
-			serverId=JSON.parse(serverId).serverId;
-			feedclass.postFeed_imgtext(groupObjId,username,feedContent,serverId,function(err,date,feed){
-				feed.save('updateTime',date);
+			var imgurl = req.body.imgurl;
+			//serverId=JSON.parse(serverId).serverId;
+			feedclass.postFeed_imgtext(groupObjId,username,feedContent,imgurl,function(err,date,feed){
+				feed.set('updateTime',date);
+				feed.set('feedTitle',feedTitle);
+				feed.save();
 				res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
 		   }); 
 	  }
@@ -445,7 +450,9 @@ router.post('/post', function(req, res, next) {
 					if(j===choiceNum){
 						console.log(voteResults);
 						feedclass.postFeed_vote(groupObjId,username,voteContent,voteResults,voteResultsWithoutUser,function(err,date,feed){
-							feed.save('updateTime',date);
+							feed.set('updateTime',date);
+							feed.set('feedTitle',feedTitle);
+							feed.save();
 							res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/getVote&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 						});
 					}
