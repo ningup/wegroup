@@ -369,7 +369,7 @@ router.post('/post', function(req, res, next) {
   //username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
   var feedclass = new FeedClass(); 
   console.log('feedType'+feedType);
-  userclass.getUserObj(username,function(err,queryUser){
+  userclass.getUserObj(username,function(err,queryUser){ 
 	  var groupObjId = queryUser.get('whichGroupNow');
 	  if(feedType === 'text'){
 		  console.log('into the text post');
