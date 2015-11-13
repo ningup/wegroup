@@ -132,24 +132,31 @@ router.get('/', function(req, res, next) {
 						 queryFeed.limit(30);
 						 //queryFeed.equalTo("feedType", "vote");
 						 queryFeed.find().then(function(feeds){
-						 userclass.getUserObj(username,function(err,user){
-							 var loadFeedTime = new Object();
-							if(feeds.length==0){
-								loadFeedTime.latest = new Date();
-							    loadFeedTime.oldest = new Date();
-								 
-							}else{
-								loadFeedTime.latest = feeds[0].get('updateTime');
-							    loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
-								user.set('loadFeedTime',loadFeedTime);
-								
-							}
-							user.save();
+						   userclass.getUserObj(username,function(err,user){
+							 userclass.getSignInCnt(username,groupObjId, function(err,cnt,isSignIn){
+								//console.log('groupnickname',nickname
+								var loadFeedTime = new Object();
+								if(feeds.length==0){
+									loadFeedTime.latest = new Date();
+									loadFeedTime.oldest = new Date();
+									 
+								}else{
+									loadFeedTime.latest = feeds[0].get('updateTime');
+									loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
+									user.set('loadFeedTime',loadFeedTime);
+									
+								}
+								user.save();
+								res.render('band', {
+									username: username,
+									cnt:cnt,
+									isSignIn:isSignIn,
+									feeds:feeds
+								 });
+							});
+							
 						 });
-							 res.render('band', {
-								username: username,
-								feeds:feeds
-							 });
+							 
 
 						 });
 						
@@ -160,7 +167,6 @@ router.get('/', function(req, res, next) {
 					});
 				 }
 			});
-		
 	    }
 	 });
 
@@ -369,11 +375,16 @@ router.post('/post', function(req, res, next) {
   //username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
   var feedclass = new FeedClass(); 
   console.log('feedType'+feedType);
+  console.log('feedTitle'+feedTitle);
+  console.log('username'+username);
+  
+  
   userclass.getUserObj(username,function(err,queryUser){ 
 	  var groupObjId = queryUser.get('whichGroupNow');
 	  if(feedType === 'text'){
 		  console.log('into the text post');
 		  var feedContent=req.body.feedContent;
+		  
 		  feedclass.postFeed_text(groupObjId,username,feedContent,function(err,date,feed){
 				feed.set('updateTime',date);
 				feed.set('feedTitle',feedTitle);
@@ -384,6 +395,9 @@ router.post('/post', function(req, res, next) {
 	  else if (feedType === 'imgtext'){
 			var feedContent=req.body.feedContent;
 			var imgurl = req.body.imgurl;
+			//console.log('imgurl'+imgurl);
+			//console.log('feedContent'+feedContent);
+			imgurl = imgurl.split(',');
 			//serverId=JSON.parse(serverId).serverId;
 			feedclass.postFeed_imgtext(groupObjId,username,feedContent,imgurl,function(err,date,feed){
 				feed.set('updateTime',date);
