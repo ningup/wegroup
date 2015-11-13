@@ -54,7 +54,8 @@ router.get('/', function(req, res, next) {
 	var userclass = new UserClass();
 	client.getAccessToken(req.query.code, function (err, result) {
 		if(err){
-			 //res.redirect('/group/fini?title=');
+			 res.redirect('/group/fini?title=');
+			/*
 			 var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				 if(err){
@@ -109,7 +110,7 @@ router.get('/', function(req, res, next) {
 					  }
 					});
 				 }
-			});
+			});*/
 			 
 		}else{
 				var username = result.data.openid;
@@ -389,7 +390,7 @@ router.post('/post', function(req, res, next) {
 				feed.set('updateTime',date);
 				feed.set('feedTitle',feedTitle);
 				feed.save();
-				res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
+				res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 		   }); 
 	  }
 	  else if (feedType === 'imgtext'){
@@ -403,7 +404,7 @@ router.post('/post', function(req, res, next) {
 				feed.set('updateTime',date);
 				feed.set('feedTitle',feedTitle);
 				feed.save();
-				res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
+				res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 		   }); 
 	  }
 	  else if (feedType === 'vote'){
