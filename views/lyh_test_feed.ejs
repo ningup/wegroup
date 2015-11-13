@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="Keywords" content="微群助手－主页" />
+    <meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>微群帮手测试</title>
+
+    <!-- Bootstrap -->
+    <!--<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">-->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/weui.css">
+    <script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
+    <!--<script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>-->
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <!--<script src="//cdn.bootcss.com/iScroll/5.1.3/iscroll.min.js"></script>-->
+    <!--<script src="//cdn.bootcss.com/iScroll/5.1.3/iscroll-lite.min.js"></script>-->
+    <script src="//cdn.bootcss.com/iScroll/5.1.3/iscroll-probe.min.js"></script>
+
+    <style type="text/css">
+    body {overflow: hidden;width: 100%;background-color: #f8f8f8;} /*background-color: #FBFBFB;*/
+    #wrapper {position: absolute;overflow: hidden;left: 0;top: 0;bottom: 0;width: 100%;z-index: 1;}
+    .container {position: relative;padding: 0;}
+    #monitor {
+    position: absolute;
+    left: 51%;
+    z-index: 2;
+    }
+    .feed-top{padding: 0 15px;color: #454545;}
+    .feed-top .user-info{position: relative;height: 70px;line-height: 70px;}
+    .feed-top .user-info:after{border-color: #e5e5e5;transform:scaleY(0.5);-webkit-transform-origin:left bottom;bottom: -1px;display: block;position: absolute;left: 0;border-top: 1px solid #c8c7cc;width: 100%;content: " ";pointer-events:none;}
+    .feed-top .user-info .user-photo{position: absolute;top: 50%;left: 0;width: 40px;height: 40px;margin-top: -20px;}
+    .feed-top .user-info .user-photo>img{position: absolute;width: 40px;height: 40px;border-radius: 20px;background-color: #efece9;overflow: hidden;font-size: 12px;padding: 0;margin: 0;}
+    .feed-top .user-info .user-name{position: relative;display: inline-block;width: 100%;}
+    .feed-top .user-info .user-name .user-nick{display: inline-block;overflow: hidden;max-width: 50%;margin-left: 50px;font-size: 17px;height: 20px;line-height: 20px;vertical-align: middle;white-space: nowrap;text-overflow:ellipsis;color: #454545!important;font-weight: 400!important;}
+    .feed-top .user-info .arrow-right:after{right: 0;color: #777;border-width: 1px 1px 0 0;margin-top: -2px;position: absolute;top: 50%;right: 15px;width: 7px;height: 7px;margin-top: -4px;content: " ";-webkit-transform:rotate(45deg);color: #324d86;border-width: 2px 2px 0 0;border-style: solid;}
+    .feed-top .feed-title{padding: 23px 0 16px;font-size: 24px;line-height: 28px;text-align: left;word-break:break-all;-webkit-user-select:initial;}
+    .feed-top .feed-info{margin-bottom: 22px;font-size: 16px;}
+    .feed-top .feed-info .time{float: left;color: #777;}
+    .feed-top .feed-info .band-name{display: inline-block;padding: 0 3px;height: 15px;font-size: 15px;line-height: 15px;text-align: center;max-width: 40%;color: #02abec;border:1px solid #02abec;border-radius: 16px;overflow: hidden;margin-left: 7px;white-space: nowrap;text-overflow:ellipsis;}
+    .feed-content{position: relative;margin: 0 15px 10px;font-size: 15px;color: #454545;overflow-x:hidden;}
+    .feed-content .main-content{-webkit-user-select:initial;}
+    .feed-content .main-content .content{clear: both;margin-bottom: 5px;font-size: 17px;line-height: 27px;word-wrap:break-word;word-break:break-all;}
+    .feed-content .main-content .pic{width: 100%;height: auto;overflow: hidden;position: relative;margin-top: 15px;background: #efece9;}
+    .feed-content .main-content .pic>img{width: 100%;height: auto;-webkit-user-select:none;max-width: 100%!important;padding: 0;margin: 0;}
+    .feed-content .actions{margin-top: 8px;font-size: 13px;height: 22px;color: #bbb;}
+    .feed-content .actions .read-num{float: right;margin-top: 3px;}
+    .feed-content .actions .read-num .read-num-icon{display: inline-block;position: relative;top: 1px;margin-right: 5px;width: 14px;height: 11px;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2tpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpjZmNjZTgwMC1jNzM0LTg2NDItYWZiZC0xMzlmNTQ4OWQ3ODIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NkY0REJFNEE1OTI0MTFFNUIzRkY4ODBDRkUyMDI4NjYiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NkY0REJFNDk1OTI0MTFFNUIzRkY4ODBDRkUyMDI4NjYiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RjQzMjdEODY0NDhDMTFFNTk0MjNFNkY0MjBCMzU5QjEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RjQzMjdEODc0NDhDMTFFNTk0MjNFNkY0MjBCMzU5QjEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5+bxByAAAC9klEQVR42uSXa2jNYRzHdxCh1kJ5MTXlViK3IoS9GEW5zVx2Wm7LmMuEN0ubaOsopYixc4xZyGVlXghvpGy5ZkRKycILvEBj7sXx+en7r3///v9zjlmt5alPz/lfnuf7f36/5/k+zwnF4/G0zijd0jqpdJpwj1gs9k8dFBUVdbER/8W7IciGBTAZhkAGEWulboFbcAGuEYVfSTuLRqOpRCUMZTAihQ98CruhLtEHJAv1SLgBJyTaCBUwCQYoYlZPhF1wHYbBMbhDNMa0R3gF3JVIM6yD6bDDOoV38FO1vbcTZkChnk+A24ivTzXUlstK2K7rOlgNfmHrBd8DPvyo2lk5AJsJfTzRiPe5RNfASo/oaDgDH+CbRmwfN9SzzAo1N6xsMnFGHwoStnCV6LeFrcbzPF9hXQrpEu4Hy+EBzPGIn6Yar8sNEPETXqj8WcnRRHEXmyjHFd4qyITekKX7faEeBnvE71NN02Upo853C2dqJlooquGqTwrKoScchI3wSvdfwio4CX2scx93a9KIrRxBPMsR3mtmAGehOGCyzFYdCXge8bznFT9EdUqR2eMIz1JdFdBpukbzBV4HvNOiemCCJer0n+0IV6suC2jwET5LfFDAO8NVv0kgXO4sUUe4Ul9sI68NaHTZNfP91r5z/4pfY/JaozTYnKhwhC2Ei+Gr1u1hn7ZmlT/kTLWyUGs/Cs5BLrRZ/nxEC9TO2i8j323u5dQsw4jLHsOe9g+hQE5lH/dElvkI8uATLHHl2hHNk9dbKUH0pp+B2Kzb6vrt9dN6GYLN/reunFoExnnDjGhUbf7kF9Fosm2xWP7aHcx91iqMqZYMzeCworIN0f2p7E6W43nQKpu854pEsrJFaQnLz+d6RZOdQC7BWPl1jkwmV3tyAzzTBtFfp5H5skbHHi/a5oDo8/YcfV7ATPm4LZepojRBm8fm+Qie74gzV4POUya6CKZoG7Sd6b1GbycVE2t077sdcdizzppE1z3ehv67/06/BRgAOiDUTwjtZzQAAAAASUVORK5CYII=');background-size: 100% 100%;}
+
+
+    .comment-header{display: block;position: relative;border-top: 15px solid #eef1f1;height: 40px;line-height: 40px;font-size: 12px;text-align: center;background: #fafafa;}
+    .comment-header .leftside-all-icon{background: #1fbbf3;position: absolute;top: 5px;bottom: 5px;left: 0;width: 5px;content: "";}
+    .comment-header span.ping{float: left;margin-left: 15px;font-size: 14px;}
+    .comment-header span.ping-num{display: block;float: right;margin-right: 10px;color: gray;}
+
+
+    .detail-comment-list{-webkit-tap-highlight-color:transparent;}
+    .detail-comment-list .list{list-style: none;padding: 0;margin: 0;}
+    .detail-comment-list .list>li:first-child{margin-top: 1px;}
+    .detail-comment-list .list>li{padding: 10px 0 8px;background-color: #fafafa;position: relative;display: list-item;text-align: -webkit-match-parent;}
+    .detail-comment-list .list .comment-wrapper{position: relative;padding: 0 15px 0 60px;}
+    .detail-comment-list .list .comment-wrapper .user-avatar{position: absolute;top: 0;left: 15px;padding-right: 9px;}
+    .detail-comment-list .list .comment-wrapper .user-avatar>img{width: 35px;height: 35px;overflow: hidden;position: relative;border-radius: 18px;font-size: 12px;background-color: #efece9;padding: 0;margin: 0;outline: 0;-webkit-tap-highlight-color:transparent;}
+    .detail-comment-list .list .comment-wrapper .name-wrap{padding-top: 5px;width: 100%;display: inline-block;}
+    .detail-comment-list .list .comment-wrapper .name-wrap .user-nick{display: inline-block;overflow: hidden;max-width: 115px;font-size: 14px;line-height: 19px;vertical-align: middle;white-space: nowrap;text-overflow:ellipsis;color: #777!important;font-weight: 400!important;}
+    .detail-comment-list .list .comment-wrapper .name-wrap .lounum{float: right;padding-top: 2px;font-size: 12px;color: #bbb;}
+    .detail-comment-list .list .comment-wrapper .content-wrapper{margin-top: 5px;color: #454545;}
+    .detail-comment-list .list .comment-wrapper .content-wrapper .ping-content{margin-bottom: 0;clear: both;font-size: 17px;line-height: 27px;word-wrap:break-word;word-break:break-all;-webkit-user-select:initial;}
+    .detail-comment-list .list .comment-wrapper .comment-action {margin-top: 0;margin-right: -15px;height: 22px;font-size: 12px;color: #bbb;}
+    .detail-comment-list .list .comment-wrapper .comment-action:after{display: block;clear: both;content: "";}
+    .detail-comment-list .list .comment-wrapper .comment-action .time{float: left;margin: 0 10px 0 0;padding: 0;position: relative;z-index: 2;height: 100%;line-height: 22px;}
+    .detail-comment-list .list .comment-wrapper .comment-action .time:after{position: absolute;top: 10px;left: 5px;content: "";}
+    .detail-comment-list .list .comment-wrapper .comment-action .reply{padding-right: 15px;float: right;position: relative;z-index: 2;margin-left: 7px;padding-top: 1px;padding-left: 24px;height: 100%;line-height: 22px;}
+    .detail-comment-list .list .comment-wrapper .comment-action .reply:after{top: 3px;width: 16px;height: 16px;background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAArlBMVEWPj4////+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj492At4UAAAAOXRSTlMAAAMEBQYHCAsMDRESFBUZGxweHzI0NTg9YWJmZ2hqbG1ub3t9kJGSlZaZuru/wsfKy83q8vP09/l6oG0XAAAA6UlEQVR4Xr3Ra0/CQBBG4RmhFW+oVQQtqOWmhQoitnL+/x9zs9lkY+tqYojn0yTvk6ZpRX9pD8DUSldb6m1XacuBW0LdGWD3xaAr9bqDhRUSw1S+TafQVnnkSQJAn7lXeeUmCPqsVT44DIJj3lVAgkBhnyBZlsvEX01QAC/+aoIS2PnrD09Iiqq48pcH//AddkRBcESpsqb/89/MmAfBnEwlhkkATCBWkSHMep0G6PRmMFIDJMWVX1pwnuMaqgUSjTcVVlz4vdqMI3XAdZIbYXbyM/eSNSCnRly73YOawO4hIAcPb1lbvoBPhOI14NP8H2QAAAAASUVORK5CYII=') center center no-repeat;background-size: 100% 100%;position: absolute;/*top: 10px;*/left: 5px;content: "";}
+    .detail-comment-list .list .comment-wrapper .comment-action .like{color: #777;float: right;position: relative;z-index: 2;margin-left: 7px;padding-top: 1px;padding-left: 24px;height: 100%;line-height: 22px;}
+    .detail-comment-list .list .comment-wrapper .comment-action .like:after{top: 2px;width: 16px;height: 16px;background: center center no-repeat;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABelBMVEWPj4////+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4/35ViBAAAAfXRSTlMAAAJDlryGEhM1EUhb73qJfiCeuGBp1JSmJs4xRwM/fF3ZqRCMI3Y91iltK4rxrMCialaSDnfEoF/96suCnxwwz/Y3H+AGOcbNMnCPm2SrgGeYlco6xQgFjXLMMwQXk2xMs1inqlUe4QfeIZCZZlQntw8iQA2R8O2EgeTyT1ISZcoAAAEuSURBVHheddJVT/VQEEbhOcJR4Bju7u7u7u7u9rnL+u+UNiU0dNbNm508d7PFYySvhUrLc6qq5W1OkAtArQoikN/YRJ4KSmgV8UJIA+1sGJOiSAN+so3ppU8DBRRaTAGVUGzMMFkKKKPtZSroUEAaPntcQQ095tZR7woaIN0EGVg1t/jegjisWjJgC8h8BZFO8+WoqxsSEk72AwODkC7vGiImSawYkfeNMiaMez0iEyAuTTIlMG0AcQczzMoc8zpYYFGWWNbBCh9ljXUVeCEoYTZVsMW2yA7samCPfRHPAYcKOIJjA5xwqoAzzsUAF1wq4IrrF3DDrTsIwp157nseXEGcRzHBEx/cQBQ+WSDK5y9f4ZsDfM+CgP3l/Lj2Q2yQiP389fvPXwf4l/ovZs/e3m8a8+LLQAAAAABJRU5ErkJggg==');background-size: 100% 100%;position: absolute;/*top: 10px;*/left: 5px;content: "";}
+    .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container{margin: 2px 0 7px;}
+    .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container:after{display: block;clear: both;content: "";}
+    .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container .ping-pic{width: 96px;height: 96px;float: left;overflow: hidden;margin: 3px 3px 0 0;position: relative;background: #efece9;}
+    .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container .ping-pic>img{margin-top: -12.224px;margin-left: 0px;width: 96px;height: 128px;-webkit-user-select: none;padding: 0;margin: 0;border-radius: 0;outline: 0;-webkit-tap-highlight-color: transparent;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper{margin-top: 5px;color: #454545;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .more{    display: block;line-height: 200%;font-size: 12px;margin: 6px 0;color: #3361a7;text-decoration: none;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list{list-style: none;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item{display: list-item;text-align: -webkit-match-parent;list-style: none;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain{text-align: left;line-height: 160%;position: relative;margin: 6px 0;word-break: break-all;word-wrap: break-word;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item{margin: 0;padding: 0;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .user_name{color: #3361a7;
+    text-decoration: none;cursor: auto;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .floor_content{color: #000;margin-right: 6px;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .floor_content a{color: #3361a7;text-decoration: none;}
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .list_item_time{display: inline-block;margin-right: 8px;color: #c5c9cd;font-size: 12px;}
+
+    .bottom-wraper{position: fixed;display: -webkit-box;overflow: hidden;bottom: 0;left: 0;z-index: 99;width: 100%;height: 44px;line-height: 44px;color: #00a5e0;background: -webkit-gradient(linear,0 0,0 100%,from(#fff),to(#fafafa));box-shadow: 0 0 2px rgba(0,0,0,.3);visibility: visible;}
+    .bottom-wraper .reply{display: block;-webkit-box-flex:1;position: relative;width: 0;font-size: 16px;text-align: center;vertical-align: middle;color: #777;}
+    .bottom-wraper .reply:before{top: -2px;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAArlBMVEV3d3f///93d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3fZnHjLAAAAOXRSTlMAAAMEBQYHCAsMDRESFBUZGxweHzI0NTg9YWJmZ2hqbG1ub3t9kJGSlZaZuru/wsfKy83q8vP09/l6oG0XAAAA60lEQVR4XuXSS0/CQBhG4VehFW+oKIIWL+WmhQoitnL+/x+TJl8mTWgnJK7Us3oXT2bzjQ727P9CSY1osaai9SJqSHLwDk/3DhZu1m+ronZ/VkiDIYxV2xiaBp95kadXHg2+c+uDPZYGvzjywRM+DYK8wW+EnXk275RmLUyBt9KshRmwKc2fv9hJ8/R6Zwr+4mU2BD53TGZwSW+/Hx4z9cEpscEQRvVuBKFBDWDSbVWpVncCDzIoRVgkVyq6SHAN5KAUDFe5ycuyy1fDQCXoOk22snDJuVxVUGdbc2OuHprEnB/q8OkjbmoHfgMsUz0uWZEOqwAAAABJRU5ErkJggg==');background-size: 20px 20px;display: inline-block;position: relative;margin-right: 5px;width: 20px;height: 20px;font-size: 0;line-height: 0;vertical-align: middle;color: #324d86;content: "";}
+    .bottom-wraper .reply:after{position: absolute;top: 0;right: -1px;width: 1px;height: 44px;background: #dadada;-webkit-transform:scale(0.5,.5);content: "\20";}
+    .bottom-wraper .like{color: #777;display: block;-webkit-box-flex:1;position: relative;width: 0;font-size: 16px;text-align: center;vertical-align: middle;}
+    .bottom-wraper .like:before{top: -2px;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAABZVBMVEV3d3f///93d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3eUDovbAAAAdnRSTlMAAO4RD3qDfYiCM5Z3fAKcHuFC4zo0ZATF4G3PLQsGab2ds1OFBR+3FvwTcgMSmsPMkvCy72VjTem/SAkQfmJ5QH/7uLYw2CdmS0Y8SqpV6BdMKtUO0izTPcKPcAis7RShm804GwFOxstdq0M7KZGO9FnWdGuBAbFVswAAAYlJREFUeF6N01V33DAQQOGZZd4kbZJusLuhhqnMzMzMzHh/fyS7x42dtdT7oKdPZ15mRP+zGJSwsfHV8nFJ1AXOYWtWvLBOdah4gKYXLnPJgJ30+eAaOQP2sOSBPfRaUGHFA/exHnknnCRvQZaMB+5guwWLPHXDZzBlwTQtNxyiGoAzDDthA0YCcJAZJyzRlqCjtF1wHvpDeIJMZje2/c3KFrgX5iVsF5s6loC/4U806lA2ezj8cgQux2ABCtKtPB0L89sATp46DTXp3lnOiZ4n6oKkVGVcdJiLahosMitp1SiJ9tKjtkVIhUXKomaVA5hzwCtcFZ0k74XXuC56g44P3uSWiN6GQQ+sUzBQzaZ64B1GLCxTdMO73BML7/PADR/yKIBTkHPBxzAXQH3ChAsO8FxCOMALF3zJq7/wNbxJh295F53Ce/rT4QwfIlinoDoGjS6uxEeJ4DR80s8wkVSNL1+h7x/UbzAL8D0TD+CHbIL2HFo18yT7+Ws0edcLhstoNt6CAXHobwPA/XGejVBbHAAAAABJRU5ErkJggg==');background-repeat: no-repeat;background-size: 20px 20px;display: inline-block;position: relative;margin-right: 5px;width: 20px;height: 20px;font-size: 0;line-height: 0;vertical-align: middle;color: #324d86;content: "";}
+    .bottom-wraper .like:after{position: absolute;top: 0;right: -1px;width: 1px;height: 44px;background: #dadada;-webkit-transform:scale(0.5,.5);content: "\20";}
+
+
+
+    .publish{position: fixed;left: 0;top: 0;bottom: 0;right: 0;background-color: #f0eff5;width: 100%;-webkit-user-select:none;-webkit-highlight:none;-webkit-tap-highlight-color:transparent;font-size: 0;}
+    .publish .pub-con{background: #f0eff5;position: relative;top: 0;width: 100%;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;}
+    .publish .pub-con .pub-wrap{background: transparent;overflow: hidden;position: relative;}
+    .publish .pub-con .pub-wrap:before{z-index: 1;top: -1px;display: block;position: absolute;left: 0;border-top: 1px solid #c8c7cc;width: 100%;content: " ";pointer-events:none;}
+    .publish .pub-con .pub-wrap .pub-theme{background: #fff;padding: 0 20px;position: relative;}
+    .publish .pub-con .pub-wrap .pub-theme>input{border: 0;width: 100%;height: 45px;font-size: 15px;font-weight: 700;color: #000;outline: 0;-webkit-tap-highlight-color:rgba(255,255,255,0);padding: 0;margin: 0;border-radius: 0;-webkit-appearance:textfield;background-color: white;cursor: auto;font: 11px BlinkMacSystemFont;text-rendering:auto;letter-spacing: normal;word-spacing: normal;text-transform: none;text-indent: 0px;text-shadow:none;display: inline-block;text-align: start;-webkit-writing-mode: horizontal-tb;}
+    .publish .pub-con .pub-wrap .pub-theme:after{border-color: #eee;bottom: -1px;display: block;position: absolute;left: 0;border-top: 1px solid #c8c7cc;width: 100%;content: " ";pointer-event:none;}
+    .publish .pub-con .pub-wrap .pub-editor{padding: 10px 20px 15px;background: #fff;}
+    .publish .pub-con .pub-wrap .pub-editor textarea{font-size: 14px;color: #000;margin: 0;display: -webkit-box;-webkit-box-flex:1;border: 0;width: 100%;height: auto;min-height: 72px;-webkit-appearance:none;outline: 0;-webkit-tap-highlight-color:rgba(255,255,255,0);border-radius: 0;background-color: white;-webkit-rtl-ordering:logical;-webkit-user-select:text;flex-direction:column;resize:auto;cursor: auto;white-space: pre-wrap;word-wrap:break-word;font: 11px BlinkMacSystemFont;text-rendering: auto;letter-spacing: normal;word-spacing: normal;text-transform: none;text-indent: 0px;text-shadow: none;text-align: start;-webkit-writing-mode: horizontal-tb;}
+    .publish .pub-con .pub-wrap .pub-type{display: -webkit-box;-webkit-box-pack: end;-webkit-box-align: center;-webkit-box-sizing: content-box;padding: 10px 20px;height: 35px;font-size: 16px;background: #fff;list-style: none;margin: 0; }
+    .publish .pub-con .pub-wrap .pub-type .selectPic{background-image: url(/images/t/test_touxiang.jpg);overflow: hidden;position: relative;margin-right: 14px;width: 25px;height: 25px;background: url(/images/t/test_touxiang.jpg) no-repeat 0 0;background-size: 25px 25px;line-height: 35px;}
+    .publish .pub-con .pub-wrap .pub-type .selectFace{overflow: hidden;position: relative;width: 25px;height: 25px;background: url(/images/t/test_touxiang.jpg) no-repeat 0 0;background-size: 25px 25px;line-height: 35px;}
+    .publish .pub-con .pub-wrap .pub-type .pub-flex{ -webkit-box-flex: 1; height: 35px;line-height: 35px;}
+    .publish .pub-con .pub-wrap .pub-type .pub-btn{height: 35px;line-height: 35px;display: list-item;text-align: -webkit-match-parent;}
+    .publish .pub-con .pub-wrap .pub-type .pub-btn button{border: 0;border-radius: 4px;
+    width: 81px;
+    height: 35px;
+    font-size: 16px;
+    text-align: center;
+    color: #fff;float: right;
+    background-color: #2791dc;outline: 0;
+    -webkit-tap-highlight-color: rgba(255,255,255,0);padding: 0;
+    margin: 0;font: 11px BlinkMacSystemFont;
+    text-rendering: auto;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;}
+    .publish .pub-con .pub-wrap .pub-pics{display: block;    overflow: hidden;
+    padding: 9px 18px 15px;list-style: none;margin: 0;    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;}
+    .publish .pub-con .pub-wrap .pub-pics .up-entry{float: left;
+    position: relative;
+    margin: 6px 6px 0 0;
+    width: 65px;
+    height: 65px;background: transparent url(http://pub.idqqimg.com/qqun/xiaoqu/mobile/img/nopack/publish-sprite.png?9c568819) no-repeat -60px 0;
+    background-size: 270px 65px;display: list-item;
+    text-align: -webkit-match-parent;}
+    .publish .pub-con .pub-wrap .pub-pics .up-entry .upfile{pointer-events: auto;position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;outline: 0;
+    -webkit-tap-highlight-color: rgba(255,255,255,0);padding: 0;
+    margin: 0;border-radius: 0;-webkit-appearance: textfield;
+    background-color: white;
+    border: 2px inset;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    -webkit-rtl-ordering: logical;
+    -webkit-user-select: text;font: 11px BlinkMacSystemFont;
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;}
+    .publish .pub-con .pub-wrap .pub-pics .up-pic{
+        float: left;
+    position: relative;
+    margin: 6px 6px 0 0;
+    width: 65px;
+    height: 65px;padding: 0;
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+    vertical-align: baseline;display: list-item;
+    text-align: -webkit-match-parent;
+    }
+    .publish .pub-con .pub-wrap .pub-pics .up-pic .clip{
+        overflow: hidden;
+    border-radius: 5px;
+    width: 65px;
+    height: 65px;margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+    vertical-align: baseline;display: block;
+    }
+    .publish .pub-con .pub-wrap .pub-pics .up-pic .btn-del{
+        display: block;position: absolute;
+    top: 3px;
+    right: 3px;
+    border: 1px solid #fff;
+    border-radius: 12px;
+    width: 22px;
+    height: 22px;
+    background: rgba(0,0,0,.38);text-decoration: none;
+    color: #0079ff;outline: 0;
+    -webkit-tap-highlight-color: rgba(255,255,255,0);cursor: auto;
+    }
+    .publish .pub-con .pub-wrap .pub-pics .up-pic .btn-del:before{display: block;
+    position: absolute;
+    top: 11px;
+    left: 4px;
+    z-index: 2;
+    width: 14px;
+    height: 1px;
+    background: #fff;
+    -webkit-transform: rotate(45deg);
+    content: "";}
+    .publish .pub-con .pub-wrap .pub-pics .up-pic .btn-del:after{-webkit-transform: rotate(-45deg);display: block;
+    position: absolute;
+    top: 11px;
+    left: 4px;
+    z-index: 2;
+    width: 14px;
+    height: 1px;
+    background: #fff;
+    content: "";}
+    </style>
+
+  </head>
+  <body>
+    <div id="monitor">Y position: <strong id="position">0</strong></div>
+    <div id="wrapper">
+      <div class="container">
+
+          <div class="feed-top">
+            <div class="user-info">
+              <div class="user-photo"><img src="http://q4.qlogo.cn/g?b=qq&k=YAJwtVI1uyWpz5GECUXzZw&s=140&t=1371200833"></div>
+              <div class="user-name">
+                <span class="user-nick">刘元鸿是你爹</span>
+              </div>
+              <div class="arrow-right"></div>
+            </div>
+            <div class="feed-title"> 看完受到2000万点伤害！以后都不敢一个人出门~ </div>
+            <div class="feed-info">
+              <span class="time">2015-11-4 18:26</span>
+              <span class="band-name">我们爱讲冷笑话</span>
+            </div>
+          </div>
+
+          <div class="feed-content">
+            <div class="main-content">
+                <div class="flag">
+                  <div class="content">来来来！赶紧吃几口狗粮压压惊！</div>
+                  <div class="pic"><img src="http://ugc.qpic.cn/gbar_pic/HnInJmzIOfnBqvRc81zBfX06nKiae2j2Xag3HibBjeIor6c8QmIVKKLQ/1000"></div>
+                  <div class="pic"><img src="http://ugc.qpic.cn/gbar_pic/HnInJmzIOfnBqvRc81zBfX06nKiae2j2Xag3HibBjeIor6c8QmIVKKLQ/1000"></div>
+                  <div class="pic"><img src="http://ugc.qpic.cn/gbar_pic/HnInJmzIOfnBqvRc81zBfX06nKiae2j2Xag3HibBjeIor6c8QmIVKKLQ/1000"></div>
+                </div>
+            </div>
+            <div class="actions">
+              <span class="read-num">
+                <i class="read-num-icon"></i>
+                10000
+              </span>
+            </div>
+          </div>
+
+          <div class="comment-header">
+                <div class="leftside-all-icon"></div>
+                <span class="ping">全部评论</span>
+                <span class="ping-num">一共XXX条评论</span>
+          </div>
+
+          <div class="detail-comment-list">
+            <div class="top-comment-wraper">
+              <ul class="list">
+                <li>
+                  <div class="comment-wrapper">
+                    <div class="user-avatar"><img src="http://q1.qlogo.cn/g?b=qq&k=CBszrbDicUgd6I2rKd2kmmg&s=140&t=1445487305"></div>
+                    <div class="name-wrap">
+                      <span class="user-nick">▂▃▅▆█▂▃▅▆█▂</span>
+                      <span class="lounum">2楼</span>
+                    </div>
+                    <div class="content-wrapper">
+                      <div class="ping-content">23333333333333</div>
+                      <div class="ping-container">
+                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
+                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
+                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
+                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
+                      </div>
+                    </div>
+                    <div class="comment-action">
+                      <span class="time">11-4</span>
+                      <span class="reply ">11</span>
+                      <span class="like">1181111</span>
+                    </div>
+                    <div class="reply-wrapper">
+                      <ul class="reply-list">
+                        <li class="item">
+                          <div class="fmain j_floor_main">
+                            <div class="floor_footer_item">
+                              <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
+                              <span class="floor_content">播放器一直加载失败，弹幕声音都没事就是黑屏怎么破，今天才有的情况</span>
+                              <span class="list_item_time">5-25 20:46</span>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="item">
+                          <div class="fmain j_floor_main">
+                            <div class="floor_footer_item">
+                              <a href="/home/main?un=艾尔黄金舰队" class="user_name ">艾尔黄金舰队</a>:
+                              <span class="floor_content">回复&nbsp;
+                              <a href="/home/main?un=最爱叶倩彤">最爱叶倩彤</a>&nbsp;:我前两星期就出现这个问题了，有几个视频一直加载或者直接黑屏，离线下来了也看不了，并且导致客户端崩溃
+                              </span>
+                              <span class="list_item_time">5-28 22:58</span>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <span class="more">查看更多评论>></span>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="comment-wrapper">
+                    <div class="user-avatar"><img src="http://q1.qlogo.cn/g?b=qq&k=CBszrbDicUgd6I2rKd2kmmg&s=140&t=1445487305"></div>
+                    <div class="name-wrap">
+                      <span class="user-nick">▂▃▅▆█▂▃▅▆█▂</span>
+                      <span class="lounum">2楼</span>
+                    </div>
+                    <div class="content-wrapper">
+                      <div class="ping-content">23333333333333</div>
+
+                    </div>
+                    <div class="comment-action">
+                      <span class="time">11-4</span>
+                      <span class="reply">11</span>
+                      <span class="like">1181111</span>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="comment-wrapper">
+                    <div class="user-avatar"><img src="http://q1.qlogo.cn/g?b=qq&k=CBszrbDicUgd6I2rKd2kmmg&s=140&t=1445487305"></div>
+                    <div class="name-wrap">
+                      <span class="user-nick">▂▃▅▆█▂▃▅▆█▂</span>
+                      <span class="lounum">2楼</span>
+                    </div>
+                    <div class="content-wrapper">
+                      <div class="ping-content">23333333333333</div>
+                    </div>
+                    <div class="comment-action">
+                      <span class="time">11-4</span>
+                      <span class="reply">11</span>
+                      <span class="like">1181111</span>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="comment-wrapper">
+                    <div class="user-avatar"><img src="http://q1.qlogo.cn/g?b=qq&k=CBszrbDicUgd6I2rKd2kmmg&s=140&t=1445487305"></div>
+                    <div class="name-wrap">
+                      <span class="user-nick">▂▃▅▆█▂▃▅▆█▂</span>
+                      <span class="lounum">2楼</span>
+                    </div>
+                    <div class="content-wrapper">
+                      <div class="ping-content">23333333333333</div>
+                    </div>
+                    <div class="comment-action">
+                      <span class="time">11-4</span>
+                      <span class="reply">11</span>
+                      <span class="like">1181111</span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="bottom-wraper">
+      <span class="reply" data-toggle="modal" data-target="#myModal">100</span>
+      <span class="like">200</span>
+    </div>
+    <div class="modal fade publish" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="pub-con">
+            <div class="pub-wrap">
+                
+                <div class="pub-editor">
+                    <textarea spellcheck="false" class="editor" placeholder="内容，10-700个字"></textarea>
+                </div>
+                <ul class="pub-type">
+                    <!--<li id="selectPic" class="pic-type active" title="添加图片"></li>
+                    <li id="selectFace" class="pub-face" title="添加表情"></li>
+                    <li class="pub-flex"></li>-->
+                    <li class="pub-btn "> <button class="pub-publish">发表</button> </li>
+                </ul>
+                <ul class="pub-pics"> 
+                    <li class="up-entry"> <input class="upfile up-entry-two" id="inputField" type="file" accept="image/*" multiple=""> </li> 
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        /*$(".reply").on('click',function(){
+          alert("你妈的");
+        });*/
+    });
+    </script>
+    <script type="text/javascript">
+        var myScroll;
+        var position;
+        var flag = 0;
+        var page = 0;
+        window.onload = function(){
+            position = document.getElementById('position');
+            myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:true, tap:true});
+            myScroll.on("scroll", updataPosition);
+            myScroll.on("scrollEnd", dowmPosition);
+            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        };
+        function updataPosition(){
+            position.innerHTML = this.y>>0;
+            if (this.y>5) {
+                flag = 1;
+                //console.log(flag);
+            }else if(this.y<(this.maxScrollY-5)){
+                flag = 2;
+                //console.log(flag);
+            }
+        }
+        function dowmPosition(){
+            if (flag==1) {
+                console.log("下拉加载");
+                myScroll.refresh();
+                flag = 0;
+            }else if (flag==2) {
+                console.log("上拉加载");
+                for(var i=0;i<20;i++){
+                    $(".container").append("<li>Pretty row 50</li>");
+                }
+                myScroll.refresh();
+                flag = 0;
+            }else{
+                flag = 0;
+            }
+        }
+    </script>
+  </body>
+</html>
