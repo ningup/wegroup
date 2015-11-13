@@ -505,14 +505,19 @@
                 var str = this.getAttribute("src");
                 img_arr.push(str);
             });
-            img_str = img_arr.toString();
-            $("#form-feedType").val("imgtext");
+            if ($(".pub-pics").find("li.up-pic").length==0) {
+                $("#form-feedType").val("text");
+            }else{
+                $("#form-feedType").val("imgtext");
+                img_str = img_arr.toString();
+            }
             $("#form-username").val("<%= username %>");
             $("#form-feedTitle").val($(".ipt-theme").val());
             $("#form-feedContent").html($(".editor").val());
             $("#form-imgurl").val(img_str);
             $("#publish-form").submit();
         });
+        $(".publish-btn").click(function(){alert("diandiandian");})
     });
     </script>
     <script type="text/javascript">
