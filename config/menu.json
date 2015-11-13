@@ -40,24 +40,18 @@
 		},
 		{
 		   "type":"view",
-		   "name":"群话题",
-		   "url":"http://www.soso.com/"
-		},
-		{
-		   "type":"view",
 		   "name":"群投票",
 		   "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/getVote&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
-		},
-		{
-		   "type":"view",
-		   "name":"群文件",
-		   "url":"http://www.soso.com/"
 		}]
     },
     {
-     "type":"click",
-     "name":"更多功能",
-     "key":"WEGROUP_MORE"
+      "name":"更多",
+      "sub_button":[
+		{
+		   "type":"view",
+		   "name":"群状态",
+		   "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
+		}]
     }
   ]
 }

@@ -5,7 +5,8 @@ var path= require('path');
 var Group=AV.Object.extend('Group');
 var Feed = AV.Object.extend('Feed');
 var WechatAPI = require('wechat-api');
-var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
+var config = require('../config/config.js');
+var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
   // 传入一个获取全局token的方法
    var query = new AV.Query('WechatToken');
    query.get("5606afe9ddb2e44a47769124", {
@@ -38,7 +39,7 @@ var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c'
 });
 function FeedClass()
 {
-	this.postFeed_text = function(groupObjId,username,feedContent,redirect){
+	this.postFeed_text = function(groupObjId,username,feedContent,cb){
 		var feed=new Feed();
 		feed.set('postedBy',username);
 		feed.set('feedType','text');
@@ -70,7 +71,7 @@ function FeedClass()
 				feed.set('nicknameOfPUser',queryUser.get('nickname'));
 				feed.set('userHeadImgUrl',queryUser.get('headimgurl'));
 				feed.save().then(function(feed){
-						redirect();
+						cb(null,feed.getCreatedAt(),feed);
 					});
 				
 			},
@@ -135,7 +136,7 @@ function FeedClass()
 										feed.set('nicknameOfPUser',queryUser.get('nickname'));
 										feed.set('userHeadImgUrl',queryUser.get('headimgurl'));
 										feed.save().then(function(feed){
-												cb();
+												cb(null,feed.getCreatedAt(),feed);
 											});
 										
 									},
@@ -187,7 +188,7 @@ function FeedClass()
 				feed.set('nicknameOfPUser',queryUser.get('nickname'));
 				feed.set('userHeadImgUrl',queryUser.get('headimgurl'));
 				feed.save().then(function(feed){
-						cb();
+						cb(null,feed.getCreatedAt(),feed);
 					});
 				
 			},

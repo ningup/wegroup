@@ -6,16 +6,17 @@ var FeedClass = require('../common/feed_class.js');   //引入Feed_class.js
 var LikeClass = require('../common/like_class.js');
 var UserClass = require('../common/user_class.js'); 
 //var voteResults = require('../config/voteResults.json');
-var vote = require('../config/vote.json');
+//var vote = require('../config/vote.json');
 //var voteResultsWithoutUser = require('../config/voteResultsWithoutUser.json');
 var fs = require('fs');
 var path= require('path');
 var OAuth = require('wechat-oauth');
-var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
+var config = require('../config/config.js');
+var client = new OAuth(config.appid, config.appsecret);
 var sign=require('../common/sign.js');
 var Group = AV.Object.extend('Group');
 var Feed = AV.Object.extend('Feed');
-var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
+var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
   // 传入一个获取全局token的方法
    var query = new AV.Query('WechatToken');
    query.get("5606afe9ddb2e44a47769124", {
@@ -50,60 +51,164 @@ var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c'
 router.get('/', function(req, res, next) {
 	//var likeclass = new LikeClass();
 	//likeclass.like('55fc293860b21fbf5733ec7d',req.query.username);
-	var username = req.query.username;
-	var groupObjIdGotInto = req.query.groupObjIdGotInto;
-	username = username.trim();
-	var query = new AV.Query('Group');
-	query.descending('createdAt');
-	query.get(groupObjIdGotInto, {
-	  success: function(group) {
-		// 成功获得实例
-		 console.log('you get into the '+ group.get('nickname'));
-		 var relation = group.relation("feedPosted");
-		 relation.targetClassName = 'Feed';
-		 var queryFeed = relation.query();
-		 queryFeed.find().then(function(feeds){
-			 var j =0;
-			    var comments = new Array();
-			    for(var i = 0 ; i< feeds.length; i++){
-					(function(i){
-						var relationC = feeds[i].relation("feedComment");
-						relation.targetClassName = 'comment';
-						var queryComment = relationC.query();
-						queryComment.find().then(function(comments){
-						    comments[i] = new Array();
-							comments[i] = comments;
-							j++;
-							if(j === feeds.length){
-							   res.render('feed', {
-								groupObjIdGotInto:groupObjIdGotInto,
-								feeds: feeds,
-								comments:comments,
-								username: username
-							  });
-						
-							}
+	var userclass = new UserClass();
+	client.getAccessToken(req.query.code, function (err, result) {
+		if(err){
+			 //res.redirect('/group/fini?title=');
+			 var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				 if(err){
+					 res.send('你还没有加入群呢，快去创建一个吧！');
+				 }
+				 else{
+					var groupObjId = whichGroupNow;
+					var query = new AV.Query('Group');
+					query.get(groupObjId, {
+					  success: function(group) {
+						// 成功获得实例
+						 //console.log('you get into the '+ group.get('nickname'));
+						 var relation = group.relation("feedPosted");
+						 relation.targetClassName = 'Feed';
+						 var queryFeed = relation.query();
+						 //queryFeed.descending('updateTime
+						 queryFeed.descending('updateTime');
+						 queryFeed.limit(30);
+						 //queryFeed.equalTo("feedType", "vote");
+						 queryFeed.find().then(function(feeds){
+						   userclass.getUserObj(username,function(err,user){
+							 userclass.getSignInCnt(username,groupObjId, function(err,cnt,isSignIn){
+								//console.log('groupnickname',nickname
+								var loadFeedTime = new Object();
+								if(feeds.length==0){
+									loadFeedTime.latest = new Date();
+									loadFeedTime.oldest = new Date();
+									 
+								}else{
+									loadFeedTime.latest = feeds[0].get('updateTime');
+									loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
+									user.set('loadFeedTime',loadFeedTime);
+									
+								}
+								user.save();
+								res.render('band', {
+									username: username,
+									cnt:cnt,
+									isSignIn:isSignIn,
+									feeds:feeds
+								 });
+							});
 							
-					  });
-						
-					})(i);
-					
-						
-				}
-			    
-			     
-				
-		
-		 });
-		
-	  },
-	  error: function(object, error) {
-		// 失败了.
-	  }
-	});
-   
-});
+						 });
+							 
 
+						 });
+						
+					  },
+					  error: function(object, error) {
+						// 失败了.
+					  }
+					});
+				 }
+			});
+			 
+		}else{
+				var username = result.data.openid;
+			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				 if(err){
+					 res.send('你还没有加入群呢，快去创建一个吧！');
+				 }
+				 else{
+					var groupObjId = whichGroupNow;
+					var query = new AV.Query('Group');
+					query.get(groupObjId, {
+					  success: function(group) {
+						// 成功获得实例
+						 //console.log('you get into the '+ group.get('nickname'));
+						 var relation = group.relation("feedPosted");
+						 relation.targetClassName = 'Feed';
+						 var queryFeed = relation.query();
+						 //queryFeed.descending('updateTime
+						 queryFeed.descending('updateTime');
+						 queryFeed.limit(30);
+						 //queryFeed.equalTo("feedType", "vote");
+						 queryFeed.find().then(function(feeds){
+						 userclass.getUserObj(username,function(err,user){
+							 var loadFeedTime = new Object();
+							if(feeds.length==0){
+								loadFeedTime.latest = new Date();
+							    loadFeedTime.oldest = new Date();
+								 
+							}else{
+								loadFeedTime.latest = feeds[0].get('updateTime');
+							    loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
+								user.set('loadFeedTime',loadFeedTime);
+								
+							}
+							user.save();
+						 });
+							 res.render('band', {
+								username: username,
+								feeds:feeds
+							 });
+
+						 });
+						
+					  },
+					  error: function(object, error) {
+						// 失败了.
+					  }
+					});
+				 }
+			});
+		
+	    }
+	 });
+
+});
+router.get('/history', function(req, res, next) {
+	var userclass = new UserClass();
+	client.getAccessToken(req.query.code, function (err, result) {
+		if(err){
+			 res.redirect('/group/fini?title=');
+			 
+		}else{ 
+			 var username = result.data.openid;
+			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				 if(err){
+					 res.send('你还没有加入群呢，快去创建一个吧！');
+				 }
+				 else{
+					var groupObjId = whichGroupNow;
+					var query = new AV.Query('Group');
+					query.get(groupObjId, {
+					  success: function(group) {
+						// 成功获得实例
+						 //console.log('you get into the '+ group.get('nickname'));
+						 userclass.getUserObj(username,function(err,user){
+							    var loadFeedTime = user.get('loadFeedTime');
+							    var relation = group.relation("feedPosted");
+								 relation.targetClassName = 'Feed';
+								 var queryFeed = relation.query();
+								 queryFeed.descending('updateTime');
+								 queryFeed.lessThan("updateTime", loadFeedTime.oldest);
+								 queryFeed.limit(30);
+								 queryFeed.find().then(function(feeds){
+										res.json({"status":"0","feeds":feeds});
+										return ;
+								 });						
+						 });				
+					  },
+					  error: function(object, error) {
+						// 失败了.
+					  }
+					});
+				 }
+			});
+		
+	    }
+	 });
+
+});
 router.get('/publish', function(req, res, next) {
 	var username = req.query.username;
 	var groupObjIdGotInto = req.query.groupObjIdGotInto;
@@ -204,7 +309,7 @@ router.get('/getVote', function(req, res, next) {
 			 var username = result.data.openid;
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				 if(err){
-					 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
+					 res.send('你还没有加入群呢，快去创建一个吧！');
 				 }
 				 else{
 						var groupObjId = whichGroupNow;
@@ -268,7 +373,8 @@ router.post('/post', function(req, res, next) {
 	  if(feedType === 'text'){
 		  console.log('into the text post');
 		  var feedContent=req.body.feedContent;
-		  feedclass.postFeed_text(groupObjId,username,feedContent,function(){
+		  feedclass.postFeed_text(groupObjId,username,feedContent,function(err,date,feed){
+				feed.save('updateTime',date);
 				res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
 		   }); 
 	  }
@@ -276,7 +382,8 @@ router.post('/post', function(req, res, next) {
 			var feedContent=req.body.feedContent;
 			var serverId = req.body.serverId;
 			serverId=JSON.parse(serverId).serverId;
-			feedclass.postFeed_imgtext(groupObjId,username,feedContent,serverId,function(){
+			feedclass.postFeed_imgtext(groupObjId,username,feedContent,serverId,function(err,date,feed){
+				feed.save('updateTime',date);
 				res.redirect('/feed?username='+username+'&groupObjIdGotInto='+groupObjId);
 		   }); 
 	  }
@@ -337,7 +444,8 @@ router.post('/post', function(req, res, next) {
 					j++;
 					if(j===choiceNum){
 						console.log(voteResults);
-						feedclass.postFeed_vote(groupObjId,username,voteContent,voteResults,voteResultsWithoutUser,function(){
+						feedclass.postFeed_vote(groupObjId,username,voteContent,voteResults,voteResultsWithoutUser,function(err,date,feed){
+							feed.save('updateTime',date);
 							res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/getVote&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 						});
 					}
@@ -349,7 +457,31 @@ router.post('/post', function(req, res, next) {
   
   
 });
-
+//显示群昵称
+router.get('/groupNickname', function(req, res, next) {
+	var userclass = new UserClass();
+	client.getAccessToken(req.query.code, function (err, result) {
+		 if(err){
+			 res.redirect('/group/fini?title=');
+			 
+		}else{ 
+			 var username = result.data.openid;
+			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				 if(err){
+					 res.send('你还没有加入群呢，快去创建一个吧！');
+				 }
+				 else{
+						var groupObjId = whichGroupNow;
+						username.getGroupNickname(username,whichGroupNow,function(err,nickname){
+							console.log('groupnickname',nickname);
+						});
+						
+				 }
+			});
+		
+	    }
+	 });
+});
 
 
 module.exports = router;

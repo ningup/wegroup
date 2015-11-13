@@ -394,9 +394,13 @@ app.get('/', function(req, res) {
 					  else if (status === 0)
 							res.send('未关注');
 				});*/
-				var whichGroupNow='5624636e00b07c4da719f74a'; 
+				var whichGroupNow='5642fb8060b20fc9b982c776'; 
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';/*
+				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
+				userclass.getSignInCnt(username,whichGroupNow, function(err,nickname,isSignIn){
+						console.log('groupnickname',nickname);
+				});
+				/*
 				userclass.getGroupNotice(username,function(isOwner,queryUser,group,groupNotice){
 					if(isOwner===1){  //是群主
 						var text='' ;

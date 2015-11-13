@@ -1,5 +1,6 @@
 var AV = require('leanengine');
 var Group=AV.Object.extend('Group');
+var UserInfo=AV.Object.extend('UserInfo');
 var WechatAPI = require('wechat-api');
 var fs = require('fs');
 var config = require('../config/config.js');
@@ -38,6 +39,7 @@ function GroupClass()
 {
 	this.create = function(flagImg,serverId,groupColor,nickname,username,cb){
 		var group=new Group();
+		var userinfo = new UserInfo();
 		var promise = new AV.Promise();
 		group.set('nickname',nickname);
 		group.set('createdBy',username);
@@ -54,6 +56,10 @@ function GroupClass()
 			group.save(null,{
 			success:function(group)
 			{
+				userinfo.set('username',username);
+				userinfo.set('groupid',group.getObjectId());
+				userinfo.set('nicknameInGroup',queryUser.get('nickname'));
+				userinfo.set('signInTime',new Date());
 				var groupJoinedNum = queryUser.get('groupJoinedNum');
 				groupJoinedNum ++;
 				//var whichGroupNow = queryUser.get('whichGroupNow');
@@ -64,7 +70,9 @@ function GroupClass()
 				queryUser.set('groupJoinedNum',groupJoinedNum);
 				var relationUser = queryUser.relation('groupCreated');
 				relationUser.add(group);
+				//userinfo.save();
 				queryUser.save().then(function(obj) {
+					userinfo.save();
   				//对象保存成功
 					cb(null,group);
 				}, function(error) {

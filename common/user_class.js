@@ -554,5 +554,73 @@ function userFollowed()
 			} 
 		});
 	};
+	this.getGroupNickname = function(username,groupid,cb){
+		var query1 = new AV.Query('UserInfo');
+		var query2 = new AV.Query('UserInfo');
+		query1.equalTo("username", username);
+		query2.equalTo("groupid", groupid);
+		var query = AV.Query.or(query1,query2);
+		//console.log(groupid);
+		query.first({
+		success: function(userinfo) {
+			cb(null,userinfo.get('nicknameInGroup'));
+		},
+		error: function(object, error) {
+		}
+	  });
+	};
+	this.getSignInCnt = function(username,groupid,cb){
+		var query1 = new AV.Query('UserInfo');
+		var query2 = new AV.Query('UserInfo');
+		query1.equalTo("username", username);
+		query2.equalTo("groupid", groupid);
+		var query = AV.Query.or(query1,query2);
+		console.log(groupid);
+		query.first({
+		success: function(userinfo) {
+			var signTime = userinfo.get('signInTime');
+			//console.log(signTime);
+			var currentTime = new Date();
+			if(signTime < currentTime){
+				if(currentTime.getYear() == signTime.getYear()&&currentTime.getMonth() == signTime.getMonth() && currentTime.getDate() > signTime.getDate()){
+					cb(null,userinfo.get('signInCnt'),'0');
+				}
+				else if(currentTime.getYear() > signTime.getYear() || currentTime.getMonth() > signTime.getMonth()){
+					cb(null,userinfo.get('signInCnt'),'0');
+				}
+				else{
+					cb(null,userinfo.get('signInCnt'),userinfo.get('isSignIn'));
+				}
+			}
+			else{
+				cb(null,userinfo.get('signInCnt'),userinfo.get('isSignIn'));
+			}
+			
+		},
+		error: function(object, error) {
+		}
+	  });
+	};
+	this.setSignInCnt = function(username,groupid,cb){
+		var query1 = new AV.Query('UserInfo');
+		var query2 = new AV.Query('UserInfo');
+		query1.equalTo("username", username);
+		query2.equalTo("groupid", groupid);
+		var query = AV.Query.or(query1,query2);
+		//console.log(groupid);
+		query.first({
+		success: function(userinfo) {
+			var cnt = userinfo.get('signInCnt');
+			cnt += 1;
+			userinfo.set('signInTime',new Date());
+			userinfo.set('isSignIn','1');
+			userinfo.set('signInCnt',cnt);
+			userinfo.save();
+			cb(null,'1');
+		},
+		error: function(object, error) {
+		}
+	  });
+	};
 }
 module.exports = userFollowed;

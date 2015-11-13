@@ -7,9 +7,10 @@ var WechatAPI = require('wechat-api');
 var fs = require('fs');
 var path= require('path');
 var OAuth = require('wechat-oauth');
-var client = new OAuth('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
+var config = require('../config/config.js');
+var client = new OAuth(config.appid, config.appsecret);
 //var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c');
-var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c', function (callback) {
+var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
   // 传入一个获取全局token的方法
    var query = new AV.Query('WechatToken');
    query.get("5606afe9ddb2e44a47769124", {
@@ -42,7 +43,7 @@ var api = new WechatAPI('wx88cb5d33bbbe9e75', '77aa757e3bf312d9af6e6f05cb01de1c'
 });
 //声明一个Group类，为避免堆栈溢出，放到全局变量里面
 var Group = AV.Object.extend('Group');
-
+var UserInfo=AV.Object.extend('UserInfo');
 // 搜索 Groups 结果
 router.get('/', function(req, res, next) {
 	 client.getAccessToken(req.query.code, function (err, result) {
@@ -288,6 +289,11 @@ router.get('/join',function(req,res,next){
 								}
 								else{
 									var query = new AV.Query(Group);
+									var userinfo = new UserInfo();
+									userinfo.set('username',username);
+									userinfo.set('groupid',groupObjIdJoined);
+									userinfo.set('nicknameInGroup',queryUser.get('nickname'));
+									userinfo.set('signInTime',new Date());
 									query.get(groupObjIdJoined,{
 										 success:function(group){
 												var followersNum = group.get('followersNum');
@@ -296,6 +302,7 @@ router.get('/join',function(req,res,next){
 												var relation = group.relation('followers');
 												relation.add(queryUser);
 												group.save().then(function(group){
+													userinfo.save();
 													var text = '成功加入并切换到「'+group.get('nickname')+'」群'
 															  api.sendText(username, text, function(err,results){
 																  if(err){
