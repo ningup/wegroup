@@ -1,4 +1,4 @@
-# wegroup
+# wegroup band
 利用 wechat，wechat-api package
 ### feature       written by NingLi
 user 相关功能 
