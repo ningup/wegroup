@@ -61,7 +61,9 @@
     .top_paragraph_txt{color: #f25824;}
     .top_sign_like{margin: 13px 1px 0 0;display: -webkit-box;position: relative;}
     .sign_like_time{font-size: 14px;line-height: 34px;height: 34px;display: inline-block;}
-    .sign_like_button{width: 68px;height: 34px;position: absolute;right: 9px;top: 0;background-color: #ebedf0;color: #b2b6ba;border: 0;}
+    /*.sign_like_button{width: 68px;height: 34px;position: absolute;right: 9px;top: 0;background-color: #ebedf0;color: #b2b6ba;border: 0;}*/
+    .yes{width: 68px;height: 34px;position: absolute;right: 9px;top: 0;background-color: #ebedf0;color: #b2b6ba;border: 0;}
+    .no{width: 68px;height: 34px;position: absolute;right: 9px;top: 0;background-color: #00a5e0;color: #ffffff;border: 0;}
     .feed{overflow: hidden;position: relative;margin-bottom: 10px;background-color: #fff;padding-top: 18px;}
     .feed .detail{padding: 0 15px 15px 15px;display: block;overflow: hidden;position: relative;margin: 0;}
     .feed .detail .feed_content{overflow: hidden;margin-bottom: 10px;max-height: 73px;}
@@ -224,8 +226,12 @@
                   <span class="top_paragraph_txt">100</span>
               </p>
               <div class="top_sign_like">
-                    <div class="sign_like_time">你已签到<span style="color:#f25824;">XXX</span>天</div>
-                    <button class="sign_like_button">签到</button>
+                    <div class="sign_like_time">你已签到<span style="color:#f25824;"><%= cnt%></span>天</div>
+                    <% if(isSignIn==0){ %>
+                        <button class="sign_like_button no">签到</button>
+                    <% }else{ %>
+                        <button class="sign_like_button yes">已签到</button>
+                    <% } %>
               </div>
           </div>
           <div class="feed_list">
