@@ -314,10 +314,11 @@
             <textarea type="hidden" name="feedContent" id="form-feedContent"></textarea>
             <input type="hidden" name="imgurl" id="form-imgurl" value="">
         </form>
-        <form id="feed-post" method="get" action="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/detail&response_type=code&scope=snsapi_base&state=123#wechat_redirect">
+        <!--<form id="feed-post" method="get" action="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/detail&response_type=code&scope=snsapi_base&state=123#wechat_redirect">
         	<input type="hidden" name="feedObjId" id="feedObjId" value="">
         	<input type="hidden" name="groupObjId" id="groupObjId" value="<%= groupObjId%>">
-        </form>
+        </form>-->
+        <a href="" style="display:none;" id="feed-post"><span style="display:none;" id="feed-click">跳转</span></a>
     </div>
     <script type="text/javascript">
     $(document).ready(function(){
@@ -366,8 +367,14 @@
         });
         $(".feed").click(function(){
         	alert("尼玛");
+            /*
         	$("#feedObjId").val(this.getAttribute("data-feedid"));
-        	$("#feed-post").submit();
+        	$("#feed-post").submit();*/
+            var str = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid")+ "&groupObjId=<%= groupObjId%>" +"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+            $("#feed-post").attr("href",str);
+            alert($("#feed-post").attr("href"));
+            //$("feed-click").click();
+            document.getElementById("feed-click").click();
         });
     });
     </script>
