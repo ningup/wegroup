@@ -54,8 +54,8 @@ router.get('/', function(req, res, next) {
 	var userclass = new UserClass();
 	client.getAccessToken(req.query.code, function (err, result) {
 		if(err){
-			 res.redirect('/group/fini?title=');
-				/*
+			 //res.redirect('/group/fini?title=');
+				
 			 var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				 if(err){
@@ -112,7 +112,7 @@ router.get('/', function(req, res, next) {
 					});
 				 }
 			});
-			*/ 
+			
 		}else{
 				var username = result.data.openid;
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
