@@ -129,7 +129,7 @@ router.get('/', function(req, res, next) {
 						 var relation = group.relation("feedPosted");
 						 relation.targetClassName = 'Feed';
 						 var queryFeed = relation.query();
-						 //queryFeed.descending('updateTime
+						 queryFeed.notEqualTo('feedType','vote');
 						 queryFeed.descending('updateTime');
 						 queryFeed.limit(30);
 						 //queryFeed.equalTo("feedType", "vote");
