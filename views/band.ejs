@@ -226,7 +226,7 @@
                   <span class="top_paragraph_txt">100</span>
               </p>
               <div class="top_sign_like">
-                    <div class="sign_like_time">你已签到<span style="color:#f25824;"><%= cnt%></span>天</div>
+                    <div class="sign_like_time">你已签到<span class="day_num" style="color:#f25824;"><%= cnt%></span>天</div>
                     <% if(isSignIn==0){ %>
                         <button class="sign_like_button no">签到</button>
                     <% }else{ %>
@@ -348,9 +348,11 @@
                 },
                 type:'post',
                 dataType:'json',
-                success:function(){
+                success:function(data){
                     $(".sign_like_button").removeClass("no");
                     $(".sign_like_button").addClass("yes");
+                    $(".sign_like_button").html("已签到");
+                    $(".day_num").html(data.cnt);
                 },
                 error:function(){alert("签到失败");}
             });
