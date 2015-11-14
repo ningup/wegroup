@@ -23,29 +23,27 @@ var config = require('./config/config.js');
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var client = new OAuth(config.appid, config.appsecret);
 var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
-  // 传入一个获取全局token的方法
-   var query = new AV.Query('WechatToken');
-   query.get("5606afe9ddb2e44a47769124", {
-  success: function(obj) {
-    callback(null, JSON.parse(obj.get('accessToken')));
-  },
-  error: function(object, error) {
-  }
-});
-  
-}, function (token, callback) {
-  // 请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等
-	  var query = new AV.Query('WechatToken');
-	   query.get("5606afe9ddb2e44a47769124", {
-	  success: function(wechatToken) {
-		// 成功获得实例
-			   wechatToken.set('accessToken',JSON.stringify(token));
-			   wechatToken.save().then(function(obj){});
-		
-	  },
-	  error: function(object, error) {
+	// 传入一个获取全局token的方法
+	var query = new AV.Query('WechatToken');
+	query.get("5606afe9ddb2e44a47769124", {
+		success: function(obj) {
+    	callback(null, JSON.parse(obj.get('accessToken')));
+  		},
+  		error: function(object, error) {
+  		}
+	});  
+	}, function (token, callback) {
+	//请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等
+	var query = new AV.Query('WechatToken');
+	query.get("5606afe9ddb2e44a47769124", {
+		success: function(wechatToken) {
+			// 成功获得实例
+			wechatToken.set('accessToken',JSON.stringify(token));
+			wechatToken.save().then(function(obj){});	
+		},
+		error: function(object, error) {
 		// 失败了.
-	  }
+		}
 	});
    
 });
@@ -64,284 +62,246 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.query());
 
 app.use('/wechat', wechat(config, function (req, res, next) {
-  // 微信输入信息都在req.weixin上
-  var message = req.weixin;
-  var create_timeout;
-  if(message.MsgType === 'text'){
-	  userclass.getUserObj(message.FromUserName,function(err,user){
+	// 微信输入信息都在req.weixin上
+	var message = req.weixin;
+	var create_timeout;
+	if(message.MsgType === 'text'){
+		userclass.getUserObj(message.FromUserName,function(err,user){
 			if(user.get('whichStatus')==='wegroup_create'){
 				user.set('tempGroupName',message.Content);
 				user.save().then(function(userObj){
 					res.reply({type: "text", content: '您是否要创建微群'+'「'+message.Content+'」。'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/create&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击创建</a>'});
-				});
-				
+				});	
 			}
 			else if(user.get('whichStatus')==='wegroup_switch'){
 				res.reply('');      //回复空串
-				groupclass.groupSwitch(message.FromUserName,message.Content);
-				
-				
+				groupclass.groupSwitch(message.FromUserName,message.Content);		
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
 				res.reply('');      //回复空串
 				userclass.groupChat_text(message.FromUserName,user.get('whichGroupNow'),message.Content,function(){
 					//res.reply('');      //回复空串
-				});
-				
-				
+				});	
 			}	
 			else{
 				res.reply({type: "text", content: '你发的信息是'+message.Content});
 			}		
-	  });
-     //res.reply({type: "text", content: '你发的信息是'+message.Content});
-  }
-  else if(message.MsgType === 'image' || message.MsgType === 'voice'){
-	  userclass.getUserObj(message.FromUserName,function(err,user){
-			if(user.get('whichStatus')==='wegroup_create'){
-				
-			 res.reply({type: "text", content: '群名字只能是文字哦'});
-	
+		});
+		//res.reply({type: "text", content: '你发的信息是'+message.Content});
+	}
+	else if(message.MsgType === 'image' || message.MsgType === 'voice'){
+		userclass.getUserObj(message.FromUserName,function(err,user){
+			if(user.get('whichStatus')==='wegroup_create'){	
+				res.reply({type: "text", content: '群名字只能是文字哦'});
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
 				res.reply('');      //回复空串
 				userclass.groupChat_media(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,function(){
 					//res.reply('');      //回复空串
-				});
-				
-				
+				});	
 			}	
 			else if(user.get('whichStatus')==='wegroup_switch'){
 				res.reply('不是数字，请重新输入：');     
-		
 			}
 			else{
 				res.reply('');
 			}		
-	  });
-     //res.reply({type: "text", content: '你发的信息是'+message.Content});
-  }
-  else if(message.MsgType === 'video'){
-	  userclass.getUserObj(message.FromUserName,function(err,user){
-			if(user.get('whichStatus')==='wegroup_create'){
-				
-			 res.reply({type: "text", content: '群名字只能是文字哦'});
-	
+		});
+		//res.reply({type: "text", content: '你发的信息是'+message.Content});
+	}
+	else if(message.MsgType === 'video'){
+		userclass.getUserObj(message.FromUserName,function(err,user){
+			if(user.get('whichStatus')==='wegroup_create'){	
+				res.reply({type: "text", content: '群名字只能是文字哦'});
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
 				res.reply('目前还不支持视频！');      //回复空串
 				//userclass.groupChat_video(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,message.thumb_media_id,function(){
 					//res.reply('');      //回复空串
-				//});
-				
-				
+				//});	
 			}	
 			else if(user.get('whichStatus')==='wegroup_switch'){
-				res.reply('不是数字，请重新输入：');      
-		
+				res.reply('不是数字，请重新输入：');      	
 			}	
 			else{
 				res.reply('');
 			}		
-	  });
-     //res.reply({type: "text", content: '你发的信息是'+message.Content});
-  }
-  else if(message.MsgType === 'event'){
-     if(message.Event === 'subscribe'){
-          userclass.signUp(message.FromUserName,function(err,result){
+		});
+		//res.reply({type: "text", content: '你发的信息是'+message.Content});
+	}
+	else if(message.MsgType === 'event'){
+		if(message.Event === 'subscribe'){
+			userclass.signUp(message.FromUserName,function(err,result){
 				if(err)
 					res.reply({type: "text", content: '您已经注册过了，快来看看你错过了什么！'})
 				else
 					res.reply({type: "text", content: '感谢您找到了我，注册成功，开启便捷群生活！'});
-		  });
+			});
             
-     }
-     else if(message.Event === 'unsubscribe'){
-        var query = new AV.Query(AV.User);
-	    query.equalTo("username", message.FromUserName);
-	    query.first({
-		 success: function(queryUser) {
-			queryUser.set('subscribe', 0 );
-			queryUser.save();
-		 },
-  		 error: function(error) {
-    		//alert("Error: " + error.code + " " + error.message);
-  		 }
-	   });
-     } 
-     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SWITCH'){
-		 userclass.getUserObj(message.FromUserName,function(err,user){
+		}
+		else if(message.Event === 'unsubscribe'){
+			var query = new AV.Query(AV.User);
+			query.equalTo("username", message.FromUserName);
+			query.first({
+				success: function(queryUser) {
+					queryUser.set('subscribe', 0 );
+					queryUser.save();
+				},
+				error: function(error) {
+					//alert("Error: " + error.code + " " + error.message);
+				}
+		   });
+		} 
+		else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SWITCH'){
+			userclass.getUserObj(message.FromUserName,function(err,user){
 				user.set('whichStatus','wegroup_switch');
 				user.set('tempGroupName','');
 				user.save().then(function(userObj){
-							 userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
-							 if(err){
-								 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
-							 }
-							 else{
-									 
-								userclass.getUserAllGroup(message.FromUserName,function(err,queryUser,results){
-										 var tempGroupSwitch = new Array();
-										 var content = '';
-										 content = '当前所在群是:'+'<'+whichGroupNameNow+'>\n'; 
-										 content += '所有群群如下,输入序号切换。\n';
-										 var j=0;
-										 for(var i=0; i<results.length; i++){
-											 j++;
-											 //content += '<a href=\"'+'dev.wegroup.avosapps.com/group/switchPre?id='+results[i].getObjectId()+'\">'+'「'+results[i].get('nickname')+'」'+'<\/a>';	
-											 content +='['+i+']'+results[i].get('nickname')+'\n';
-											 tempGroupSwitch[i]=new Object();
-											 tempGroupSwitch[i].gid = results[i].getObjectId();
-											 tempGroupSwitch[i].nickname = results[i].get('nickname');
-											 if(j===results.length){
-												  user.set('tempGroupSwitch',tempGroupSwitch);
-												  user.save();
-												  res.reply({type: "text", content: content});
-								
-											 }
-												
-										 }
-								}); 	 
-							 }
-						 
-						 });
+					userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+						if(err){
+							res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
+						}
+						else{
+							userclass.getUserAllGroup(message.FromUserName,function(err,queryUser,results){
+								var tempGroupSwitch = new Array();
+								var content = '';
+								content = '当前所在群是:'+'<'+whichGroupNameNow+'>\n'; 
+								content += '所有群群如下,输入序号切换。\n';
+								var j=0;
+								for(var i=0; i<results.length; i++){
+									j++;
+									//content += '<a href=\"'+'dev.wegroup.avosapps.com/group/switchPre?id='+results[i].getObjectId()+'\">'+'「'+results[i].get('nickname')+'」'+'<\/a>';	
+									content +='['+i+']'+results[i].get('nickname')+'\n';
+									tempGroupSwitch[i]=new Object();
+									tempGroupSwitch[i].gid = results[i].getObjectId();
+									tempGroupSwitch[i].nickname = results[i].get('nickname');
+									if(j===results.length){
+										user.set('tempGroupSwitch',tempGroupSwitch);
+										user.save();
+										res.reply({type: "text", content: content});
+									}						
+								}
+							}); 	 
+						}
+					});
 				});
-				
-		 });
-
-       
-     }
-     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_CREATE'){
-		 userclass.getUserObj(message.FromUserName,function(err,user){
+			});
+		}
+		else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_CREATE'){
+			userclass.getUserObj(message.FromUserName,function(err,user){
 				user.set('whichStatus','wegroup_create');
 				user.set('tempGroupName','');
 				user.save().then(function(userObj){
 					res.reply({type: "text", content: '进入创建群功能，群聊功能关闭，请输入你想创建的群名'});
-				});
-				
-		 });
-       
-     }
-     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_GROUP_CHAT'){
-		 userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
-			 if(err){
-				 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
-			 }
-			 else{
-				 userclass.getUserObj(message.FromUserName,function(err,user){
+				});			
+			});
+		}
+		else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_GROUP_CHAT'){
+			userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+				if(err){
+					res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
+				}
+				else{
+					userclass.getUserObj(message.FromUserName,function(err,user){
 						user.set('whichStatus','wegroup_chat');
 						user.set('tempGroupName','');
 						user.set('tempGroupSwitch',[]);
 						user.save().then(function(userObj){
 							res.reply({type: "text", content: '群聊功能开启，可以在'+'「'+user.get('whichGroupNameNow')+'」群中与大家聊天了'});
-						});
-						
-				 });
-				 
-			 }
-		});
-		
-       
-     }
-     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SHARE_JOIN'){
-		  userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
-			 if(err){
-				 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
-			 }
-			 else{
-				 		 userclass.getUserObj(message.FromUserName,function(err,user){
-								var whichGroupNow = user.get('whichGroupNow');
-								var whichGroupNameNow = user.get('whichGroupNameNow');
-								res.reply([
-								{
-								title: '群名：'+whichGroupNameNow+' 点击加入',
-								description: '微群帮',
-								picurl: user.get('headimgurl'),
-								url: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/join?id='+whichGroupNow+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect'
-								}
-							]);
-								
-						 });
-			 }
-		});
-
-
-     }
-     else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_NOTICE'){
-        userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
-			 if(err){
-				 res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
-			 }
-			 else{
-				 res.reply('');
-				 userclass.getGroupNotice(message.FromUserName,function(isOwner,queryUser,group,groupNotice){
-					if(isOwner===1){  //是群主
-						var text='' ;
-						
-						if(groupNotice ==='void'){
-							console.log('notice',groupNotice);
-							text = '你还没有设置群公告';
+						});			
+					}); 
+				}
+			});
+		}
+		else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SHARE_JOIN'){
+			userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+				if(err){
+					res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
+				}
+				else{
+					userclass.getUserObj(message.FromUserName,function(err,user){
+						var whichGroupNow = user.get('whichGroupNow');
+						var whichGroupNameNow = user.get('whichGroupNameNow');
+						res.reply([
+						{
+							title: '群名：'+whichGroupNameNow+' 点击加入',
+							description: '微群帮',
+							picurl: user.get('headimgurl'),
+							url: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/join?id='+whichGroupNow+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect'
+						}]);
+					});
+				}
+			});
+		}
+		else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_NOTICE'){
+			userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+				if(err){
+					res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
+				}
+				else{
+					res.reply('');
+					userclass.getGroupNotice(message.FromUserName,function(isOwner,queryUser,group,groupNotice){
+						if(isOwner===1){  //是群主
+							var text='' ;
+							if(groupNotice ==='void'){
+								console.log('notice',groupNotice);
+								text = '你还没有设置群公告';
+							}
+							else{
+								text = groupNotice;
+							}
+							text += '\n';
+							text+='<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/notice&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击编辑群公告</a>';
+							api.sendText(message.FromUserName, text, function(err,results){
+								if(err){
+									api.sendText(message.FromUserName, text, function(err,results){
+									});
+								}							  
+							});
 						}
-						else{
-						  text = groupNotice;
+						else{				//不是群主
+							var text='';
+							if(groupNotice==='void'){
+								text += '群主还没有设置群公告';
+							}
+							else{
+							  text = groupNotice;
+							}
+							api.sendText(message.FromUserName, text, function(err,results){
+								if(err){
+									api.sendText(message.FromUserName, text, function(err,results){
+									});
+								}							  
+							});
 						}
-						text += '\n';
-						text+='<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/notice&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击编辑群公告</a>';
-						api.sendText(message.FromUserName, text, function(err,results){
-							if(err){
-								api.sendText(message.FromUserName, text, function(err,results){
-								});
-							}							  
-						 });
-					}
-					else{				//不是群主
-						var text='';
-						if(groupNotice==='void'){
-							text += '群主还没有设置群公告';
-						}
-						else{
-						  text = groupNotice;
-						}
-						
-						api.sendText(message.FromUserName, text, function(err,results){
-							if(err){
-								api.sendText(message.FromUserName, text, function(err,results){
-								});
-							}							  
-						 });
-					}
-				});
-			 }
-		});
-     }
-     else{
-	 
-	 }
-   }
-   else {} 
+					});
+				}
+			});
+		}
+		else{}
+	}
+	else {} 
 }));
 
 /*
 api.getTicket(function(err,results){
-	 //console.log(JSON.stringify(results));
-	 console.log(results);
+	//console.log(JSON.stringify(results));
+	console.log(results);
 	
 });*/
 
 //api.createMenu(menu, function (err, result){
-	////if(err)
-		//console.log(JSON.stringify(result));
+	//if(err)
+	//console.log(JSON.stringify(result));
 //});
 
 
 //api.getMenu(function(err,results){
-	
-	//console.log(JSON.stringify(results));
-	
+	//console.log(JSON.stringify(results));	
 //}); 
 
 /*api.removeMenu(function(err,results){
-        console.log(JSON.stringify(results));
+	console.log(JSON.stringify(results));
 });*/
 
 
@@ -362,9 +322,7 @@ app.use(function(req, res, next) {
   d.run(next);
 });
 
-
 app.get('/', function(req, res) {
-  
   client.getAccessToken(req.query.code, function (err, result) {
 	  //var accessToken = result.data.access_token;
 	  //var openid = result.data.openid;
