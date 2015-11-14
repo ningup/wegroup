@@ -340,22 +340,25 @@
         });
         $(".publish-btn").click(function(){alert("diandiandian");})
         $(".no").click(function(){
-            var aj = $.ajax({
-                url:'/feed/setSignIn',
-                data:{
-                    "username":"<%= username%>",
-                    "groupObjId":"<%= groupObjId%>"
-                },
-                type:'post',
-                dataType:'json',
-                success:function(data){
-                    $(".sign_like_button").removeClass("no");
-                    $(".sign_like_button").addClass("yes");
-                    $(".sign_like_button").html("已签到");
-                    $(".day_num").html(data.cnt);
-                },
-                error:function(){alert("签到失败");}
-            });
+        	if ($(".sign_like_button").hasClass("no")){
+	            var aj = $.ajax({
+	                url:'/feed/setSignIn',
+	                data:{
+	                    "username":"<%= username%>",
+	                    "groupObjId":"<%= groupObjId%>"
+	                },
+	                type:'post',
+	                dataType:'json',
+	                success:function(data){
+	                	alert("coming");
+	                    $(".sign_like_button").removeClass("no");
+	                    $(".sign_like_button").addClass("yes");
+	                    alert($(".sign_like_button").attr("class"));
+	                    $(".sign_like_button").html("已签到");
+	                    $(".day_num").html(data.cnt);
+	                }
+	            });
+        	}
         });
     });
     </script>
