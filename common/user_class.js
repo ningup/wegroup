@@ -583,9 +583,13 @@ function userFollowed()
 			var currentTime = new Date();
 			if(signTime < currentTime){
 				if(currentTime.getYear() == signTime.getYear()&&currentTime.getMonth() == signTime.getMonth() && currentTime.getDate() > signTime.getDate()){
+					userinfo.set('isSignIn','0');
+					userinfo.save();
 					cb(null,userinfo.get('signInCnt'),'0');
 				}
 				else if(currentTime.getYear() > signTime.getYear() || currentTime.getMonth() > signTime.getMonth()){
+					userinfo.set('isSignIn','0');
+					userinfo.save();
 					cb(null,userinfo.get('signInCnt'),'0');
 				}
 				else{
