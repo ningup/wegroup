@@ -528,7 +528,7 @@ router.get('/groupNickname', function(req, res, next) {
 	 });
 });
 router.get('/detail',function(req,res,next){
-	 client.getAccessToken(req.query.code, function (err, result) {
+	 client.getAccessToken(req.query.code, function (err, result){
 		 if(err){
 			 res.send('请从微信进入');
 		}else{ 
