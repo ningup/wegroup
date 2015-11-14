@@ -237,7 +237,7 @@
           <div class="feed_list">
               <ul class="feed_ul_list">
                 <% for(var i=0; i<feeds.length; i++) {%>
-                  <li class="feed">
+                  <li class="feed" data-feedid="<%= feeds[i].getObjectId()%>">
                       <div class="detail">
                           <div class="feed_content">
                               <p class="feed_title"><%= feeds[i].get('feedTitle')%></p>
@@ -314,6 +314,10 @@
             <textarea type="hidden" name="feedContent" id="form-feedContent"></textarea>
             <input type="hidden" name="imgurl" id="form-imgurl" value="">
         </form>
+        <form id="feed-post" method="get" action="">
+        	<input type="hidden" name="feedObjId" id="feedObjId" value="">
+        	<input type="hidden" name="groupObjId" id="groupObjId" value="<%= groupObjId%>">
+        </form>
     </div>
     <script type="text/javascript">
     $(document).ready(function(){
@@ -359,6 +363,11 @@
 	                }
 	            });
         	}
+        });
+        $(".feed").click(function(){
+        	alert("尼玛");
+        	$("#feedObjId").val(this.attr("data-feedid"));
+        	$("#feed-post").submit();
         });
     });
     </script>
