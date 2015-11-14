@@ -616,7 +616,7 @@ function userFollowed()
 			userinfo.set('isSignIn','1');
 			userinfo.set('signInCnt',cnt);
 			userinfo.save();
-			cb(null,'1');
+			cb(null,cnt);
 		},
 		error: function(object, error) {
 		}

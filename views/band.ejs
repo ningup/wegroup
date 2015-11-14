@@ -339,6 +339,22 @@
             $("#publish-form").submit();
         });
         $(".publish-btn").click(function(){alert("diandiandian");})
+        $(".no").click(function(){
+            var aj = $.ajax({
+                url:'/feed/setSignIn',
+                data:{
+                    "username":"<%= username%>",
+                    "groupObjId":"<%= groupObjId%>"
+                },
+                type:'post',
+                dataType:'json',
+                success:function(){
+                    $(".sign_like_button").removeClass("no");
+                    $(".sign_like_button").addClass("yes");
+                },
+                error:function(){alert("签到失败");}
+            });
+        });
     });
     </script>
     <script type="text/javascript">

@@ -54,8 +54,8 @@ router.get('/', function(req, res, next) {
 	var userclass = new UserClass();
 	client.getAccessToken(req.query.code, function (err, result) {
 		if(err){
-			 res.redirect('/group/fini?title=');
-			/*
+			 //res.redirect('/group/fini?title=');
+			
 			 var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				 if(err){
@@ -93,6 +93,7 @@ router.get('/', function(req, res, next) {
 								user.save();
 								res.render('band', {
 									username: username,
+									groupObjId:groupObjId,
 									cnt:cnt,
 									isSignIn:isSignIn,
 									feeds:feeds
@@ -110,7 +111,7 @@ router.get('/', function(req, res, next) {
 					  }
 					});
 				 }
-			});*/
+			});
 			 
 		}else{
 				var username = result.data.openid;
@@ -150,6 +151,7 @@ router.get('/', function(req, res, next) {
 								user.save();
 								res.render('band', {
 									username: username,
+									groupObjId:groupObjId,
 									cnt:cnt,
 									isSignIn:isSignIn,
 									feeds:feeds
@@ -478,6 +480,16 @@ router.post('/post', function(req, res, next) {
   });
   
   
+});
+router.post('/setSignIn', function(req, res, next) {
+	var username = req.body.username;
+	var groupObjId = req.body.groupObjId;
+	var userclass = new UserClass();
+	userclass.setSignInCnt(username,groupObjId,function(err,cnt){
+			res.json({"status":"ok","cnt":cnt});
+		return ;
+	});
+
 });
 //显示群昵称
 router.get('/groupNickname', function(req, res, next) {
