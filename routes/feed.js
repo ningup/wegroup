@@ -536,7 +536,7 @@ router.get('/detail',function(req,res,next){
 		  var groupObjId = req.query.groupObjId;
 		  var feedObjId = req.query.feedObjId;
 			var userclass = new UserClass();
-			userclass.isGroupJoined(username,feedObjId,function(status,obj){
+			userclass.isGroupJoined(username,groupObjId,function(status,obj){
 					  if(status === 1){
 							//res.send('已加入');
 							var query = new AV.Query('Feed');
