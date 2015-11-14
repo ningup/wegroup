@@ -55,7 +55,7 @@ router.get('/', function(req, res, next) {
 	client.getAccessToken(req.query.code, function (err, result) {
 		if(err){
 			 //res.redirect('/group/fini?title=');
-			
+
 			 var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				 if(err){
@@ -485,10 +485,21 @@ router.post('/setSignIn', function(req, res, next) {
 	var username = req.body.username;
 	var groupObjId = req.body.groupObjId;
 	var userclass = new UserClass();
-	userclass.setSignInCnt(username,groupObjId,function(err,cnt){
-			res.json({"status":"ok","cnt":cnt});
-		return ;
+	console.log(username);
+	console.log(groupObjId);
+	userclass.getSignInCnt(username,groupObjId,function(err,signIncnt,isSignIn){
+		  if(isSignIn=='0'){
+				userclass.setSignInCnt(username,groupObjId,function(err,cnt){
+				res.json({"status":"1","cnt":cnt});
+					return ;
+				});
+			}
+			else{
+				res.json({"status":"1","cnt":cnt});
+					return ;
+			}
 	});
+	
 
 });
 //显示群昵称

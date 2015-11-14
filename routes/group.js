@@ -332,16 +332,23 @@ router.get('/join',function(req,res,next){
 router.get('/set', function(req, res, next) {
 	 client.getAccessToken(req.query.code, function (err, result) {
 		 if(err){
-			 //res.send('请从微信进入');
-			 res.render('group_set_new', {
-				//title: 'Groups 列表',
-				});
-		}
+			 res.send('请从微信进入');
+			}
 		else{ 
-			res.render('group_set_new', {
-				//title: 'Groups 列表',
-				});
-	    }
+			var userclass = new UserClass();
+			//var groupclass = new GroupClass();
+			var username = result.data.openid;
+			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				if(err){
+					res.send('你还没有加入群呢，快去创建一个吧！');
+				}
+				else{
+					res.render('group_set_new', {
+								//title: 'Groups 列表',
+						});
+				}
+			});
+		}	
 	 });
     
 	//console.log((req.AV.user).get('nickname'));
