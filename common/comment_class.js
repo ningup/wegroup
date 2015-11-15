@@ -5,30 +5,40 @@ var Comment = AV.Object.extend('Comment');
 
 function FeedClass()
 {
-	this.addComment = function(feedObjId,content,username,toUsername,cb){
+	this.addComment = function(groupObjId,feedObjId,content,username,toUsername,commentType,isReply,commentImgArray,replyCommentId,cb){
 		var comment = new Comment(); 
 		comment.set('who',username);
 		comment.set('toWhom',toUsername);
 		comment.set('content',content);
 		comment.set('inWhichFeed',feedObjId);
+		comment.set('isReply',isReply);
+		comment.set('commentType',commentType);
+		comment.set('commentImgArray',commentImgArray);
+		comment.set('replyCommentId',replyCommentId);
 		comment.save().then(function(comment) {
 			//对象保存成功
-			var queryUser = new AV.Query(AV,User);
-			queryUser.get(username, {
-			  success: function(user) {
+			var query1 = new AV.Query('UserInfo');
+			query1.equalTo("username", username);
+			query1.equalTo("groupid", groupObjId);
+			query1.first({
+			  success: function(userinfo) {
 				// 成功获得实例
-				comment.set('headimgurl',user.get('headimgurl'));
-				comment.set('nickname',user.get('nickname'));
+				comment.set('headimgurl',userinfo.get('headimgurl'));
+				comment.set('nickname',userinfo.get('nicknameInGroup'));
 				comment.save().then(function(comment){
 						var queryF = new AV.Query(Feed);
 						queryF.get(feedObjId, {
 							success: function(feed) {
 								// 成功获得实例
 								console.log("found the "+feed.get('feedContent'));
+								var date = new Date();
 								var relation = feed.relation('feedComment');
 								relation.add(comment);
+								if(isReply==='0'){
+									feed.set('updateTime',date);
+								}
 								feed.save();
-								cb(user.get('nickname'),user.get('headimgurl'));
+								cb(userinfo.get('nicknameInGroup'),userinfo.get('headimgurl'));
 							},
 							error: function(feed, error) {
 								// 失败了.

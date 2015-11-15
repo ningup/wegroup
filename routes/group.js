@@ -293,6 +293,7 @@ router.get('/join',function(req,res,next){
 									userinfo.set('username',username);
 									userinfo.set('groupid',groupObjIdJoined);
 									userinfo.set('nicknameInGroup',queryUser.get('nickname'));
+									userinfo.set('headimgurl',queryUser.get('headimgurl'));
 									userinfo.set('signInTime',new Date());
 									query.get(groupObjIdJoined,{
 										 success:function(group){

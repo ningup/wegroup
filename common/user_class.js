@@ -558,10 +558,10 @@ function userFollowed()
 		var query1 = new AV.Query('UserInfo');
 		var query2 = new AV.Query('UserInfo');
 		query1.equalTo("username", username);
-		query2.equalTo("groupid", groupid);
+		query1.equalTo("groupid", groupid);
 		var query = AV.Query.or(query1,query2);
 		//console.log(groupid);
-		query.first({
+		query1.first({
 		success: function(userinfo) {
 			cb(null,userinfo.get('nicknameInGroup'));
 		},

@@ -71,7 +71,6 @@ router.get('/', function(req, res, next) {
 						 var relation = group.relation("feedPosted");
 						 relation.targetClassName = 'Feed';
 						 var queryFeed = relation.query();
-						 //queryFeed.descending('updateTime
 						 queryFeed.descending('updateTime');
 						 queryFeed.limit(30);
 						 //queryFeed.equalTo("feedType", "vote");
@@ -530,7 +529,40 @@ router.get('/groupNickname', function(req, res, next) {
 router.get('/detail',function(req,res,next){
 	 client.getAccessToken(req.query.code, function (err, result){
 		 if(err){
-			 res.send('请从微信进入');
+			 //res.send('请从微信进入');
+			 var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+			  var groupObjId = req.query.groupObjId;
+		  var feedObjId = req.query.feedObjId;
+			var userclass = new UserClass();
+			userclass.isGroupJoined(username,groupObjId,function(status,obj){
+					  if(status === 1){
+							//res.send('已加入');
+							var query = new AV.Query('Feed');
+							query.get(feedObjId, {
+									success: function(feed) {
+										// 成功获得实例
+										res.render('lyh_test_feed', {
+												username: username,
+												groupObjId:groupObjId,
+												feedObjId:feedObjId,
+												feed:feed
+										 });
+									},
+									error: function(error) {
+										// 失败了.
+									}
+								});
+						}	
+					  else if (status === 3){
+						  res.send('该群已经解散了');
+					  }
+					  else if (status === 2){
+							res.send('你不在这个群里，不能看该状态');
+					  }
+							
+					  else if (status === 0)
+							res.send('未关注');
+			});
 		}else{ 
 			var username = result.data.openid;
 		  var groupObjId = req.query.groupObjId;
@@ -546,6 +578,7 @@ router.get('/detail',function(req,res,next){
 										res.render('lyh_test_feed', {
 												username: username,
 												groupObjId:groupObjId,
+												feedObjId:feedObjId,
 												feed:feed
 										 });
 									},

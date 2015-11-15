@@ -11,17 +11,34 @@ var Comment = AV.Object.extend('Comment');
 //  feed 结果
 router.post('/', function(req, res, next) {
 	var username = req.body.username;
+	var groupObjId = req.body.groupObjId;
 	var content = req.body.content;
 	var toWhom = req.body.toWhom;
 	var feedObjId = req.body.feedObjId;
+	var commentType = req.body.commentType;
+	var isReply = req.body.isReply;
+	if(commentType==='text'){
+		var commentImgArray = [];
+	}
+	else if(commentType ==='imgtext'){
+		var commentImgArray = req.body.commentImgArray;
+		commentImgArray = commentImgArray.split(',');
+	}
+	else{}
+	
+	if(isReply==='1'){
+		var replyCommentId = req.body.replyCommentId;
+	}
+	else if(isReply==='0'){
+		var replyCommentId = '0';
+	}
+	else{}
 	var commentclass = new CommentClass();
-	username = username.trim();
-	commentclass.addComment(feedObjId,content,username,toWhom,function(nickname,headimgurl){
+	commentclass.addComment(groupObjId,feedObjId,content,username,toUsername,commentType,isReply,commentImgArray,replyCommentId,function(nickname,headimgurl){
 		res.json({"nickname":nickname,"headimgurl":headimgurl,"content":content,"username":username,"toWhom":toWhom,"feedObjId":feedObjId});
 		return ;
 	});
-	
-	
+
 });
 
 

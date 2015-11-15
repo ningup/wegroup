@@ -59,6 +59,7 @@ function GroupClass()
 				userinfo.set('username',username);
 				userinfo.set('groupid',group.getObjectId());
 				userinfo.set('nicknameInGroup',queryUser.get('nickname'));
+				userinfo.set('headimgurl',queryUser.get('headimgurl'));
 				userinfo.set('signInTime',new Date());
 				var groupJoinedNum = queryUser.get('groupJoinedNum');
 				groupJoinedNum ++;

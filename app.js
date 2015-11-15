@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 //var user = require('./routes/user');
 var group = require('./routes/group');
 var feed = require('./routes/feed');
-//var comment = require('./routes/comment');
+var comment = require('./routes/comment');
 var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
 var wechat = require('wechat');
@@ -450,7 +450,7 @@ app.get('/', function(req, res) {
 //app.use('/todos', todos);
 app.use('/group', group);
 app.use('/feed', feed);
-//app.use('/comment', comment);
+app.use('/comment', comment);
 //app.use('/user', user);
 //app.use('/groupAlbum', groupAlbum);
 
