@@ -133,6 +133,7 @@
     text-indent: 0px;
     text-shadow: none;
     display: inline-block;}
+    .publish .pub-con .pub-wrap .pub-type .pub-btn button.pub-cancel{margin-right: 10px;}
     .publish .pub-con .pub-wrap .pub-pics{display: block;    overflow: hidden;
     padding: 9px 18px 15px;list-style: none;margin: 0;    -webkit-margin-before: 1em;
     -webkit-margin-after: 1em;
@@ -242,7 +243,7 @@
               </div>
               <div class="arrow-right"></div>
             </div>
-            <div class="feed-title"> 看完受到2000万点伤害！以后都不敢一个人出门~ </div>
+            <div class="feed-title"><%= feed.get('feedTitle')%></div>
             <div class="feed-info">
               <span class="time">2015-11-4 18:26</span>
               <span class="band-name">我们爱讲冷笑话</span>
@@ -252,10 +253,10 @@
           <div class="feed-content">
             <div class="main-content">
                 <div class="flag">
-                  <div class="content">来来来！赶紧吃几口狗粮压压惊！</div>
-                  <div class="pic"><img src="http://ugc.qpic.cn/gbar_pic/HnInJmzIOfnBqvRc81zBfX06nKiae2j2Xag3HibBjeIor6c8QmIVKKLQ/1000"></div>
-                  <div class="pic"><img src="http://ugc.qpic.cn/gbar_pic/HnInJmzIOfnBqvRc81zBfX06nKiae2j2Xag3HibBjeIor6c8QmIVKKLQ/1000"></div>
-                  <div class="pic"><img src="http://ugc.qpic.cn/gbar_pic/HnInJmzIOfnBqvRc81zBfX06nKiae2j2Xag3HibBjeIor6c8QmIVKKLQ/1000"></div>
+                  <div class="content"><%= feed.get('feedContent')%></div>
+                  <% if(var f=0;f<feed.get('feedImgArray').length;f++){%>
+                  <div class="pic"><img src="<%= feed.get('feedImgArray')[f]%>"></div>
+                  <% } %>
                 </div>
             </div>
             <div class="actions">
@@ -384,7 +385,7 @@
       <span class="reply" data-toggle="modal" data-target="#myModal">100</span>
       <span class="like">200</span>
     </div>
-    <div class="modal fade publish" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade publish" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
         <div class="pub-con">
             <div class="pub-wrap">
                 
@@ -395,10 +396,26 @@
                     <!--<li id="selectPic" class="pic-type active" title="添加图片"></li>
                     <li id="selectFace" class="pub-face" title="添加表情"></li>
                     <li class="pub-flex"></li>-->
-                    <li class="pub-btn "> <button class="pub-publish">发表</button> </li>
+                    <li class="pub-btn "> <button class="pub-publish">发表</button> <button class="pub-cancel">关闭</button> </li>
                 </ul>
                 <ul class="pub-pics"> 
                     <li class="up-entry"> <input class="upfile up-entry-two" id="inputField" type="file" accept="image/*" multiple=""> </li> 
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade reply-publish" id="reply-id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+        <div class="pub-con">
+            <div class="pub-wrap">
+                
+                <div class="pub-editor">
+                    <textarea spellcheck="false" class="editor" placeholder="内容，10-700个字"></textarea>
+                </div>
+                <ul class="pub-type">
+                    <!--<li id="selectPic" class="pic-type active" title="添加图片"></li>
+                    <li id="selectFace" class="pub-face" title="添加表情"></li>
+                    <li class="pub-flex"></li>-->
+                    <li class="pub-btn "> <button class="pub-publish">发表</button> <button class="pub-cancel">关闭</button> </li>
                 </ul>
             </div>
         </div>
@@ -408,6 +425,10 @@
         /*$(".reply").on('click',function(){
           alert("你妈的");
         });*/
+        $(".pub-cancel").click(function(){
+            $("#myModal").modal('hide');
+            $("#reply-id").modal('hide');
+        });
     });
     </script>
     <script type="text/javascript">
@@ -446,6 +467,57 @@
                 flag = 0;
             }else{
                 flag = 0;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        var file_num = 0;
+        var inputElement = document.getElementById("inputField");
+        inputElement.addEventListener("change", handleFiles, false);
+        function handleFiles() {
+            var fileList = this.files; 
+            if (fileList.length>0) {
+                if ((fileList.length+file_num)>8) {
+                    var aaa = 8-file_num;
+                    alert("一次最多上传8张图片");
+                    for (var i = 0; i < aaa; i++) {
+                        var file = fileList[i];
+                        var name = file.name;
+                        var avFile = new AV.File(name,file);
+                        avFile.save().then(function(avFile){
+                            file_num++;
+                            alert(file_num);
+                            var src = avFile.url();
+                            var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
+                            $(".pub-pics").prepend(str_pic);
+                            $(".btn-del").click(function(){
+                                alert("nima");
+                                this.closest("li.up-pic").remove();
+                                file_num--;
+                                if (file_num<0) {file_num=0;}
+                            });
+                        });
+                    };
+                }else{
+                    for (var i = 0; i < fileList.length; i++) {
+                        var file = fileList[i];
+                        var name = file.name;
+                        var avFile = new AV.File(name,file);
+                        avFile.save().then(function(avFile){
+                            file_num++;
+                            alert(file_num);
+                            var src = avFile.url();
+                            var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
+                            $(".pub-pics").prepend(str_pic);
+                            $(".btn-del").click(function(){
+                                alert("nima");
+                                this.closest("li.up-pic").remove();
+                                file_num--;
+                                if (file_num<0) {file_num=0;}
+                            });
+                        });
+                }
+                }
             }
         }
     </script>
