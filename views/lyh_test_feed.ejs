@@ -19,6 +19,10 @@
     <!--<script src="//cdn.bootcss.com/iScroll/5.1.3/iscroll.min.js"></script>-->
     <!--<script src="//cdn.bootcss.com/iScroll/5.1.3/iscroll-lite.min.js"></script>-->
     <script src="//cdn.bootcss.com/iScroll/5.1.3/iscroll-probe.min.js"></script>
+    <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+    <script type="text/javascript">
+        AV.initialize('zsxn9bhj8fuecdfqgqv1ly7lt70cej7ftbe2hp7r4i916gmn', 'u73ok822ykyc19s1i179tqdf2pgz7bhzrlxwprc6pchs1ioo');
+    </script>
 
     <style type="text/css">
     body {overflow: hidden;width: 100%;background-color: #f8f8f8;} /*background-color: #FBFBFB;*/
@@ -254,7 +258,7 @@
             <div class="main-content">
                 <div class="flag">
                   <div class="content"><%= feed.get('feedContent')%></div>
-                  <% if(var f=0;f<feed.get('feedImgArray').length;f++){%>
+                  <% for(var f=0;f<feed.get('feedImgArray').length;f++){%>
                   <div class="pic"><img src="<%= feed.get('feedImgArray')[f]%>"></div>
                   <% } %>
                 </div>
@@ -404,22 +408,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade reply-publish" id="reply-id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
-        <div class="pub-con">
-            <div class="pub-wrap">
-                
-                <div class="pub-editor">
-                    <textarea spellcheck="false" class="editor" placeholder="内容，10-700个字"></textarea>
-                </div>
-                <ul class="pub-type">
-                    <!--<li id="selectPic" class="pic-type active" title="添加图片"></li>
-                    <li id="selectFace" class="pub-face" title="添加表情"></li>
-                    <li class="pub-flex"></li>-->
-                    <li class="pub-btn "> <button class="pub-publish">发表</button> <button class="pub-cancel">关闭</button> </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    
     <script type="text/javascript">
     $(document).ready(function(){
         /*$(".reply").on('click',function(){
@@ -427,7 +416,49 @@
         });*/
         $(".pub-cancel").click(function(){
             $("#myModal").modal('hide');
-            $("#reply-id").modal('hide');
+        });
+        $(".pub-publish").click(function(){
+
+            var img_arr = [];
+            var img_str = "";
+            var content = "";
+            var commentType = "";
+            alert("发布");
+            if ($("div.pub-editor textarea").val()==null) {
+                alert("评论内容不能为空");
+                return;
+            }
+            content = $("div.pub-editor textarea").val();
+            $(".pub-pics").find("li.up-pic img").each(function(){
+                var str = this.getAttribute("src");
+                img_arr.push(str);
+            });
+            alert(img_arr);
+            if ($(".pub-pics").find("li.up-pic").length==0) {
+                commentType = "text";
+            }else{
+                commentType = "imgtext";
+                img_str = img_arr.toString();
+            }
+            alert(img_str);
+            var aj = $.ajax({
+                url:'/comment',
+                data:{
+                    "username":"<%= username%>",
+                    "groupObjId":"<%= groupObjId%>",
+                    "content":content,
+                    "toWhom":"<%= feed.get('postedBy')%>",
+                    "feedObjId":"<%= feedObjId%>",
+                    "commentType":commentType,
+                    "isReply":"0",
+                    "commentImgArray":img_str
+                },
+                type:'post',
+                dataType:'json',
+                success:function(){
+                    alert("okokokokokok");
+                }
+            });
         });
     });
     </script>

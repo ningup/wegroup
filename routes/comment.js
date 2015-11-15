@@ -18,10 +18,11 @@ router.post('/', function(req, res, next) {
 	var commentType = req.body.commentType;
 	var isReply = req.body.isReply;
 	if(commentType==='text'){
-		var commentImgArray = [];
+		var commentImgArray = new Array();
 	}
 	else if(commentType ==='imgtext'){
 		var commentImgArray = req.body.commentImgArray;
+		console.log(commentImgArray);
 		commentImgArray = commentImgArray.split(',');
 	}
 	else{}
@@ -34,11 +35,11 @@ router.post('/', function(req, res, next) {
 	}
 	else{}
 	var commentclass = new CommentClass();
-	commentclass.addComment(groupObjId,feedObjId,content,username,toUsername,commentType,isReply,commentImgArray,replyCommentId,function(nickname,headimgurl){
+	commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,function(nickname,headimgurl){
 		res.json({"nickname":nickname,"headimgurl":headimgurl,"content":content,"username":username,"toWhom":toWhom,"feedObjId":feedObjId});
 		return ;
 	});
-
+	console.log("sssss");
 });
 
 
