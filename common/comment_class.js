@@ -38,7 +38,7 @@ function FeedClass()
 									feed.set('updateTime',date);
 								}
 								feed.save();
-								cb(userinfo.get('nicknameInGroup'),userinfo.get('headimgurl'));
+								cb(comment,userinfo.get('nicknameInGroup'),userinfo.get('headimgurl'));
 							},
 							error: function(feed, error) {
 								// 失败了.

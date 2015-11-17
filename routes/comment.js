@@ -5,10 +5,45 @@ var AV = require('leanengine');
 var LikeClass = require('../common/like_class.js');
 var CommentClass = require('../common/comment_class.js');
 //var Group = AV.Object.extend('Group');
+var OAuth = require('wechat-oauth');
+var config = require('../config/config.js');
+var client = new OAuth(config.appid, config.appsecret);
+var sign=require('../common/sign.js');
+var WechatAPI = require('wechat-api');
 var Feed = AV.Object.extend('Feed');
 var Comment = AV.Object.extend('Comment');
+var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
+  // 传入一个获取全局token的方法
+   var query = new AV.Query('WechatToken');
+   query.get("5606afe9ddb2e44a47769124", {
+  success: function(obj) {
+    // 成功获得实例
+    callback(null, JSON.parse(obj.get('accessToken')));
+  },
+  error: function(object, error) {
+    // 失败了.
+  }
+});
+  
+}, function (token, callback) {
+  // 请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等
+  // 这样才能在cluster模式及多机情况下使用，以下为写入到文件的示例
+  //fs.writeFile('access_token.txt', JSON.stringify(token), callback);
+	  var query = new AV.Query('WechatToken');
+	  query.get("5606afe9ddb2e44a47769124", {
+	  success: function(wechatToken) {
+		// 成功获得实例
+	   wechatToken.set('accessToken',JSON.stringify(token));
+	   wechatToken.save().then(function(obj){});
+		
+	  },
+	  error: function(object, error) {
+		// 失败了.
+	  }
+	});
+   
+})
 
-//  feed 结果
 router.post('/', function(req, res, next) {
 	var username = req.body.username;
 	var groupObjId = req.body.groupObjId;
@@ -35,11 +70,51 @@ router.post('/', function(req, res, next) {
 	}
 	else{}
 	var commentclass = new CommentClass();
-	commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,function(nickname,headimgurl){
-		res.json({"nickname":nickname,"headimgurl":headimgurl,"content":content,"username":username,"toWhom":toWhom,"feedObjId":feedObjId});
-		return ;
+	commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,function(comment,nickname,headimgurl){
+		//res.json({"nickname":nickname,"headimgurl":headimgurl,"content":content,"username":username,"toWhom":toWhom,"feedObjId":feedObjId});
+		//return ;
+		//res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/comment/detail?cid='+comment.getObjectId()+'&fid='+feedObjId+'&gid='+groupObjId+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
+		 res.redirect('/comment/detail?cid='+comment.getObjectId()+'&fid='+feedObjId+'&gid='+groupObjId);
 	});
-	console.log("sssss");
+});
+
+router.get('/detail', function(req, res, next) {
+			var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+			var cid = req.query.cid;
+			var fid = req.query.fid;
+			var gid = req.query.gid;
+			var userclass = new UserClass();
+			res.render('lyh_test_replyall', {
+					username: username,
+					groupObjId:gid,
+					commentObjId:cid,
+					feedObjId: fid,
+					
+			 });
+			 
+	    //client.getAccessToken(req.query.code, function (err, result) {
+				//if(err){
+			 ////res.redirect('/group/fini?title=');	
+		//}else{
+				//var username = result.data.openid;
+			 //userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				 //if(err){
+					 //res.send('你还没有加入群呢，快去创建一个吧！');
+				 //}
+				 //else{
+						//需要查询comment。。。。。。。。。。
+						//var groupObjId = whichGroupNow;
+						//res.render('lyh_test_replyall', {
+								//username: username,
+								//groupObjId:gid,
+								//commentObjId:cid,
+								//feedObjId: fid,
+								
+						 //});
+				 //}
+			//});
+	    //}
+	 //});		
 });
 
 
