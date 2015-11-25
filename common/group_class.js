@@ -37,7 +37,7 @@ var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
 });
 function GroupClass()
 {
-	this.create = function(flagImg,serverId,groupColor,nickname,username,cb){
+	this.create = function(flagImg,serverId,groupColor,nickname,username,roomId,cb){
 		var group=new Group();
 		var userinfo = new UserInfo();
 		var promise = new AV.Promise();
@@ -46,50 +46,50 @@ function GroupClass()
 		group.set('groupColor',groupColor);
 		group.set('flagImg',flagImg);
 		group.set('serverId',serverId);
+		group.set('roomId',roomId);
 		var query = new AV.Query(AV.User);
 		query.equalTo("username", username);
 		query.first({
 		    success: function(queryUser) {
-			var relation = group.relation('followers');
-            relation.add(queryUser);
-			group.set('nicknameOfCUser',queryUser.get('nickname'));
-			group.save(null,{
-			success:function(group)
-			{
-				userinfo.set('username',username);
-				userinfo.set('groupid',group.getObjectId());
-				userinfo.set('nicknameInGroup',queryUser.get('nickname'));
-				userinfo.set('headimgurl',queryUser.get('headimgurl'));
-				userinfo.set('signInTime',new Date());
-				var groupJoinedNum = queryUser.get('groupJoinedNum');
-				groupJoinedNum ++;
-				//var whichGroupNow = queryUser.get('whichGroupNow');
-				//if(whichGroupNow == '0'){
-					queryUser.set('whichGroupNow',group.getObjectId());
-					queryUser.set('whichGroupNameNow',nickname);
-				//}
-				queryUser.set('groupJoinedNum',groupJoinedNum);
-				var relationUser = queryUser.relation('groupCreated');
-				relationUser.add(group);
-				//userinfo.save();
-				queryUser.save().then(function(obj) {
-					userinfo.save();
-  				//对象保存成功
-					cb(null,group);
-				}, function(error) {
-				  //对象保存失败，处理 error
-				});	
-							
-			},
-			error: function(group,err){
-			
-			}
-		        });
+					var relation = group.relation('followers');
+								relation.add(queryUser);
+					group.set('nicknameOfCUser',queryUser.get('nickname'));
+					group.save(null,{
+					success:function(group)
+					{
+						userinfo.set('username',username);
+						userinfo.set('groupid',group.getObjectId());
+						userinfo.set('nicknameInGroup',queryUser.get('nickname'));
+						userinfo.set('headimgurl',queryUser.get('headimgurl'));
+						userinfo.set('signInTime',new Date());
+						var groupJoinedNum = queryUser.get('groupJoinedNum');
+						groupJoinedNum ++;
+						//var whichGroupNow = queryUser.get('whichGroupNow');
+						//if(whichGroupNow == '0'){
+							queryUser.set('whichGroupNow',group.getObjectId());
+							queryUser.set('whichGroupNameNow',nickname);
+						//}
+						queryUser.set('groupJoinedNum',groupJoinedNum);
+						var relationUser = queryUser.relation('groupCreated');
+						relationUser.add(group);
+						//userinfo.save();
+						queryUser.save().then(function(obj) {
+							userinfo.save();
+							//对象保存成功
+							cb(null,group);
+						}, function(error) {
+							//对象保存失败，处理 error
+						});	
+									
+					},
+					error: function(group,err){
+					}
+				 });
 		   },
-                   error: function(error) {
-                   }});
-		
+       error: function(error) {
+       }});	
 	};
+	
 	this.groupSet = function(groupObjId,pushMsg2Wechat,identityVerify){
 		var query = new AV.Query(Group);
 		console.log(groupObjId);

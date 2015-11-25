@@ -22,6 +22,10 @@ var Group=AV.Object.extend('Group');
 var config = require('./config/config.js');	
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var client = new OAuth(config.appid, config.appsecret);
+var realtime = require('leancloud-realtime');
+//realtime.config({
+  //WebSocket: require('websocket').w3cwebsocket
+//});
 var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
 	// 传入一个获取全局token的方法
 	var query = new AV.Query('WechatToken');
@@ -78,11 +82,13 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				groupclass.groupSwitch(message.FromUserName,message.Content);		
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
+				res.reply('我收到了你的消息，可以把你需要的功能告诉我'); 
+				/*
 				res.reply('');      //回复空串
 				userclass.groupChat_text(message.FromUserName,user.get('whichGroupNow'),message.Content,function(){
-					//res.reply('');      //回复空串
-				});	
-			}	
+					
+				});	*/
+			}
 			else{
 				res.reply({type: "text", content: '你发的信息是'+message.Content});
 			}		
@@ -95,10 +101,12 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				res.reply({type: "text", content: '群名字只能是文字哦'});
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
+				res.reply('我收到了你的消息，可以把你需要的功能告诉我'); 
+				/*
 				res.reply('');      //回复空串
 				userclass.groupChat_media(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,function(){
 					//res.reply('');      //回复空串
-				});	
+				});	*/
 			}	
 			else if(user.get('whichStatus')==='wegroup_switch'){
 				res.reply('不是数字，请重新输入：');     
@@ -115,7 +123,8 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				res.reply({type: "text", content: '群名字只能是文字哦'});
 			}
 			else if(user.get('whichStatus')==='wegroup_chat'){
-				res.reply('目前还不支持视频！');      //回复空串
+				res.reply('我收到了你的消息，可以把你需要的功能告诉我'); 
+				//res.reply('目前还不支持视频！');      //回复空串
 				//userclass.groupChat_video(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,message.thumb_media_id,function(){
 					//res.reply('');      //回复空串
 				//});	
@@ -329,17 +338,7 @@ app.get('/', function(req, res) {
 	  //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
 	  if(err){
 		  //userclass.followedUserRegister();
-		  /*
-		  var text = '这条消息是公众号主动发给你的，前提是48小时之内，用户主动发消息给公众号（包括发送信息、点击\
-		  自定义菜单、订阅事件、扫描二维码事件、支付成功事件、用户维权）。'
-		  api.sendText('orSEhuBllBij-g3Ayx2jujBuuPNY', text, function(err,results){
-			  console.log(JSON.stringify(results));
-		  });
-		  api.sendText('orSEhuNxAkianv5eFOpTJ3LXWADE', text, function(err,results){
-			  console.log(JSON.stringify(results));
-		  });
-		  res.send('请从微信进入'); */
-		  //userclass.groupChat_text(username,whichGroupNow,'text',function(){});
+		  res.send('请从微信进入'); 
 				/*
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
@@ -352,84 +351,6 @@ app.get('/', function(req, res) {
 					  else if (status === 0)
 							res.send('未关注');
 				});*/
-				var whichGroupNow='5642fb8060b20fc9b982c776'; 
-				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
-				userclass.getSignInCnt(username,whichGroupNow, function(err,nickname,isSignIn){
-						console.log('groupnickname',nickname);
-				});
-				/*
-				userclass.getGroupNotice(username,function(isOwner,queryUser,group,groupNotice){
-					if(isOwner===1){  //是群主
-						var text='' ;
-						
-						if(groupNotice ==='void'){
-							console.log('notice',groupNotice);
-							text = '你还没有设置群公告';
-						}
-						else{
-						  text = groupNotice;
-						}
-						text += '\n';
-						text+='<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击编辑群公告</a>';
-						api.sendText(username, text, function(err,results){
-							if(err){
-								api.sendText(username, text, function(err,results){
-								});
-							}							  
-						 });
-					}
-					else{				//不是群主
-						var text='';
-						if(groupNotice==='void'){
-							text += '群主还没有设置群公告';
-						}
-						else{
-						  text = groupNotice;
-						}
-						
-						api.sendText(username, text, function(err,results){
-							if(err){
-								api.sendText(username, text, function(err,results){
-								});
-							}							  
-						 });
-					}
-				}); */
-				/*
-						groupclass.quitGroup(username,function(){
-								
-								userclass.getUserAllGroup(username,function(err,queryUser,results){
-									if(results[0].length === 0){
-											queryUser.set('whichGroupNow','');
-											queryUser.set('whichGroupNameNow','');
-											queryUser.save().then(function(){});
-									}
-									else{
-										var newUser = results[0]
-										queryUser.set('whichGroupNow',newUser.getObjectId());
-										queryUser.set('whichGroupNameNow',newUser.get('nickname'));
-										queryUser.save().then(function(){
-											var text = '切换到「'+newUser.get('nickname')+'」群';
-											api.sendText(username, text, function(err,results){
-												if(err){
-													api.sendText(username, text, function(err,results){
-													});
-												}							  
-											 });
-										});
-										
-									}
-									
-									res.send('退出成功');
-									
-								});
-								
-							});*/
-				
-				
-
-
 	  }else{
 		  AV.User.logIn(openid, "A00000000~", {
 			  success: function(user) {
@@ -444,7 +365,6 @@ app.get('/', function(req, res) {
   });
   
 });
-
 
 // 可以将一类的路由单独保存在一个文件中
 //app.use('/todos', todos);

@@ -1,0 +1,41 @@
+{
+  "name": "leancloud-realtime",
+  "version": "2.3.2",
+  "homepage": "http://github.com/leancloud/js-realtime-sdk/",
+  "authors": [
+    "WangXiao <xwang@leancloud.rocks>"
+  ],
+  "description": "LeanCloud JavaScript Realtime SDK",
+  "main": "dist/AV.realtime.js",
+  "ignore": [
+    "**/.*",
+    "demo",
+    "test",
+    "Gruntfile.js",
+    "README.md",
+    "changelog.md"
+  ],
+  "moduleType": [
+    "node",
+    "amd",
+    "globals"
+  ],
+  "keywords": [
+    "LeanCloud",
+    "Realtime"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "~2.2.5"
+  },
+  "_release": "2.3.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.3.2",
+    "commit": "8e4703960b8420a2e9ba646e27655ffa4e122a63"
+  },
+  "_source": "git://github.com/leancloud/js-realtime-sdk.git",
+  "_target": "~2.3.2",
+  "_originalSource": "leancloud-realtime",
+  "_direct": true
+}
