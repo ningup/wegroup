@@ -128,7 +128,30 @@ router.get('/room', function(req, res, next) {
   var userclass = new UserClass();
 	client.getAccessToken(req.query.code, function (err, result) {
 		 if(err){
-			 res.redirect('pls access from wechat');	 
+			 //res.send('pls access from wechat');
+			 var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				 if(err){
+					 res.send('你还没有加入群呢，快去创建一个吧！');
+				 }
+				 else{
+						var groupObjId = whichGroupNow;
+						var query = new AV.Query('Group');
+						query.get(groupObjId, {
+						  success: function(group) {
+							// 成功获得实例
+								 res.render('chat', {
+										username:username,
+										roomId:group.get('roomId'),
+										
+									});	
+						  },
+						  error: function(object, error) {
+							// 失败了.
+						  }
+						});
+				 }
+			});	 
 		}else{ 
 			 var username = result.data.openid;
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -142,8 +165,9 @@ router.get('/room', function(req, res, next) {
 						  success: function(group) {
 							// 成功获得实例
 								 res.render('chat', {
-									group: group,
-								 });		
+										username:username,
+										roomId:group.get('roomId')
+									});	
 						  },
 						  error: function(object, error) {
 							// 失败了.
@@ -414,9 +438,7 @@ router.post('/notice', function(req, res, next) {
 					
 			
 });
-router.get('/group_chat', function(req, res, next) {
-			res.render('chat');
-});
+
 router.get('/fini', function(req, res, next) {
 	var title = req.query.title;
 	var ticket;

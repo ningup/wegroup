@@ -18,7 +18,7 @@
     "ejs": "2.3.1",
     "express": "4.12.3",
     "leanengine": "^0.1.4",
-    "leancloud-realtime": "2.3.2",
+    "leancloud-realtime": "^2.3.2",
     "wechat-api": "1.11.0",
     "wechat": "2.0.1",
     "wechat-oauth": "1.1.0",

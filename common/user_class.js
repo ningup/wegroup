@@ -556,10 +556,10 @@ function userFollowed()
 	};
 	this.getGroupNickname = function(username,groupid,cb){
 		var query1 = new AV.Query('UserInfo');
-		var query2 = new AV.Query('UserInfo');
+		//var query2 = new AV.Query('UserInfo');
 		query1.equalTo("username", username);
 		query1.equalTo("groupid", groupid);
-		var query = AV.Query.or(query1,query2);
+		//var query = AV.Query.or(query1,query2);
 		//console.log(groupid);
 		query1.first({
 		success: function(userinfo) {
