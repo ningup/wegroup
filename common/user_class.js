@@ -68,12 +68,12 @@ function userFollowed()
 							newUser.set("city", data.city);
 							//console.log(data.headimgurl+'\n');
 							console.log(data.nickname);
-							console.log(openids[i]+'\n');
+							console.log(openids[i]);
 							if(data.headimgurl!=''){		//用户设置头像
 								request({url:data.headimgurl,encoding:null},function(err,res,body){
 									headFile[i] = new AV.File('head_'+data.nickname+'jpg', body);
 									headFile[i].save().then(function(file) {
-											newUser.set("headimgurl", file.thumbnailURL(46,46));
+											newUser.set("headimgurl", file.thumbnailURL(50,50));
 											newUser.set("headimgSrc", file.url());
 											newUser.set("headimgurlShare", file.thumbnailURL(360,200));
 											newUser.signUp(null, {
@@ -95,7 +95,7 @@ function userFollowed()
 						else{
 							newUser.signUp(null, {
 								 success: function(newUser) {
-									 console.log(i+'...'+count);
+									 console.log(i+'...'+count+'\n');
 									// 注册成功，可以使用了.
 									iterator(++i);
 										
@@ -238,7 +238,7 @@ function userFollowed()
 				request({url:data.headimgurl,encoding:null},function(err,res,body){
 					var headFile = new AV.File('head'+username, body);
 					headFile.save().then(function(file) {
-							newUser.set("headimgurl", file.thumbnailURL(46,46));
+							newUser.set("headimgurl", file.thumbnailURL(50,50));
 							newUser.set("headimgSrc", file.url());
 							newUser.set("headimgurlShare", file.thumbnailURL(360,200));
 							newUser.signUp(null, {

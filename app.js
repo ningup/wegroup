@@ -236,7 +236,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 						{
 							title: '群名：'+whichGroupNameNow+' 点击加入',
 							description: '微群帮',
-							picurl: user.get('headimgurl'),
+							picurl: user.get('headimgurlShare'),
 							url: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/join?id='+whichGroupNow+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect'
 						}]);
 					});
