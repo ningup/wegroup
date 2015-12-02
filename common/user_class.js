@@ -1,6 +1,7 @@
 var AV = require('leanengine');
 var WechatAPI = require('wechat-api');
 var fs = require('fs');
+var request = require('request');
 var config = require('../config/config.js');
 var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
   // 传入一个获取全局token的方法
@@ -37,44 +38,75 @@ var Group = AV.Object.extend('Group');
 function userFollowed()
 {
     
-    this.followedUserRegister = function(){
+    this.followedUserRegister = function(cb){
+			cb();
 	  var count;
       api.getFollowers(function (err, dataF, resf){
         count = dataF.count;
         console.log('count'+count);	
         var openids = dataF.data.openid;
-	    for(var i=0 ; i < count ; i++){
-			(function(i){
-				     //console.log("datalist"+datalist.user_info_list.length);	     
+        var headFile = new Array();
+			(function iterator(i){
+						if(i==count){
+							
+							
+						}
+				     //console.log("datalist"+datalist.user_info_list.length);	 
+				   else{    
 					 var newUser = new AV.User();
 					 api.getUser({openid:openids[i], lang: 'zh_CN'}, function (err, data, userres){
-									var newUser = new AV.User();
-									newUser.set("username", data.openid);
-									newUser.set("password", "A00000000~");
-									newUser.set("openid", data.openid);
-									newUser.set("nickname", data.nickname);
-									newUser.set("sex", data.sex);
-									newUser.set("headimgurl", data.headimgurl);
-									newUser.set("subscribe", 1);
-									newUser.set("country", data.country);
-									newUser.set("province", data.province);
-									newUser.set("city", data.city);
-									newUser.signUp(null, {
-									   success: function(newUser) {
-											// 注册成功，可以使用了.
-											 
-									   },
-									   error: function(newUser, error) {
-										
-										}
+							var newUser = new AV.User();
+							newUser.set("username", data.openid);
+							newUser.set("password", "A00000000~");
+							newUser.set("openid", data.openid);
+							newUser.set("nickname", data.nickname);
+							newUser.set("sex", data.sex);
+							//newUser.set("headimgurl", data.headimgurl);
+							newUser.set("subscribe", 1);
+							newUser.set("country", data.country);
+							newUser.set("province", data.province);
+							newUser.set("city", data.city);
+							//console.log(data.headimgurl+'\n');
+							console.log(data.nickname);
+							console.log(openids[i]+'\n');
+							if(data.headimgurl!=''){		//用户设置头像
+								request({url:data.headimgurl,encoding:null},function(err,res,body){
+									headFile[i] = new AV.File('head_'+data.nickname+'jpg', body);
+									headFile[i].save().then(function(file) {
+											newUser.set("headimgurl", file.thumbnailURL(46,46));
+											newUser.set("headimgSrc", file.url());
+											newUser.set("headimgurlShare", file.thumbnailURL(360,200));
+											newUser.signUp(null, {
+												 success: function(newUser) {
+													 console.log(i+'...'+count);
+													// 注册成功，可以使用了.
+													iterator(++i);
+														
+													},
+													error: function(newUser, error) {
+													}
+												});		
+									}, 
+									function(error){
+
 									});
-
+								});
+						}
+						else{
+							newUser.signUp(null, {
+								 success: function(newUser) {
+									 console.log(i+'...'+count);
+									// 注册成功，可以使用了.
+									iterator(++i);
+										
+									},
+									error: function(newUser, error) {
+									}
+								});	
+						}
 					});	
-				
-			})(i);
-	     
-
-          }
+				}
+			})(0);
                             
      
       });
@@ -196,33 +228,56 @@ function userFollowed()
 				newUser.set("openid", data.openid);
 				newUser.set("nickname", data.nickname);
 				newUser.set("sex", data.sex);
-				newUser.set("headimgurl", data.headimgurl);
+				//newUser.set("headimgurl", data.headimgurl);
 				newUser.set("subscribe", 1);
 				newUser.set("country", data.country);
 				newUser.set("province", data.province);
 				newUser.set("city", data.city);
-				newUser.signUp(null, {
-				   success: function(newUser) {
-						// 注册成功，可以使用了.
-						  cb(0,newUser);
-						  
-				   },
-				   error: function(newUser, error) {
-						var query = new AV.Query(AV.User);
-						query.equalTo("username", username);
-						query.first({
-							success: function(queryUser) {
-									queryUser.set('subscribe', 1 );
-									queryUser.save();
-									cb(1,queryUser);
-									
-							},
-							error: function(error) {
-							} 
-						});
-					}
-				});
+				console.log('url'+data.headimgurl);
+				if(data.headimgurl!=''){		//用户设置头像
+				request({url:data.headimgurl,encoding:null},function(err,res,body){
+					var headFile = new AV.File('head'+username, body);
+					headFile.save().then(function(file) {
+							newUser.set("headimgurl", file.thumbnailURL(46,46));
+							newUser.set("headimgSrc", file.url());
+							newUser.set("headimgurlShare", file.thumbnailURL(360,200));
+							newUser.signUp(null, {
+								 success: function(newUser) {
+									// 注册成功，可以使用了.
+										cb(0,newUser);
+										
+								 },
+								 error: function(newUser, error) {
+									var query = new AV.Query(AV.User);
+									query.equalTo("username", username);
+									query.first({
+										success: function(queryUser) {
+												queryUser.set('subscribe', 1 );
+												queryUser.save();
+												cb(1,queryUser);
+												
+										},
+										error: function(error) {
+										} 
+									});
+								}
+							});
+							//console.log(file.url());
+					}, 
+					function(error){
 
+					});
+			});
+		}
+		else{
+			newUser.signUp(null, {
+			 success: function(newUser) {
+				// 注册成功，可以使用了.
+				},
+				error: function(newUser, error) {
+				}
+			});	
+		}
 		});	
 	};
 	this.getCurrentGroup = function(username,cb){

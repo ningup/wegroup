@@ -12,6 +12,7 @@ var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
 var wechat = require('wechat');
 var fs = require('fs');
+var request = require('request');
 var AV = require('leanengine');
 var OAuth = require('wechat-oauth');
 var UserClass = require('./common/user_class.js');
@@ -335,10 +336,10 @@ app.get('/', function(req, res) {
   client.getAccessToken(req.query.code, function (err, result) {
 	  //var accessToken = result.data.access_token;
 	  //var openid = result.data.openid;
-	  //if(openid === 'orSEhuNxAkianv5eFOpTJ3LXWADE' || openid === '')
 	  if(err){
-		  //userclass.followedUserRegister();
-		  res.send('请从微信进入'); 
+				userclass.followedUserRegister(function(){
+						res.send('ing...');
+				});
 				/*
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 				var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
