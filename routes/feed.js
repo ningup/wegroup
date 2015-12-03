@@ -54,7 +54,63 @@ router.get('/', function(req, res, next) {
 	var userclass = new UserClass();
 	client.getAccessToken(req.query.code, function (err, result) {
 		if(err){
-			 res.redirect('/group/fini?title=');		 
+			 //res.redirect('/group/fini?title=');		
+			 var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				 if(err){
+					 res.send('你还没有加入群呢，快去创建一个吧！');
+				 }
+				 else{
+					var groupObjId = whichGroupNow;
+					var query = new AV.Query('Group');
+					query.get(groupObjId, {
+					  success: function(group) {
+						// 成功获得实例
+						 //console.log('you get into the '+ group.get('nickname'));
+						 var relation = group.relation("feedPosted");
+						 relation.targetClassName = 'Feed';
+						 var queryFeed = relation.query();
+						 queryFeed.notEqualTo('feedType','vote');
+						 queryFeed.descending('updateTime');
+						 queryFeed.limit(1);
+						 //queryFeed.equalTo("feedType", "vote");
+						 queryFeed.find().then(function(feeds){
+						   userclass.getUserObj(username,function(err,user){
+							 userclass.getSignInCnt(username,groupObjId, function(err,cnt,isSignIn){
+								//console.log('groupnickname',nickname
+								var loadFeedTime = new Object();
+								if(feeds.length==0){
+									loadFeedTime.latest = new Date();
+									loadFeedTime.oldest = new Date();
+									 
+								}else{
+									loadFeedTime.latest = feeds[0].get('updateTime');
+									loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
+									user.set('loadFeedTime',loadFeedTime);
+									
+								}
+								user.save();
+								res.render('band', {
+									username: username,
+									groupObjId:groupObjId,
+									cnt:cnt,
+									isSignIn:isSignIn,
+									feeds:feeds
+								 });
+							});
+							
+						 });
+							 
+
+						 });
+						
+					  },
+					  error: function(object, error) {
+						// 失败了.
+					  }
+					});
+				 }
+			}); 
 		}else{
 				var username = result.data.openid;
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -73,7 +129,7 @@ router.get('/', function(req, res, next) {
 						 var queryFeed = relation.query();
 						 queryFeed.notEqualTo('feedType','vote');
 						 queryFeed.descending('updateTime');
-						 queryFeed.limit(30);
+						 queryFeed.limit(1);
 						 //queryFeed.equalTo("feedType", "vote");
 						 queryFeed.find().then(function(feeds){
 						   userclass.getUserObj(username,function(err,user){
@@ -117,55 +173,50 @@ router.get('/', function(req, res, next) {
 
 });
 router.post('/history', function(req, res, next) {
-	var userclass = new UserClass();
-	client.getAccessToken(req.query.code, function (err, result) {
-		if(err){
-			 res.redirect('/group/fini?title=');		 
-		}else{
-				var username = result.data.openid;
-			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-				 if(err){
-					 res.send('你还没有加入群呢，快去创建一个吧！');
-				 }
-				 else{
-					var groupObjId = whichGroupNow;
-					var query = new AV.Query('Group');
-					query.get(groupObjId, {
-					  success: function(group) {
-						// 成功获得实例
-						 //console.log('you get into the '+ group.get('nickname'));
-						 userclass.getUserObj(username,function(err,user){
-							  var loadFeedTime = user.get('loadFeedTime');
-							  var relation = group.relation("feedPosted");
-						    relation.targetClassName = 'Feed';
-						    var queryFeed = relation.query();
-						    queryFeed.notEqualTo('feedType','vote');
-						    queryFeed.descending('updateTime');
-						    queryFeed.lessThan("updateTime", loadFeedTime.oldest);
-								queryFeed.limit(30);
-								queryFeed.find().then(function(feeds){
-										if(feeds.length != 0){
-												loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
-												user.set('loadFeedTime',loadFeedTime);
-												user.save();			
-										}
-										res.json({"status":"0","feeds":feeds});
-										return ;
-										
-								});
+		var userclass = new UserClass();
+	 var username = req.body.username;
+	 console.log('history'+username);
+	 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+		 if(err){
+			 res.send('你还没有加入群呢，快去创建一个吧！');
+		 }
+		 else{
+			var groupObjId = whichGroupNow;
+			var query = new AV.Query('Group');
+			query.get(groupObjId, {
+				success: function(group) {
+				// 成功获得实例
+				 //console.log('you get into the '+ group.get('nickname'));
+				 userclass.getUserObj(username,function(err,user){
+						var loadFeedTime = user.get('loadFeedTime');
+						var relation = group.relation("feedPosted");
+						relation.targetClassName = 'Feed';
+						var queryFeed = relation.query();
+						queryFeed.notEqualTo('feedType','vote');
+						queryFeed.descending('updateTime');
+						queryFeed.lessThan("updateTime", loadFeedTime.oldest);
+						queryFeed.limit(1);
+						queryFeed.find().then(function(feeds){
+								if(feeds.length != 0){
+										loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
+										user.set('loadFeedTime',loadFeedTime);
+										user.save();			
+								}
+								//res.json({"status":"0","feeds":1});
+								res.json({"status":"0","feeds":feeds});
+								return ;
+								
+						});
 
-						 });
-						 
-					  },
-					  error: function(object, error) {
-						// 失败了.
-					  }
-					});
-				 }
+				 });
+				 
+				},
+				error: function(object, error) {
+				// 失败了.
+				}
 			});
-	    }
+		 }
 	 });
-
 });
 router.get('/publish', function(req, res, next) {
 	var username = req.query.username;
