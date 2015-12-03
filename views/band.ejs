@@ -424,9 +424,19 @@
                 flag = 0;
             }else if (flag==2) {
                 console.log("上拉加载");
-                for(var i=0;i<20;i++){
+                /*for(var i=0;i<20;i++){
                     $(".container ul").append("<li>Pretty row 50</li>");
-                }
+                }*/
+                $.ajax({
+                    type:'post',
+                    url:'/feed/histroy',
+                    data:{username:"<%= username%>"},
+                    dataType:'json',
+                    success:function(data){
+                        alert('返回来了');
+                        console.log(data);
+                    }
+                })
                 myScroll.refresh();
                 flag = 0;
             }else{
