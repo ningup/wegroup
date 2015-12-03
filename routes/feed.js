@@ -72,7 +72,7 @@ router.get('/', function(req, res, next) {
 						 var queryFeed = relation.query();
 						 queryFeed.notEqualTo('feedType','vote');
 						 queryFeed.descending('updateTime');
-						 queryFeed.limit(1);
+						 queryFeed.limit(5);
 						 //queryFeed.equalTo("feedType", "vote");
 						 queryFeed.find().then(function(feeds){
 						   userclass.getUserObj(username,function(err,user){
@@ -129,7 +129,7 @@ router.get('/', function(req, res, next) {
 						 var queryFeed = relation.query();
 						 queryFeed.notEqualTo('feedType','vote');
 						 queryFeed.descending('updateTime');
-						 queryFeed.limit(1);
+						 queryFeed.limit(5);
 						 //queryFeed.equalTo("feedType", "vote");
 						 queryFeed.find().then(function(feeds){
 						   userclass.getUserObj(username,function(err,user){
@@ -195,7 +195,7 @@ router.post('/history', function(req, res, next) {
 						queryFeed.notEqualTo('feedType','vote');
 						queryFeed.descending('updateTime');
 						queryFeed.lessThan("updateTime", loadFeedTime.oldest);
-						queryFeed.limit(1);
+						queryFeed.limit(2);
 						queryFeed.find().then(function(feeds){
 								if(feeds.length != 0){
 										loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
