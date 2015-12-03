@@ -437,6 +437,7 @@
                         //console.log(datas);
                         if(data.feeds.length>0){
                             for(var i=0;i<data.feeds.length;i++){
+                                //console.log(data.feeds[i].objectId);
                                 var feed_groupbody = "<div class=\"feed_groupbody\"><div class=\"feed_time\">刚刚</div><div class=\"icon_wrap\"><i class=\"reply-icon\"></i><span class=\"groupreply\">2000</span></div><div class=\"icon_wrap\"><i class=\"read-icon\"></i><span class=\"readnum\">2000</span></div></div>";
                                 var feed_content = '';
                                 var feed_img = '';
@@ -460,6 +461,17 @@
                                 $(".container ul").append(feed);
                             }
                         }
+                        $(".feed").click(function(){
+                            alert("尼玛");
+                            /*
+                            $("#feedObjId").val(this.getAttribute("data-feedid"));
+                            $("#feed-post").submit();*/
+                            var str = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid")+ "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+                            $("#feed-post").attr("href",str);
+                            alert($("#feed-post").attr("href"));
+                            //$("feed-click").click();
+                            document.getElementById("feed-click").click();
+                        });
                         myScroll.refresh();
                         flag = 0;
                     }
