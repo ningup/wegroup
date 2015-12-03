@@ -219,7 +219,6 @@ router.post('/history', function(req, res, next) {
 	 });
 });
 
-});
 router.get('/groupMember', function(req, res, next) {
 	var username = req.query.username;
 	var groupObjIdGotInto = req.query.groupObjIdGotInto;
