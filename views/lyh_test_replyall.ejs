@@ -54,7 +54,7 @@
     .comment-wrapper .content-wrapper .ping-container .ping-pic>img{margin-top: -12.224px;margin-left: 0px;width: 96px;height: 128px;-webkit-user-select: none;padding: 0;margin: 0;border-radius: 0;outline: 0;-webkit-tap-highlight-color: transparent;}
     .comment-wrapper .reply-wrapper{margin-top: 5px;color: #454545;}
     .comment-wrapper .reply-wrapper .more{    display: block;line-height: 200%;font-size: 12px;margin: 6px 0;color: #3361a7;text-decoration: none;}
-    .comment-wrapper .reply-wrapper .reply-list{list-style: none;}
+    .comment-wrapper .reply-wrapper .reply-list{list-style: none;padding-left: 0;}
     .comment-wrapper .reply-wrapper .reply-list .item{display: list-item;text-align: -webkit-match-parent;list-style: none;}
     .comment-wrapper .reply-wrapper .reply-list .item .fmain{text-align: left;line-height: 160%;position: relative;margin: 6px 0;word-break: break-all;word-wrap: break-word;}
     .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item{margin: 0;padding: 0;}
@@ -64,6 +64,12 @@
     .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .floor_content a{color: #3361a7;text-decoration: none;}
     .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .list_item_time{display: inline-block;margin-right: 8px;color: #c5c9cd;font-size: 12px;}
 
+
+    .publish{position: fixed;left: 0;bottom: 0;width: 100%;height: 44px;z-index: 2;background-color: #f8f8f8;}
+    .publish:before{z-index: 2;top: -1px;display: block;position: absolute;left: 0;border-top: 1px solid #c8c7cc;width: 100%;content: " ";pointer-events:none;}
+    .publish .pub-con .pub-wrap {position: relative;width: 100%;height: 100%;}
+    .publish .pub-con .pub-wrap button{position: absolute;top: 4px;right: 5px; border: 0;border-radius: 4px;width: 20%;height: 35px;font-size: 16px;text-align: center;color: #fff; background-color: #2791dc;outline: 0;-webkit-tap-highlight-color: rgba(255,255,255,0);padding: 0;margin: 0;font: 11px BlinkMacSystemFont;text-rendering: auto;letter-spacing: normal;word-spacing: normal;text-transform: none;text-indent: 0px;text-shadow: none;display: inline-block;}
+    .publish .pub-con .pub-wrap input{position: absolute;width: 75%;top: 4px;left: 7px;height: 35px;border-radius: 4px;outline:0; resize:none;box-shadow:0;border-style: solid;border-color:#c8c7cc;border: 1;}
     </style>
 
   </head>
@@ -95,7 +101,7 @@
                     </div>
                     <div class="reply-wrapper">
                       <ul class="reply-list">
-                        <li class="item">
+                        <li class="item" >
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
                               <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
@@ -104,7 +110,7 @@
                             </div>
                           </div>
                         </li>
-                        <li class="item">
+                        <li class="item" >
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
                               <a href="/home/main?un=艾尔黄金舰队" class="user_name ">艾尔黄金舰队</a>:
@@ -115,7 +121,7 @@
                             </div>
                           </div>
                         </li>
-                        <li class="item">
+                        <li class="item" >
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
                               <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
@@ -124,7 +130,7 @@
                             </div>
                           </div>
                         </li>
-                        <li class="item">
+                        <li class="item" >
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
                               <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
@@ -133,7 +139,7 @@
                             </div>
                           </div>
                         </li>
-                        <li class="item">
+                        <li class="item" >
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
                               <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
@@ -142,7 +148,7 @@
                             </div>
                           </div>
                         </li>
-                        <li class="item">
+                        <li class="item" >
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
                               <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
@@ -151,7 +157,7 @@
                             </div>
                           </div>
                         </li>
-                        <li class="item">
+                        <li class="item" >
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
                               <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
@@ -168,9 +174,19 @@
           
       </div>
     </div>
+    <div class="publish" id="myModal">
+        <div class="pub-con">
+            <div class="pub-wrap">
+              <input spellcheck="false" type="text" class="editor" placeholder="我也来说一句...." style="" />
+              <button class="pub-publish">发表</button>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
     $(document).ready(function(){
-        
+        $("li.item").click(function(){
+          alert("heh");
+        });
     });
     </script>
     <script type="text/javascript">

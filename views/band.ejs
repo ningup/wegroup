@@ -387,6 +387,7 @@
         var position;
         var flag = 0;
         var page = 0;
+        var last_position = 0;
         window.onload = function(){
             position = document.getElementById('position');
             myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:true, tap:true });
@@ -402,6 +403,18 @@
             }else if(this.y<(this.maxScrollY-5)){
                 flag = 2;
                 //console.log(flag);
+            }
+            if (this.y<=0) {
+                if ((this.y-last_position)>=0) {
+                    $(".publish-btn").css("display","block");
+                    last_position = this.y;
+                }else{
+                    $(".publish-btn").css("display","none");
+                    last_position = this.y;
+                }
+            }else{
+                $(".publish-btn").css("display","block");
+                last_position = 0;
             }
         }
         function dowmPosition(){
