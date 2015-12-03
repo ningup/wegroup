@@ -429,14 +429,65 @@
                 }*/
                 $.ajax({
                     type:'post',
-                    url:'/feed/histroy',
+                    url:'/feed/history',
                     data:{username:"<%= username%>"},
                     dataType:'json',
-                    success:function(data){
-                        alert('返回来了');
-                        console.log(data);
+                    success:function(datas){
+                        //alert('返回来了');
+                        //console.log(data);
+                        if(datas.length>0){
+                            for(var i=0;i<datas.length;i++){
+                                var feed_groupbody = '<div class="feed_groupbody">
+                                      <div class="feed_time">刚刚</div>
+                                      <div class="icon_wrap">
+                                          <i class="reply-icon"></i>
+                                          <span class="groupreply">2000</span>
+                                      </div>
+                                      <div class="icon_wrap">
+                                          <i class="read-icon"></i>
+                                          <span class="readnum">2000</span>
+                                      </div>
+                                  </div>';
+                                var feed_content = '';
+                                var feed_img = '';
+                                var feed = '';
+                                feed_content = '<div class="feed_content">
+                                  <p class="feed_title">'+datas[i].feedTitle+'</p>
+                                  <p class="feed_txt">'+datas[i].feedContent+'</p>
+                                    </div>';
+                                if (datas[i].feedImgArray.length>3) {
+                                    for(var q=0;q<3;q++){
+                                        if (q==2) {
+                                            feed_img = feed_img + '<div class="feed_img_item" >
+                                                  <img src="'+datas[i].feedImgArray[q]+'">
+                                                  <span class="total_img">
+                                                      <span class="total_img_txt">9</span>
+                                                  </span>
+                                              </div>';
+                                        }else{
+                                            feed_img = feed_img + '<div class="feed_img_item" >
+                                              <img src="'+ datas[i].feedImgArray[q] +'">
+                                          </div>';
+                                        }
+                                    }
+                                }else{
+                                    for(var j=0;j<datas[i].feedImgArray.length;j++){
+                                        feed_img = feed_img + '<div class="feed_img_item" >
+                                      <img src="'+ datas[i].feedImgArray[j] +'">
+                                  </div>';
+                                    }
+                                }
+                                feed_img = '<div class="feed_img">' + feed_img + '</div>';
+                                feed = '<li class="feed" data-feedid="'+datas[i].objectId+'">
+                                              <div class="detail">' + feed_content + feed_img + feed_groupbody + '</div>
+                                          </li>';
+                                $(".container ul").append(feed);
+                            }
+                        }
+                        myScroll.refresh();
+                        flag = 0;
                     }
-                })
+                });
                 myScroll.refresh();
                 flag = 0;
             }else{
