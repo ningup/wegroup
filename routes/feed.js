@@ -218,63 +218,6 @@ router.post('/history', function(req, res, next) {
 		 }
 	 });
 });
-router.get('/publish', function(req, res, next) {
-	var username = req.query.username;
-	var groupObjIdGotInto = req.query.groupObjIdGotInto;
-    var ticket;
-    var groupclass = new GroupClass();
-    var query = new AV.Query('WechatTicket');
-     query.get("5606be0760b294604924a0c5", {
-	   success: function(obj) {
-		// 成功获得实例
-		if((new Date().getTime()) < (JSON.parse(obj.get('ticket')).expireTime)){
-				ticket = JSON.parse(obj.get('ticket')).ticket;
-				var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/feed/publish?groupObjIdGotInto='+groupObjIdGotInto+'&username='+username);
-				console.log('not exoired'+ticket);
-				console.log('.............'+jsapi.nonceStr);
-				res.render('feed_publish', {
-					//title: 'Groups 列表',
-					groupObjIdGotInto:groupObjIdGotInto,
-					username: username,
-					nonceStr: jsapi.nonceStr,
-					timestamp: jsapi.timestamp,
-					signature: jsapi.signature
-					//groups: results
-				});
-			}
-			else{
-				api.getLatestToken(function(){});
-				api.getTicket(function(err,results){
-					//console.log(JSON.stringify(results));
-					console.log('guoqi?');
-					ticket = results.ticket;
-					obj.set('ticket',JSON.stringify(results));
-					obj.save().then(function(obj){
-						console.log('ticket expire time'+results.expireTime);
-						var jsapi=sign(ticket, 'http://dev.wctest.avosapps.com/feed/publish?groupObjIdGotInto='+groupObjIdGotInto+'&username='+username);
-						//console.log('.............'+jsapi.nonceStr);
-						res.render('feed_publish', {
-							//title: 'Groups 列表',
-							groupObjIdGotInto:groupObjIdGotInto,
-							username: username,
-							nonceStr: jsapi.nonceStr,
-							timestamp: jsapi.timestamp,
-							signature: jsapi.signature
-							//groups: results
-						});
-						
-					
-					});
-
-				});
-		
-			}
-	  },
-	  error: function(object, error) {
-		// 失败了.
-	  }
-});
-
 
 });
 router.get('/groupMember', function(req, res, next) {
