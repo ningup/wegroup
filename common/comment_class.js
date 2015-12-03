@@ -11,6 +11,7 @@ function FeedClass()
 		comment.set('toWhom',toUsername);
 		comment.set('content',content);
 		comment.set('inWhichFeed',feedObjId);
+		comment.set('inWhichGroup',groupObjId);
 		comment.set('isReply',isReply);
 		comment.set('commentType',commentType);
 		comment.set('commentImgArray',commentImgArray);
@@ -23,6 +24,7 @@ function FeedClass()
 			query1.first({
 			  success: function(userinfo) {
 				// 成功获得实例
+				console.log('comment find userinfo');
 				comment.set('headimgurl',userinfo.get('headimgurl'));
 				comment.set('nickname',userinfo.get('nicknameInGroup'));
 				comment.save().then(function(comment){
