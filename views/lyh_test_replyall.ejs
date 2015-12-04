@@ -187,6 +187,30 @@
         $("li.item").click(function(){
           alert("heh");
         });
+        $(".pub-publish").click(function(){
+          var content = $(".editor").val();
+          $(".editor").val("");
+          var aj = $.ajax({
+                url:'/comment',
+                data:{
+                    "username":"<%= username%>",
+                    "groupObjId":"<%= groupObjId%>",
+                    "content":content,
+                    "toWhom":"<%= toWhom%>",
+                    "feedObjId":"<%= feedObjId%>",
+                    "commentType":"text",
+                    "isReply":"1",
+                    "replyCommentId":"<%= commentObjId%>",
+                    "inWhichComment":"<%= commentObjId%>"
+                },
+                type:'post',
+                dataType:'json',
+                success:function(data){
+                    alert("okokokokokok");
+                    console.log(data);
+                }
+            });
+        });
     });
     </script>
     <script type="text/javascript">
