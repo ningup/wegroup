@@ -161,6 +161,7 @@
         $(".pub-publish").click(function(){
           var content = $(".editor").val();
           $(".editor").val("");
+          alert(reply_flag);
           var aj = $.ajax({
                 url:'/comment',
                 data:{
