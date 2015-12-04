@@ -105,18 +105,20 @@ router.get('/detail', function(req, res, next) {
 					 else{
 							var query = new AV.Query('Comment');
 							query.ascending('createdAt');
-							query.EqualTo('isReply','1');
-							query.EqualTo('inWhichComment',cid);
+							query.equalTo('isReply','1');
+							query.equalTo('inWhichComment',cid);
 							query.limit(25);
-							query.first({
+							query.find({
 								success: function(comments) {
+									
+									console.log(comments.length);
 									res.render('lyh_test_replyall', {
 										username: username,
 										toWhom:toWhom,
-										groupObjId:gid,
+										groupObjId:groupObjId,
 										commentObjId:cid,
 										feedObjId: fid,
-										comments:comment	
+										comments:comments	
 								  });
 										
 								},
