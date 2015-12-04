@@ -103,7 +103,7 @@
                       <ul class="reply-list">
                       <% for(var i=0;i<comments.length;i++){ 
                             if(comments[i].get("replyCommentId")==comments[i].get("inWhichComment")){ %>
-                              <li class="item" data-reply="<%= comments[i].get("replyCommentId")%>">
+                              <li class="item" data-reply="<%= comments[i].getObjectId()%>" data-user="<%= comments[i].get("who")%>">
                                 <div class="fmain j_floor_main">
                                   <div class="floor_footer_item">
                                     <a href="" class="user_name "><%= comments[i].get("nickname")%></a>:
@@ -113,7 +113,7 @@
                                 </div>
                               </li>
                             <% }else{ %>
-                              <li class="item" data-reply="<%= comments[i].get("replyCommentId")%>">
+                              <li class="item" data-reply="<%= comments[i].getObjectId()%>" data-user="<%= comments[i].get("who")%>">
                                 <div class="fmain j_floor_main">
                                   <div class="floor_footer_item">
                                     <a href="" class="user_name "><%= comments[i].get("nickname")%></a>:
@@ -143,10 +143,17 @@
     </div>
     <script type="text/javascript">
     var reply_flag = "<%= commentObjId%>";
+    var toWhom = "<%= toWhom%>";
+    var replyCommentId = "<%= commentObjId%>";
+    var inWhichComment = "<%= commentObjId%>";
+    var chufa_flag = "0";
     $(document).ready(function(){
         $("li.item").click(function(){
           //alert("heh");
           reply_flag = $(this).attr("data-reply");
+          toWhom = $(this).attr("data-user");
+          alert(reply_flag);
+          alert(toWhom);
           var li_nickname = $(this).find(".user_name").html();
           li_nickname = "回复 " + li_nickname + ":";
           $(".editor").val("");
@@ -154,21 +161,32 @@
           $(".editor").focus();
         });
         $(".editor").blur(function(){
-          if (reply_flag != "<%= commentObjId%>") {$(".editor").val("");}
-          $(".editor").attr("placeholder","我也来说一句....");
-          reply_flag = "<%= commentObjId%>";
+          setTimeout(function(){
+            //alert("hei");
+            if (chufa_flag=="1") {
+              chufa_flag="0";
+              return;
+            }
+            if (reply_flag != "<%= commentObjId%>") {$(".editor").val("");}
+            $(".editor").attr("placeholder","我也来说一句....");
+            reply_flag = "<%= commentObjId%>";
+            toWhom = "<%= toWhom%>";
+          },250);
         });
         $(".pub-publish").click(function(){
+          chufa_flag = "1";
           var content = $(".editor").val();
           $(".editor").val("");
           alert(reply_flag);
+          alert(toWhom);
+          alert(content);
           var aj = $.ajax({
                 url:'/comment',
                 data:{
                     "username":"<%= username%>",
                     "groupObjId":"<%= groupObjId%>",
                     "content":content,
-                    "toWhom":"<%= toWhom%>",
+                    "toWhom":toWhom,
                     "feedObjId":"<%= feedObjId%>",
                     "commentType":"text",
                     "isReply":"1",
