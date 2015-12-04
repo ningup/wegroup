@@ -101,73 +101,32 @@
                     </div>
                     <div class="reply-wrapper">
                       <ul class="reply-list">
-                        <li class="item" >
-                          <div class="fmain j_floor_main">
-                            <div class="floor_footer_item">
-                              <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
-                              <span class="floor_content">播放器一直加载失败，弹幕声音都没事就是黑屏怎么破，今天才有的情况</span>
-                              <span class="list_item_time">5-25 20:46</span>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="item" >
-                          <div class="fmain j_floor_main">
-                            <div class="floor_footer_item">
-                              <a href="/home/main?un=艾尔黄金舰队" class="user_name ">艾尔黄金舰队</a>:
-                              <span class="floor_content">回复&nbsp;
-                              <a href="/home/main?un=最爱叶倩彤">最爱叶倩彤</a>&nbsp;:我前两星期就出现这个问题了，有几个视频一直加载或者直接黑屏，离线下来了也看不了，并且导致客户端崩溃
-                              </span>
-                              <span class="list_item_time">5-28 22:58</span>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="item" >
-                          <div class="fmain j_floor_main">
-                            <div class="floor_footer_item">
-                              <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
-                              <span class="floor_content">播放器一直加载失败，弹幕声音都没事就是黑屏怎么破，今天才有的情况</span>
-                              <span class="list_item_time">5-25 20:46</span>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="item" >
-                          <div class="fmain j_floor_main">
-                            <div class="floor_footer_item">
-                              <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
-                              <span class="floor_content">播放器一直加载失败，弹幕声音都没事就是黑屏怎么破，今天才有的情况</span>
-                              <span class="list_item_time">5-25 20:46</span>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="item" >
-                          <div class="fmain j_floor_main">
-                            <div class="floor_footer_item">
-                              <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
-                              <span class="floor_content">播放器一直加载失败，弹幕声音都没事就是黑屏怎么破，今天才有的情况</span>
-                              <span class="list_item_time">5-25 20:46</span>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="item" >
-                          <div class="fmain j_floor_main">
-                            <div class="floor_footer_item">
-                              <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
-                              <span class="floor_content">播放器一直加载失败，弹幕声音都没事就是黑屏怎么破，今天才有的情况</span>
-                              <span class="list_item_time">5-25 20:46</span>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="item" >
-                          <div class="fmain j_floor_main">
-                            <div class="floor_footer_item">
-                              <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
-                              <span class="floor_content">播放器一直加载失败，弹幕声音都没事就是黑屏怎么破，今天才有的情况</span>
-                              <span class="list_item_time">5-25 20:46</span>
-                            </div>
-                          </div>
-                        </li>
+                      <% for(var i=0;i<comments.length;i++){ 
+                            if(comments[i].get("replyCommentId")==comments[i].get("inWhichComment")){ %>
+                              <li class="item" data-reply="<%= comments[i].get("replyCommentId")%>">
+                                <div class="fmain j_floor_main">
+                                  <div class="floor_footer_item">
+                                    <a href="" class="user_name "><%= comments[i].get("nickname")%></a>:
+                                    <span class="floor_content"><%= comments[i].get("content")%></span>
+                                    <span class="list_item_time"><%= comments[i].getCreatedAt()%></span>
+                                  </div>
+                                </div>
+                              </li>
+                            <% }else{ %>
+                              <li class="item" data-reply="<%= comments[i].get("replyCommentId")%>">
+                                <div class="fmain j_floor_main">
+                                  <div class="floor_footer_item">
+                                    <a href="" class="user_name "><%= comments[i].get("nickname")%></a>:
+                                    <span class="floor_content">回复&nbsp;
+                                    <a href=""><%= comments[i].get("toNickname")%></a>&nbsp;:<%= comments[i].get("content")%>
+                                    </span>
+                                    <span class="list_item_time"><%= comments[i].getCreatedAt()%></span>
+                                  </div>
+                                </div>
+                              </li>
+                            <% } %>
+                      <% } %>
                       </ul>
-                      <span class="more">查看更多评论&gt;&gt;</span>
                     </div>
                   </div>
         </div>
@@ -183,9 +142,21 @@
         </div>
     </div>
     <script type="text/javascript">
+    var reply_flag = "<%= commentObjId%>";
     $(document).ready(function(){
         $("li.item").click(function(){
-          alert("heh");
+          //alert("heh");
+          reply_flag = $(this).attr("data-reply");
+          var li_nickname = $(this).find(".user_name").html();
+          li_nickname = "回复 " + li_nickname + ":";
+          $(".editor").val("");
+          $(".editor").attr("placeholder",li_nickname);
+          $(".editor").focus();
+        });
+        $(".editor").blur(function(){
+          if (reply_flag != "<%= commentObjId%>") {$(".editor").val("");}
+          $(".editor").attr("placeholder","我也来说一句....");
+          reply_flag = "<%= commentObjId%>";
         });
         $(".pub-publish").click(function(){
           var content = $(".editor").val();
@@ -200,7 +171,7 @@
                     "feedObjId":"<%= feedObjId%>",
                     "commentType":"text",
                     "isReply":"1",
-                    "replyCommentId":"<%= commentObjId%>",
+                    "replyCommentId":reply_flag,
                     "inWhichComment":"<%= commentObjId%>"
                 },
                 type:'post',
