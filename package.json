@@ -24,6 +24,7 @@
     "wechat-oauth": "1.1.0",
     "jssha": "^1.5.0",
     "weui": "0.2.0",
-		"request": "2.67.0"
+		"request": "2.67.0",
+		"cookie-session": "2.0.0-alpha.1"
   }
 }

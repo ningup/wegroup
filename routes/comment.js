@@ -77,8 +77,8 @@ router.post('/', function(req, res, next) {
 		var inWhichComment = '0';
 		var commentclass = new CommentClass();
 		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl){
-		//res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/comment/detail?cid='+comment.getObjectId()+'&fid='+feedObjId+'&gid='+groupObjId+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
-		 res.redirect('/comment/detail?cid='+comment.getObjectId()+'&toWhom='+comment.get('who')+'&fid='+feedObjId);
+		res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/comment/detail?cid='+comment.getObjectId()+'&toWhom='+comment.get('who')+'&fid='+feedObjId+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
+		 //res.redirect('/comment/detail?cid='+comment.getObjectId()+'&toWhom='+comment.get('who')+'&fid='+feedObjId);
 	});
 	}
 	else{}
@@ -90,13 +90,13 @@ router.get('/detail', function(req, res, next) {
 		var fid = req.query.fid;
 		var toWhom = req.query.toWhom;
 		var userclass = new UserClass();
-		cid = '56617b0400b0d1db00d319fe';
-		toWhom = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-		fid = '56605d1160b21eab5d3db031';
 	  client.getAccessToken(req.query.code, function (err, result) {
 			if(err){
 				//res.redirect('/group/fini?title=');	
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+				cid = '56617b0400b0d1db00d319fe';
+				toWhom = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+				fid = '56605d1160b21eab5d3db031';
 				userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 					 var groupObjId = whichGroupNow;
 					 if(err){
@@ -110,7 +110,6 @@ router.get('/detail', function(req, res, next) {
 							query.limit(25);
 							query.find({
 								success: function(comments) {
-									
 									console.log(comments.length);
 									res.render('lyh_test_replyall', {
 										username: username,
@@ -131,22 +130,36 @@ router.get('/detail', function(req, res, next) {
 			}else{
 				 var username = result.data.openid;
 				 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+					 var groupObjId = whichGroupNow;
 					 if(err){
 						 res.send('你还没有加入群呢，快去创建一个吧！');
 					 }
 					 else{
-							//需要查询comment。。。。。。。。。。
-							var groupObjId = whichGroupNow;
-										res.render('lyh_test_replyall', {
+							var query = new AV.Query('Comment');
+							query.ascending('createdAt');
+							query.equalTo('isReply','1');
+							query.equalTo('inWhichComment',cid);
+							query.limit(25);
+							query.find({
+								success: function(comments) {
+									console.log(comments.length);
+									res.render('lyh_test_replyall', {
 										username: username,
 										toWhom:toWhom,
-										groupObjId:gid,
+										groupObjId:groupObjId,
 										commentObjId:cid,
 										feedObjId: fid,
+										comments:comments	
+								  });
 										
-								 });
+								},
+								error: function(error) {
+									alert("Error: " + error.code + " " + error.message);
+								}
+							});
 					 }
 				});
+
 	    }
 	 });		
 });

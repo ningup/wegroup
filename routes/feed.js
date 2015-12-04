@@ -54,24 +54,7 @@ router.get('/', function(req, res, next) {
 	var userclass = new UserClass();
 	client.getAccessToken(req.query.code, function (err, result) {
 		if(err){
-				if (req.AV.user) {
-					// 如果已经登录，发送当前登录用户信息。
-					var id = req.AV.user.id;
-					var query = new AV.Query(AV.User);
-					query.get(id, {
-							success: function(user) {
-								res.send('你是'+user.get('nickname')+'id'+id);
-							},
-							error: function(object, error) {
-								// 失败了.
-								//console.log(object);
-								res.send('id', id);
-							}
-					});
-				}
-				else{
-					res.send('我不知道你是谁，请重新登录:(');
-				}
+					res.send('...');
 		}else{
 				var username = result.data.openid;
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -434,42 +417,7 @@ router.get('/groupNickname', function(req, res, next) {
 router.get('/detail',function(req,res,next){
 	 client.getAccessToken(req.query.code, function (err, result){
 		 if(err){
-			 res.send('请从微信进入');
-			 //var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-			  //var groupObjId = req.query.groupObjId;
-		  //var feedObjId = req.query.feedObjId;
-		  //feedObjId ='56605d1160b21eab5d3db031';
-		  //groupObjId = '565edc8a60b25b0435220df8';
-			//var userclass = new UserClass();
-			//userclass.isGroupJoined(username,groupObjId,function(status,obj){
-					  //if(status === 1){
-							////res.send('已加入');
-							//var query = new AV.Query('Feed');
-							//query.get(feedObjId, {
-									//success: function(feed) {
-										//// 成功获得实例
-										//res.render('lyh_test_feed', {
-												//username: username,
-												//groupObjId:groupObjId,
-												//feedObjId:feedObjId,
-												//feed:feed
-										 //});
-									//},
-									//error: function(error) {
-										//// 失败了.
-									//}
-								//});
-						//}	
-					  //else if (status === 3){
-						  //res.send('该群已经解散了');
-					  //}
-					  //else if (status === 2){
-							//res.send('你不在这个群里，不能看该状态');
-					  //}
-							
-					  //else if (status === 0)
-							//res.send('未关注');
-			//});
+			res.send('请从微信进入');
 		}else{ 
 			var username = result.data.openid;
 		  //var groupObjId = req.query.groupObjId; 

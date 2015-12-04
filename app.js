@@ -5,6 +5,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 //var groupAlbum = require('./routes/groupAlbum');
 //var user = require('./routes/user');
+var cookieSession = require('cookie-session');
 var group = require('./routes/group');
 var feed = require('./routes/feed');
 var comment = require('./routes/comment');
@@ -61,6 +62,7 @@ app.use(express.static('public'));
 
 // 加载云代码方法
 app.use(cloud);
+//app.use(express.cookieParser());
 app.use(AV.Cloud.CookieSession({secret: 'wegroup', maxAge: 3600000,fetchUser: false}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -335,26 +337,30 @@ app.use(function(req, res, next) {
 app.get('/', function(req, res) {
   client.getAccessToken(req.query.code, function (err, result) {
 	  //var accessToken = result.data.access_token;
-	  var openid = result.data.openid;
 	  if(err){
 				//userclass.followedUserRegister(function(){
 						//res.send('ing...');
 				//});
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 				//var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
-				AV.User.logIn(username, "A00000000~", {
+				var openid = username;
+		  AV.User.logIn(openid, "A00000000~", {
 			  success: function(user) {
+						//res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 						res.redirect("/feed");
 			  },
 			  error: function(user, error) {
 				// 失败了.
 			  }
 		  });
+
+				
 	  }else{
-			//var openid = result.data.openid;
+			var openid = result.data.openid;
 		  AV.User.logIn(openid, "A00000000~", {
 			  success: function(user) {
 						res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+						
 			  },
 			  error: function(user, error) {
 				// 失败了.
