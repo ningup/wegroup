@@ -72,6 +72,7 @@ router.post('/', function(req, res, next) {
 		return ;
 		//res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/comment/detail?cid='+comment.getObjectId()+'&fid='+feedObjId+'&gid='+groupObjId+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
 		 //res.redirect('/comment/detail?cid='+comment.getObjectId()+'&toWhom='+comment.get('who')+'&fid='+feedObjId+'&gid='+groupObjId);
+		});
 	}
 	else if(isReply==='0'){
 		var replyCommentId = '0';
