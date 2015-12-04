@@ -65,18 +65,27 @@ router.post('/', function(req, res, next) {
 	
 	if(isReply==='1'){
 		var replyCommentId = req.body.replyCommentId;
+		var inWhichComment = req.body.inWhichComment;
+		var commentclass = new CommentClass();
+		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl){
+		res.json({"nickname":nickname,"headimgurl":headimgurl,"content":content,"username":username,"toWhom":toWhom,"replyCommentObjId":comment.getObjectId()});
+		return ;
+		//res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/comment/detail?cid='+comment.getObjectId()+'&fid='+feedObjId+'&gid='+groupObjId+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
+		 //res.redirect('/comment/detail?cid='+comment.getObjectId()+'&toWhom='+comment.get('who')+'&fid='+feedObjId+'&gid='+groupObjId);
 	}
 	else if(isReply==='0'){
 		var replyCommentId = '0';
-	}
-	else{}
-	var commentclass = new CommentClass();
-	commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,function(comment,nickname,headimgurl){
+		var inWhichComment = '0';
+		var commentclass = new CommentClass();
+		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl){
 		//res.json({"nickname":nickname,"headimgurl":headimgurl,"content":content,"username":username,"toWhom":toWhom,"feedObjId":feedObjId});
 		//return ;
 		//res.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/comment/detail?cid='+comment.getObjectId()+'&fid='+feedObjId+'&gid='+groupObjId+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect');
-		 res.redirect('/comment/detail?cid='+comment.getObjectId()+'&fid='+feedObjId+'&gid='+groupObjId);
+		 res.redirect('/comment/detail?cid='+comment.getObjectId()+'&toWhom='+comment.get('who')+'&fid='+feedObjId+'&gid='+groupObjId);
 	});
+	}
+	else{}
+	
 });
 
 router.get('/detail', function(req, res, next) {
@@ -84,9 +93,11 @@ router.get('/detail', function(req, res, next) {
 			var cid = req.query.cid;
 			var fid = req.query.fid;
 			var gid = req.query.gid;
+			var toWhom = req.query.toWhom;
 			var userclass = new UserClass();
 			res.render('lyh_test_replyall', {
 					username: username,
+					toWhom:toWhom,
 					groupObjId:gid,
 					commentObjId:cid,
 					feedObjId: fid,

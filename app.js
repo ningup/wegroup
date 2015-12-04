@@ -340,9 +340,18 @@ app.get('/', function(req, res) {
 				//userclass.followedUserRegister(function(){
 						//res.send('ing...');
 				//});
-				//var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 				//var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
+				AV.User.logIn(username, "A00000000~", {
+			  success: function(user) {
+						res.redirect("/feed");
+			  },
+			  error: function(user, error) {
+				// 失败了.
+			  }
+		  });
 	  }else{
+			//var openid = result.data.openid;
 		  AV.User.logIn(openid, "A00000000~", {
 			  success: function(user) {
 						res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");

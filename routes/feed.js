@@ -54,7 +54,25 @@ router.get('/', function(req, res, next) {
 	var userclass = new UserClass();
 	client.getAccessToken(req.query.code, function (err, result) {
 		if(err){
-			 res.redirect('/group/fini?title=');		
+				if (req.AV.user) {
+					// 如果已经登录，发送当前登录用户信息。
+					var id = req.AV.user.id;
+					var query = new AV.Query(AV.User);
+					query.get(id, {
+							success: function(user) {
+								res.send('你是'+user.get('nickname')+'id'+id);
+							},
+							error: function(object, error) {
+								// 失败了.
+								//console.log(object);
+								res.send('id', id);
+							}
+					});
+				}
+				else{
+					res.send('我不知道你是谁，请重新登录:(');
+				}
+			 //res.redirect('/group/fini?title=');
 			 //var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 			 //userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				 //if(err){

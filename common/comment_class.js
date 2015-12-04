@@ -5,7 +5,7 @@ var Comment = AV.Object.extend('Comment');
 
 function FeedClass()
 {
-	this.addComment = function(groupObjId,feedObjId,content,username,toUsername,commentType,isReply,commentImgArray,replyCommentId,cb){
+	this.addComment = function(groupObjId,feedObjId,content,username,toUsername,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,cb){
 		var comment = new Comment(); 
 		comment.set('who',username);
 		comment.set('toWhom',toUsername);
@@ -16,6 +16,7 @@ function FeedClass()
 		comment.set('commentType',commentType);
 		comment.set('commentImgArray',commentImgArray);
 		comment.set('replyCommentId',replyCommentId);
+		comment.set('inWhichComment',inWhichComment);
 		comment.save().then(function(comment) {
 			//对象保存成功
 			var query1 = new AV.Query('UserInfo');
