@@ -2,10 +2,11 @@ var AV = require('leanengine');
 var Group=AV.Object.extend('Group');
 var Feed = AV.Object.extend('Feed');
 var Comment = AV.Object.extend('Comment');
-
+var UserClass = require('./user_class.js'); 
 function FeedClass()
 {
 	this.addComment = function(groupObjId,feedObjId,content,username,toUsername,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,cb){
+		var userclass = new UserClass();
 		var comment = new Comment(); 
 		comment.set('who',username);
 		comment.set('toWhom',toUsername);
@@ -25,29 +26,34 @@ function FeedClass()
 			query1.first({
 			  success: function(userinfo) {
 				// 成功获得实例
-				console.log('comment find userinfo');
-				comment.set('headimgurl',userinfo.get('headimgurl'));
-				comment.set('nickname',userinfo.get('nicknameInGroup'));
-				comment.save().then(function(comment){
-						var queryF = new AV.Query(Feed);
-						queryF.get(feedObjId, {
-							success: function(feed) {
-								// 成功获得实例
-								console.log("found the "+feed.get('feedContent'));
-								var date = new Date();
-								var relation = feed.relation('feedComment');
-								relation.add(comment);
-								if(isReply==='0'){
-									feed.set('updateTime',date);
+				userclass.getGroupNickname(toUsername,groupObjId,function(err,toNickname){
+					console.log('comment find userinfo');
+					comment.set('headimgurl',userinfo.get('headimgurl'));
+					comment.set('nickname',userinfo.get('nicknameInGroup'));
+					comment.set('toNickname',toNickname);
+					comment.save().then(function(comment){
+							var queryF = new AV.Query(Feed);
+							queryF.get(feedObjId, {
+								success: function(feed) {
+									// 成功获得实例
+									console.log("found the "+feed.get('feedContent'));
+									var date = new Date();
+									var relation = feed.relation('feedComment');
+									relation.add(comment);
+									if(isReply==='0'){
+										feed.set('updateTime',date);
+									}
+									feed.save();
+									cb(comment,userinfo.get('nicknameInGroup'),userinfo.get('headimgurl'));
+								},
+								error: function(feed, error) {
+									// 失败了.
 								}
-								feed.save();
-								cb(comment,userinfo.get('nicknameInGroup'),userinfo.get('headimgurl'));
-							},
-							error: function(feed, error) {
-								// 失败了.
-							}
-						});
+							});
+					});
+					
 				});
+				
 			  },
 			  error: function(object, error) {
 				// 失败了.
