@@ -476,7 +476,7 @@ router.get('/detail',function(req,res,next){
 			 var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 			  var groupObjId = req.query.groupObjId;
 		  var feedObjId = req.query.feedObjId;
-		  feedObjId ='565ff4a900b0d1dba27abf07';
+		  feedObjId ='56605d1160b21eab5d3db031';
 		  groupObjId = '565edc8a60b25b0435220df8';
 			var userclass = new UserClass();
 			userclass.isGroupJoined(username,groupObjId,function(status,obj){
