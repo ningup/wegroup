@@ -231,6 +231,7 @@
     height: 1px;
     background: #fff;
     content: "";}
+    .publish_form{display: none;}
     </style>
 
   </head>
@@ -408,6 +409,17 @@
             </div>
         </div>
     </div>
+
+    <form class="publish_form" method="post" action="/comment">
+        <input type="hidden" id="username" name="username" value="<%= username%>">
+        <input type="hidden" id="groupObjId" name="groupObjId" value="<%= groupObjId%>">
+        <input type="hidden" id="toWhom" name="toWhom" value="<%= feed.get('postedBy')%>">
+        <input type="hidden" id="feedObjId" name="feedObjId" value="<%= feedObjId%>">
+        <input type="hidden" id="isReply" name="isReply" value="0">
+        <input type="hidden" id="content" name="content" value="">
+        <input type="hidden" id="commentType" name="commentType" value="">
+        <input type="hidden" id="commentImgArray" name="commentImgArray" value="">
+    </form>
     
     <script type="text/javascript">
     $(document).ready(function(){
@@ -434,15 +446,15 @@
                 var str = this.getAttribute("src");
                 img_arr.push(str);
             });
-            alert(img_arr);
+            //alert(img_arr);
             if ($(".pub-pics").find("li.up-pic").length==0) {
                 commentType = "text";
             }else{
                 commentType = "imgtext";
                 img_str = img_arr.toString();
             }
-            alert(img_str);
-            var aj = $.ajax({
+            //alert(img_str);
+            /*var aj = $.ajax({
                 url:'/comment',
                 data:{
                     "username":"<%= username%>",
@@ -459,7 +471,11 @@
                 success:function(){
                     alert("okokokokokok");
                 }
-            });
+            });*/
+            $(".publish_form #content").val(content);
+            $(".publish_form #commentType").val(commentType);
+            $(".publish_form #commentImgArray").val(img_str);
+            $(".publish_form").submit();
         });
     });
     </script>
