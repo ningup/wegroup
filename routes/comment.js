@@ -110,20 +110,11 @@ router.get('/detail', function(req, res, next) {
 							query.limit(25);
 							query.find({
 								success: function(comments) {
-									var queryall = new AV.Query('Comment');
-									queryall.ascending('createdAt');
-									queryall.equalTo('isReply','1');
-									queryall.equalTo('inWhichComment',cid);
-									queryall.limit(100);
-									queryall.count({
-										success: function(count) {
 											// 成功了
 											console.log(comments.length);
-											console.log(count);
 											var elseCommet = '0';
-											if(comments.length < count){
-												var elseCommet = '1';
-											}
+											if(comments.length >=25)
+													elseCommet = '1';
 											console.log('elseCommet'+elseCommet);
 											res.render('lyh_test_replyall', {
 												username: username,
@@ -134,12 +125,6 @@ router.get('/detail', function(req, res, next) {
 												comments:comments,
 												elseCommet: elseCommet
 											});
-							
-										},
-										error: function(error) {
-											// 失败了
-										}
-									});
 										
 								},
 								error: function(error) {
@@ -163,19 +148,11 @@ router.get('/detail', function(req, res, next) {
 							query.limit(25);
 							query.find({
 								success: function(comments) {
-									var queryall = new AV.Query('Comment');
-									queryall.ascending('createdAt');
-									queryall.equalTo('isReply','1');
-									queryall.equalTo('inWhichComment',cid);
-									queryall.limit(100);
-									queryall.count({
-										success: function(count) {
 											// 成功了
-											//console.log(comments.length);
+											console.log(comments.length);
 											var elseCommet = '0';
-											if(comments.length < count){
-												var elseCommet = '1';
-											}
+											if(comments.length >=25)
+													elseCommet = '1';
 											console.log('elseCommet'+elseCommet);
 											res.render('lyh_test_replyall', {
 												username: username,
@@ -186,12 +163,6 @@ router.get('/detail', function(req, res, next) {
 												comments:comments,
 												elseCommet: elseCommet
 											});
-							
-										},
-										error: function(error) {
-											// 失败了
-										}
-									});
 										
 								},
 								error: function(error) {
@@ -216,29 +187,12 @@ router.post('/more', function(req, res, next) {
 		query.skip(skipCount);
 		query.find({
 			success: function(comments) {
-				var queryall = new AV.Query('Comment');
-				queryall.ascending('createdAt');
-				queryall.equalTo('isReply','1');
-				queryall.equalTo('inWhichComment',cid);
-				queryall.limit(100);
-				queryall.skip(skipCount);
-				queryall.count({
-					success: function(count) {
-						// 成功了
-						//console.log(comments.length);
-						var elseCommet = '0';
-						if(comments.length < count){
-							var elseCommet = '1';
-						}
-						console.log('elseCommet'+elseCommet);
-						res.json({"elseCommet":elseCommet,"comments":comments});
-						return ;
-		
-					},
-					error: function(error) {
-						// 失败了
-					}
-				});
+				var elseCommet = '0';
+				if(comments.length>=25)
+					elseCommet = '1';
+				console.log(elseCommet+"   "+comments.length+"   "+skipCount);
+				res.json({"elseCommet":elseCommet,"comments":comments});
+				return ;
 					
 			},
 			error: function(error) {
