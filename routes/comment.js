@@ -68,7 +68,7 @@ router.post('/', function(req, res, next) {
 		var inWhichComment = req.body.inWhichComment;
 		var commentclass = new CommentClass();
 		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl){
-		res.json({"nickname":nickname,"toNickname":comment.get('toNickname'),"content":content,"username":username,"toWhom":toWhom,"commentObjId":comment.getObjectId(),"replyCommentObjId":comment.get('replyCommentObjId'),"replyTime":comment.getCreatedAt()});
+		res.json({"nickname":nickname,"toNickname":comment.get('toNickname'),"content":content,"username":username,"toWhom":toWhom,"commentObjId":comment.getObjectId(),"replyCommentId":comment.get('replyCommentId'),"replyTime":comment.getCreatedAt()});
 		return ;
 		});
 	}
