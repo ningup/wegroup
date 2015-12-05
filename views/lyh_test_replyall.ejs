@@ -277,14 +277,26 @@
                         $("#temp").remove();
                         for(var i=0;i<data.comments.length;i++){
                           if(data.comments[i].replyCommentId==data.comments[i].inWhichComment){
-                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">"+data.comments[i].content+"</span><span class=\"list_item_time\">"+data.comments[i].CreatedAt+"</span></div></div></li>";
+                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">"+data.comments[i].content+"</span><span class=\"list_item_time\">"+data.comments[i].createdAt+"</span></div></div></li>";
                               $("ul.reply-list").append(str);
                           }else{
-                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.comments[i].toNickname+"</a>&nbsp;:"+data.comments[i].content+"</span><span class=\"list_item_time\">"+data.comments[i].CreatedAt+"</span></div></div></li>";
+                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.comments[i].toNickname+"</a>&nbsp;:"+data.comments[i].content+"</span><span class=\"list_item_time\">"+data.comments[i].createdAt+"</span></div></div></li>";
                               $("ul.reply-list").append(str);
                           } 
                         }
                         reply_num = 0;
+                        $("li.item").click(function(){
+                          //alert("heh");
+                          reply_flag = $(this).attr("data-reply");
+                          toWhom = $(this).attr("data-user");
+                          //alert(reply_flag);
+                          //alert(toWhom);
+                          var li_nickname = $(this).find(".user_name").html();
+                          li_nickname = "回复 " + li_nickname + ":";
+                          $(".editor").val("");
+                          $(".editor").attr("placeholder",li_nickname);
+                          $(".editor").focus();
+                        });
 
                         myScroll.refresh();
                         flag = 0;
