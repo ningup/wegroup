@@ -153,8 +153,8 @@
           //alert("heh");
           reply_flag = $(this).attr("data-reply");
           toWhom = $(this).attr("data-user");
-          alert(reply_flag);
-          alert(toWhom);
+          //alert(reply_flag);
+          //alert(toWhom);
           var li_nickname = $(this).find(".user_name").html();
           li_nickname = "回复 " + li_nickname + ":";
           $(".editor").val("");
@@ -199,7 +199,7 @@
                 success:function(data){
                     //alert("okokokokokok");
                     console.log(data);
-                    alert(isHave);
+                    //alert(isHave);
                     if(isHave=="0"){
                           if(data.replyCommentId=="<%= commentObjId%>"){
                               var str = "<li class=\"item\" id=\"temp\" data-reply=\""+data.commentObjId+"\" data-user=\""+ data.username +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.nickname+"</a>:<span class=\"floor_content\">"+data.content+"</span><span class=\"list_item_time\">"+data.replyTime+"</span></div></div></li>";
@@ -227,7 +227,7 @@
         var position;
         var flag = 0;
         var page = 0;
-        var isHave = "<%= elseCommet%>";
+        var isHave = "<%= elseComment%>";
         window.onload = function(){
             position = document.getElementById('position');
             myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:true });
@@ -260,7 +260,7 @@
                     reply_num++;
                   }
                 });
-                alert(reply_num);
+                //alert(reply_num);
                 var aj = $.ajax({
                     url:'/comment/more',
                     data:{
@@ -270,10 +270,10 @@
                     type:'post',
                     dataType:'json',
                     success:function(data){
-                        alert("返回ok");
+                        //alert("返回ok");
                         console.log(data);
-                        isHave = data.elseCommet;
-                        alert(isHave);
+                        isHave = data.elseComment;
+                        //alert(isHave);
                         $("#temp").remove();
                         for(var i=0;i<data.comments.length;i++){
                           if(data.comments[i].replyCommentId==data.comments[i].inWhichComment){
