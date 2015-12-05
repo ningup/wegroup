@@ -103,7 +103,7 @@
                       <ul class="reply-list">
                       <% for(var i=0;i<comments.length;i++){ 
                             if(comments[i].get("replyCommentId")==comments[i].get("inWhichComment")){ %>
-                              <li class="item" data-reply="<%= comments[i].getObjectId()%>" data-user="<%= comments[i].get("who")%>">
+                              <li class="item" id="" data-reply="<%= comments[i].getObjectId()%>" data-user="<%= comments[i].get("who")%>">
                                 <div class="fmain j_floor_main">
                                   <div class="floor_footer_item">
                                     <a href="" class="user_name "><%= comments[i].get("nickname")%></a>:
@@ -113,7 +113,7 @@
                                 </div>
                               </li>
                             <% }else{ %>
-                              <li class="item" data-reply="<%= comments[i].getObjectId()%>" data-user="<%= comments[i].get("who")%>">
+                              <li class="item" id="" data-reply="<%= comments[i].getObjectId()%>" data-user="<%= comments[i].get("who")%>">
                                 <div class="fmain j_floor_main">
                                   <div class="floor_footer_item">
                                     <a href="" class="user_name "><%= comments[i].get("nickname")%></a>:
@@ -147,6 +147,7 @@
     var replyCommentId = "<%= commentObjId%>";
     var inWhichComment = "<%= commentObjId%>";
     var chufa_flag = "0";
+    var reply_num = 0;
     $(document).ready(function(){
         $("li.item").click(function(){
           //alert("heh");
@@ -177,9 +178,9 @@
           chufa_flag = "1";
           var content = $(".editor").val();
           $(".editor").val("");
-          alert(reply_flag);
-          alert(toWhom);
-          alert(content);
+          //alert(reply_flag);
+          //alert(toWhom);
+          //alert(content);
           var aj = $.ajax({
                 url:'/comment',
                 data:{
@@ -196,8 +197,18 @@
                 type:'post',
                 dataType:'json',
                 success:function(data){
-                    alert("okokokokokok");
+                    //alert("okokokokokok");
                     console.log(data);
+                    alert(isHave);
+                    if(isHave=="0"){
+                          if(data.replyCommentId=="<%= commentObjId%>"){
+                              var str = "<li class=\"item\" id=\"temp\" data-reply=\""+data.commentObjId+"\" data-user=\""+ data.username +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.nickname+"</a>:<span class=\"floor_content\">"+data.content+"</span><span class=\"list_item_time\">"+data.replyTime+"</span></div></div></li>";
+                              $("ul.reply-list").append(str);
+                          }else{
+                              var str = "<li class=\"item\" id=\"temp\" data-reply=\""+data.commentObjId+"\" data-user=\""+ data.username +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.toNickname+"</a>&nbsp;:"+data.content+"</span><span class=\"list_item_time\">"+data.replyTime+"</span></div></div></li>";
+                              $("ul.reply-list").append(str);
+                          } 
+                    }
                     reply_flag = "<%= commentObjId%>";
                     toWhom = "<%= toWhom%>";
                     $(".editor").attr("placeholder","我也来说一句....");
@@ -216,6 +227,7 @@
         var position;
         var flag = 0;
         var page = 0;
+        var isHave = "<%= elseCommet%>";
         window.onload = function(){
             position = document.getElementById('position');
             myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:true });
@@ -240,9 +252,46 @@
                 flag = 0;
             }else if (flag==2) {
                 console.log("上拉加载");
-                for(var i=0;i<20;i++){
+                /*for(var i=0;i<20;i++){
                     $(".container").append("<li>Pretty row 50</li>");
-                }
+                }*/
+                $("li.item").each(function(){
+                  if($(this).attr("id")!="temp"){
+                    reply_num++;
+                  }
+                });
+                var aj = $.ajax({
+                    url:'/comment/more',
+                    data:{
+                        "inWhichComment":"<%= commentObjId%>",
+                        "skipCount":reply_num
+                    },
+                    type:'post',
+                    dataType:'json',
+                    success:function(data){
+                        alert("返回ok");
+                        console.log(data);
+                        isHave = data.elseCommet;
+                        alert(isHave);
+                        $("#temp").remove();
+                        for(var i=0;i<data.comments.length;i++){
+                          if(data.comments[i].replyCommentId==data.comments[i].inWhichComment){
+                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">"+data.comments[i].content+"</span><span class=\"list_item_time\">"+data.comments[i].CreatedAt+"</span></div></div></li>";
+                              $("ul.reply-list").append(str);
+                          }else{
+                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.comments[i].toNickname+"</a>&nbsp;:"+data.comments[i].content+"</span><span class=\"list_item_time\">"+data.comments[i].CreatedAt+"</span></div></div></li>";
+                              $("ul.reply-list").append(str);
+                          } 
+                        }
+
+                        myScroll.refresh();
+                        flag = 0;
+                    },
+                    error:function(){
+                        myScroll.refresh();
+                        flag = 0;
+                    }
+                });
                 myScroll.refresh();
                 flag = 0;
             }else{
