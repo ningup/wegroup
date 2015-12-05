@@ -112,10 +112,10 @@ router.get('/detail', function(req, res, next) {
 								success: function(comments) {
 											// 成功了
 											console.log(comments.length);
-											var elseCommet = '0';
+											var elseComment = '0';
 											if(comments.length >=25)
-													elseCommet = '1';
-											console.log('elseCommet'+elseCommet);
+													elseComment = '1';
+											console.log('elseComment'+elseComment);
 											res.render('lyh_test_replyall', {
 												username: username,
 												toWhom:toWhom,
@@ -123,7 +123,7 @@ router.get('/detail', function(req, res, next) {
 												commentObjId:cid,
 												feedObjId: fid,
 												comments:comments,
-												elseCommet: elseCommet
+												elseComment: elseComment
 											});
 										
 								},
@@ -150,10 +150,10 @@ router.get('/detail', function(req, res, next) {
 								success: function(comments) {
 											// 成功了
 											console.log(comments.length);
-											var elseCommet = '0';
+											var elseComment = '0';
 											if(comments.length >=25)
-													elseCommet = '1';
-											console.log('elseCommet'+elseCommet);
+													elseComment = '1';
+											console.log('elseComment'+elseComment);
 											res.render('lyh_test_replyall', {
 												username: username,
 												toWhom:toWhom,
@@ -161,7 +161,7 @@ router.get('/detail', function(req, res, next) {
 												commentObjId:cid,
 												feedObjId: fid,
 												comments:comments,
-												elseCommet: elseCommet
+												elseComment: elseComment
 											});
 										
 								},
@@ -187,11 +187,11 @@ router.post('/more', function(req, res, next) {
 		query.skip(skipCount);
 		query.find({
 			success: function(comments) {
-				var elseCommet = '0';
+				var elseComment = '0';
 				if(comments.length>=25)
-					elseCommet = '1';
-				console.log(elseCommet+"   "+comments.length+"   "+skipCount);
-				res.json({"elseCommet":elseCommet,"comments":comments});
+					elseComment = '1';
+				console.log(elseComment+"   "+comments.length+"   "+skipCount);
+				res.json({"elseComment":elseComment,"comments":comments});
 				return ;
 					
 			},
