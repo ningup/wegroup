@@ -198,6 +198,14 @@
                 success:function(data){
                     alert("okokokokokok");
                     console.log(data);
+                    reply_flag = "<%= commentObjId%>";
+                    toWhom = "<%= toWhom%>";
+                    $(".editor").attr("placeholder","我也来说一句....");
+                },
+                error:function(){
+                    reply_flag = "<%= commentObjId%>";
+                    toWhom = "<%= toWhom%>";
+                    $(".editor").attr("placeholder","我也来说一句....");
                 }
             });
         });
