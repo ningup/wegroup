@@ -260,6 +260,7 @@
                     reply_num++;
                   }
                 });
+                alert(reply_num);
                 var aj = $.ajax({
                     url:'/comment/more',
                     data:{
@@ -283,11 +284,13 @@
                               $("ul.reply-list").append(str);
                           } 
                         }
+                        reply_num = 0;
 
                         myScroll.refresh();
                         flag = 0;
                     },
                     error:function(){
+                        reply_num = 0;
                         myScroll.refresh();
                         flag = 0;
                     }
