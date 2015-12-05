@@ -114,6 +114,7 @@ router.get('/detail', function(req, res, next) {
 									queryall.ascending('createdAt');
 									queryall.equalTo('isReply','1');
 									queryall.equalTo('inWhichComment',cid);
+									queryall.limit(100);
 									queryall.count({
 										success: function(count) {
 											// 成功了
@@ -166,6 +167,7 @@ router.get('/detail', function(req, res, next) {
 									queryall.ascending('createdAt');
 									queryall.equalTo('isReply','1');
 									queryall.equalTo('inWhichComment',cid);
+									queryall.limit(100);
 									queryall.count({
 										success: function(count) {
 											// 成功了
@@ -203,6 +205,48 @@ router.get('/detail', function(req, res, next) {
 	 });		
 });
 
+router.post('/more', function(req, res, next) {
+		var cid = req.body.inWhichComment;
+		var skipCount = req.body.skipCount;
+		var query = new AV.Query('Comment');
+		query.ascending('createdAt');
+		query.equalTo('isReply','1');
+		query.equalTo('inWhichComment',cid);
+		query.limit(25);
+		query.skip(skipCount);
+		query.find({
+			success: function(comments) {
+				var queryall = new AV.Query('Comment');
+				queryall.ascending('createdAt');
+				queryall.equalTo('isReply','1');
+				queryall.equalTo('inWhichComment',cid);
+				queryall.limit(100);
+				queryall.skip(skipCount);
+				queryall.count({
+					success: function(count) {
+						// 成功了
+						//console.log(comments.length);
+						var elseCommet = '0';
+						if(comments.length < count){
+							var elseCommet = '1';
+						}
+						console.log('elseCommet'+elseCommet);
+						res.json({"elseCommet":elseCommet,"comments":comments});
+						return ;
+		
+					},
+					error: function(error) {
+						// 失败了
+					}
+				});
+					
+			},
+			error: function(error) {
+				alert("Error: " + error.code + " " + error.message);
+			}
+		});
+  
+});
 
 router.post('/post', function(req, res, next) {
   
