@@ -190,6 +190,7 @@ router.post('/more', function(req, res, next) {
 				var elseComment = '0';
 				if(comments.length>=25)
 					elseComment = '1';
+				console.log('more');
 				console.log(elseComment+"   "+comments.length+"   "+skipCount);
 				res.json({"elseComment":elseComment,"comments":comments});
 				return ;
