@@ -94,7 +94,7 @@ router.get('/detail', function(req, res, next) {
 			if(err){
 				//res.redirect('/group/fini?title=');	
 				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-				cid = '5661e1f160b202595a584ad2';
+				cid = '566563f200b0d1db00ecb2d8';
 				toWhom = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 				fid = '56605d1160b21eab5d3db031';
 				var queryC = new AV.Query('Comment');

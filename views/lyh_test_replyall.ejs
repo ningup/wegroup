@@ -50,8 +50,8 @@
     .comment-wrapper .comment-action .like:after{top: 2px;width: 16px;height: 16px;background: center center no-repeat;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABelBMVEWPj4////+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4/35ViBAAAAfXRSTlMAAAJDlryGEhM1EUhb73qJfiCeuGBp1JSmJs4xRwM/fF3ZqRCMI3Y91iltK4rxrMCialaSDnfEoF/96suCnxwwz/Y3H+AGOcbNMnCPm2SrgGeYlco6xQgFjXLMMwQXk2xMs1inqlUe4QfeIZCZZlQntw8iQA2R8O2EgeTyT1ISZcoAAAEuSURBVHheddJVT/VQEEbhOcJR4Bju7u7u7u7u9rnL+u+UNiU0dNbNm508d7PFYySvhUrLc6qq5W1OkAtArQoikN/YRJ4KSmgV8UJIA+1sGJOiSAN+so3ppU8DBRRaTAGVUGzMMFkKKKPtZSroUEAaPntcQQ095tZR7woaIN0EGVg1t/jegjisWjJgC8h8BZFO8+WoqxsSEk72AwODkC7vGiImSawYkfeNMiaMez0iEyAuTTIlMG0AcQczzMoc8zpYYFGWWNbBCh9ljXUVeCEoYTZVsMW2yA7samCPfRHPAYcKOIJjA5xwqoAzzsUAF1wq4IrrF3DDrTsIwp157nseXEGcRzHBEx/cQBQ+WSDK5y9f4ZsDfM+CgP3l/Lj2Q2yQiP389fvPXwf4l/ovZs/e3m8a8+LLQAAAAABJRU5ErkJggg==');background-size: 100% 100%;position: absolute;/*top: 10px;*/left: 5px;content: "";}
     .comment-wrapper .content-wrapper .ping-container{margin: 2px 0 7px;}
     .comment-wrapper .content-wrapper .ping-container:after{display: block;clear: both;content: "";}
-    .comment-wrapper .content-wrapper .ping-container .ping-pic{width: 96px;height: 96px;float: left;overflow: hidden;margin: 3px 3px 0 0;position: relative;background: #efece9;}
-    .comment-wrapper .content-wrapper .ping-container .ping-pic>img{margin-top: -12.224px;margin-left: 0px;width: 96px;height: 128px;-webkit-user-select: none;padding: 0;margin: 0;border-radius: 0;outline: 0;-webkit-tap-highlight-color: transparent;}
+    .comment-wrapper .content-wrapper .ping-container .ping-pic{/*width: 96px;height: 96px;*/width: 100%;height: auto; float: left;overflow: hidden;margin: 3px 3px 0 0;position: relative;background: #efece9;}
+    .comment-wrapper .content-wrapper .ping-container .ping-pic>img{margin-top: -12.224px;margin-left: 0px;/*width: 96px;height: 128px;*/width: 100%;height: auto; -webkit-user-select: none;padding: 0;margin: 0;border-radius: 0;outline: 0;-webkit-tap-highlight-color: transparent;}
     .comment-wrapper .reply-wrapper{margin-top: 5px;color: #454545;}
     .comment-wrapper .reply-wrapper .more{    display: block;line-height: 200%;font-size: 12px;margin: 6px 0;color: #3361a7;text-decoration: none;}
     .comment-wrapper .reply-wrapper .reply-list{list-style: none;padding-left: 0;}
@@ -80,19 +80,20 @@
 
       <div>
                   <div class="comment-wrapper">
-                    <div class="user-avatar"><img src="http://q1.qlogo.cn/g?b=qq&amp;k=CBszrbDicUgd6I2rKd2kmmg&amp;s=140&amp;t=1445487305"></div>
+                    <div class="user-avatar"><img src="<%= c.get('headimgurl')%>"></div>
                     <div class="name-wrap">
-                      <span class="user-nick">▂▃▅▆█▂▃▅▆█▂</span>
+                      <span class="user-nick"><%= c.get('nickname')%></span>
                       <span class="lounum">2楼</span>
                     </div>
                     <div class="content-wrapper">
-                      <div class="ping-content">23333333333333</div>
+                      <div class="ping-content"><%= c.get('content')%></div>
+                      <% if(c.get('commentType')=="imgtext"){ %>
                       <div class="ping-container">
-                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
-                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
-                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
-                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
+                        <% for(var i=0;i<c.get("commentImgArray").length;i++){ %>
+                        <div class="ping-pic"><img src="<%= c.get("commentImgArray")[i]%>"></div>
+                        <% } %>
                       </div>
+                      <% } %>
                     </div>
                     <div class="comment-action">
                       <span class="time">11-4</span>
