@@ -417,11 +417,11 @@ router.get('/groupNickname', function(req, res, next) {
 router.get('/detail',function(req,res,next){
 	 client.getAccessToken(req.query.code, function (err, result){
 		 if(err){
-			res.send('请从微信进入');
-		}else{ 
-			var username = result.data.openid;
+			//res.send('请从微信进入');
+			var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 		  //var groupObjId = req.query.groupObjId; 
 		  var feedObjId = req.query.feedObjId;
+			feedObjId = '56605d1160b21eab5d3db031';
 			var userclass = new UserClass();
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				 if(err){
@@ -429,6 +429,7 @@ router.get('/detail',function(req,res,next){
 				 }
 				 else{
 						var groupObjId = whichGroupNow;
+					 	var groupNickname = whichGroupNameNow;
 						userclass.isGroupJoined(username,groupObjId,function(status,obj){
 							if(status === 1){
 								//res.send('已加入');
@@ -440,6 +441,53 @@ router.get('/detail',function(req,res,next){
 													username: username,
 													groupObjId:groupObjId,
 													feedObjId:feedObjId,
+													groupNickname:groupNickname,
+													feed:feed
+											 });
+										},
+										error: function(error) {
+											// 失败了.
+										}
+								});
+							}	
+							else if (status === 3){
+								res.send('该群已经解散了');
+							}
+							else if (status === 2){
+								res.send('你不在这个群里，不能看该状态');
+							}
+								
+							else if (status === 0)
+								res.send('未关注');
+					});
+						
+				 }
+			});
+			 
+		}else{ 
+			var username = result.data.openid;
+		  //var groupObjId = req.query.groupObjId; 
+		  var feedObjId = req.query.feedObjId;
+			var userclass = new UserClass();
+			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				 if(err){
+					 res.send('你还没有加入群呢，快去创建一个吧！');
+				 }
+				 else{
+						var groupObjId = whichGroupNow;
+					 	var groupNickname = whichGroupNameNow;
+						userclass.isGroupJoined(username,groupObjId,function(status,obj){
+							if(status === 1){
+								//res.send('已加入');
+								var query = new AV.Query('Feed');
+								query.get(feedObjId, {
+									success: function(feed) {
+											// 成功获得实例
+											res.render('lyh_test_feed', {
+													username: username,
+													groupObjId:groupObjId,
+													feedObjId:feedObjId,
+													groupNickname:groupNickname,
 													feed:feed
 											 });
 										},

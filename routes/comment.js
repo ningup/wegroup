@@ -116,7 +116,7 @@ router.get('/detail', function(req, res, next) {
 							success: function(comments) {
 								// 成功了
 								console.log(comments.length);
-								console.log(comment);
+								//console.log(comment);
 								var elseComment = '0';
 								if(comments.length >=25)
 										elseComment = '1';
