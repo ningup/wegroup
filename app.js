@@ -63,9 +63,13 @@ app.use(express.static('public'));
 // 加载云代码方法
 app.use(cloud);
 //app.use(express.cookieParser());
-app.use(AV.Cloud.CookieSession({secret: 'wegroup', maxAge: 3600000,fetchUser: false}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(AV.Cloud.CookieSession({
+		secret: 'wegroup', 
+		maxAge: 3600000, 
+		fetchUser: false,
+		name: 'liaoqu'}));
 app.use(express.query());
 
 app.use('/wechat', wechat(config, function (req, res, next) {
@@ -338,12 +342,12 @@ app.get('/', function(req, res) {
   client.getAccessToken(req.query.code, function (err, result) {
 	  //var accessToken = result.data.access_token;
 	  if(err){
-				//userclass.followedUserRegister(function(){
-						//res.send('ing...');
-				//});
-				var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-				//var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
-				var openid = username;
+			//userclass.followedUserRegister(function(){
+					//res.send('ing...');
+			//});
+			var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
+			//var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
+			var openid = username;
 		  AV.User.logIn(openid, "A00000000~", {
 			  success: function(user) {
 						//res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
@@ -356,11 +360,11 @@ app.get('/', function(req, res) {
 
 				
 	  }else{
-			var openid = result.data.openid;
+		  var openid = result.data.openid;
 		  AV.User.logIn(openid, "A00000000~", {
 			  success: function(user) {
-						res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
-						
+						//res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+						res.redirect("/feed");
 			  },
 			  error: function(user, error) {
 				// 失败了.

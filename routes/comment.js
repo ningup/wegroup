@@ -102,11 +102,11 @@ router.get('/detail', function(req, res, next) {
 				  success: function(comment) {
 					// 成功获得实例
 					userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-					 var groupObjId = whichGroupNow;
-					 if(err){
+						var groupObjId = whichGroupNow;
+					 	if(err){
 						 res.send('你还没有加入群呢，快去创建一个吧！');
-					 }
-					 else{
+					 	}
+						else{
 						var query = new AV.Query('Comment');
 						query.ascending('createdAt');
 						query.equalTo('isReply','1');
@@ -137,7 +137,7 @@ router.get('/detail', function(req, res, next) {
 								alert("Error: " + error.code + " " + error.message);
 							}
 						});
-					 }
+						}
 					});
 				  },
 				  error: function(error) {
@@ -151,11 +151,11 @@ router.get('/detail', function(req, res, next) {
 				  success: function(comment) {
 					// 成功获得实例
 					userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-					 var groupObjId = whichGroupNow;
-					 if(err){
+						var groupObjId = whichGroupNow;
+						if(err){
 						 res.send('你还没有加入群呢，快去创建一个吧！');
-					 }
-					 else{
+						}
+						else{
 						var query = new AV.Query('Comment');
 						query.ascending('createdAt');
 						query.equalTo('isReply','1');
@@ -185,7 +185,7 @@ router.get('/detail', function(req, res, next) {
 								alert("Error: " + error.code + " " + error.message);
 							}
 						});
-					 }
+						}
 					});
 				  },
 				  error: function(error) {
