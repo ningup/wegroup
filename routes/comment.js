@@ -68,8 +68,8 @@ router.post('/', function(req, res, next) {
 		var inWhichComment = req.body.inWhichComment;
 		var commentclass = new CommentClass();
 		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl){
-		res.json({"nickname":nickname,"toNickname":comment.get('toNickname'),"content":content,"username":username,"toWhom":toWhom,"commentObjId":comment.getObjectId(),"replyCommentId":comment.get('replyCommentId'),"replyTime":comment.getCreatedAt()});
-		return ;
+			res.json({"nickname":nickname,"toNickname":comment.get('toNickname'),"content":content,"username":username,"toWhom":toWhom,"commentObjId":comment.getObjectId(),"replyCommentId":comment.get('replyCommentId'),"replyTime":comment.getCreatedAt()});
+			return ;
 		});
 	}
 	else if(isReply==='0'){
@@ -97,81 +97,101 @@ router.get('/detail', function(req, res, next) {
 				cid = '5661e1f160b202595a584ad2';
 				toWhom = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
 				fid = '56605d1160b21eab5d3db031';
-				userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				var queryC = new AV.Query('Comment');
+				queryC.get(cid, {
+				  success: function(comment) {
+					// 成功获得实例
+					userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 					 var groupObjId = whichGroupNow;
 					 if(err){
 						 res.send('你还没有加入群呢，快去创建一个吧！');
 					 }
 					 else{
-							var query = new AV.Query('Comment');
-							query.ascending('createdAt');
-							query.equalTo('isReply','1');
-							query.equalTo('inWhichComment',cid);
-							query.limit(25);
-							query.find({
-								success: function(comments) {
-											// 成功了
-											console.log(comments.length);
-											var elseComment = '0';
-											if(comments.length >=25)
-													elseComment = '1';
-											console.log('elseComment'+elseComment);
-											res.render('lyh_test_replyall', {
-												username: username,
-												toWhom:toWhom,
-												groupObjId:groupObjId,
-												commentObjId:cid,
-												feedObjId: fid,
-												comments:comments,
-												elseComment: elseComment
-											});
-										
-								},
-								error: function(error) {
-									alert("Error: " + error.code + " " + error.message);
-								}
-							});
-					 }
-				});
-			}else{
-				 var username = result.data.openid;
-				 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-					 var groupObjId = whichGroupNow;
-					 if(err){
-						 res.send('你还没有加入群呢，快去创建一个吧！');
-					 }
-					 else{
-							var query = new AV.Query('Comment');
-							query.ascending('createdAt');
-							query.equalTo('isReply','1');
-							query.equalTo('inWhichComment',cid);
-							query.limit(25);
-							query.find({
-								success: function(comments) {
-											// 成功了
-											console.log(comments.length);
-											var elseComment = '0';
-											if(comments.length >=25)
-													elseComment = '1';
-											console.log('elseComment'+elseComment);
-											res.render('lyh_test_replyall', {
-												username: username,
-												toWhom:toWhom,
-												groupObjId:groupObjId,
-												commentObjId:cid,
-												feedObjId: fid,
-												comments:comments,
-												elseComment: elseComment
-											});
-										
-								},
-								error: function(error) {
-									alert("Error: " + error.code + " " + error.message);
-								}
-							});
-					 }
-				});
+						var query = new AV.Query('Comment');
+						query.ascending('createdAt');
+						query.equalTo('isReply','1');
+						query.equalTo('inWhichComment',cid);
+						query.limit(25);
+						query.find({
+							success: function(comments) {
+								// 成功了
+								console.log(comments.length);
+								console.log(comment);
+								var elseComment = '0';
+								if(comments.length >=25)
+										elseComment = '1';
+								console.log('elseComment'+elseComment);
+								res.render('lyh_test_replyall', {
+									username: username,
+									toWhom:toWhom,
+									groupObjId:groupObjId,
+									commentObjId:cid,
+									feedObjId: fid,
+									comments:comments,
+									elseComment: elseComment,
+									c:comment
+								});
 
+							},
+							error: function(error) {
+								alert("Error: " + error.code + " " + error.message);
+							}
+						});
+					 }
+					});
+				  },
+				  error: function(error) {
+					// 失败了.
+				  }
+			  });
+			}else{
+				var username = result.data.openid;
+				var queryC = new AV.Query('Comment');
+				queryC.get(cid, {
+				  success: function(comment) {
+					// 成功获得实例
+					userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+					 var groupObjId = whichGroupNow;
+					 if(err){
+						 res.send('你还没有加入群呢，快去创建一个吧！');
+					 }
+					 else{
+						var query = new AV.Query('Comment');
+						query.ascending('createdAt');
+						query.equalTo('isReply','1');
+						query.equalTo('inWhichComment',cid);
+						query.limit(25);
+						query.find({
+							success: function(comments) {
+								// 成功了
+								console.log(comments.length);
+								var elseComment = '0';
+								if(comments.length >=25)
+										elseComment = '1';
+								console.log('elseComment'+elseComment);
+								res.render('lyh_test_replyall', {
+									username: username,
+									toWhom:toWhom,
+									groupObjId:groupObjId,
+									commentObjId:cid,
+									feedObjId: fid,
+									comments:comments,
+									elseComment: elseComment,
+									c:comment
+								});
+
+							},
+							error: function(error) {
+								alert("Error: " + error.code + " " + error.message);
+							}
+						});
+					 }
+					});
+				  },
+				  error: function(error) {
+					// 失败了.
+				  }
+			  });
 	    }
 	 });		
 });
