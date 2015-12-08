@@ -66,7 +66,7 @@ app.use(express.static('public'));
 // 加载云代码方法
 app.use(cloud);
 //app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
-app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkU', maxAge: 3600000, fetchUser: true,name:'liaoqu'}));
+app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkU', maxAge: 86400000, fetchUser: true,name:'liaoqu'}));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -348,17 +348,21 @@ app.get('/', function(req, res) {
 	  //var accessToken = result.data.access_token;
 	  if(err){
 			if(req.AV.user){
+					//AV.User.logOut();
 					res.redirect("/feed");
 			}
 			else{
-				var openid = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
+				//AV.User.logOut();
+				var openid ='orSEhuNxAkianv5eFOpTJ3LXWADE';
 				AV.User.logIn(openid, "A00000000~", {
 					success: function(user) {
+							console.log('login');
 							req.AV.user = user;
 							res.redirect("/feed");
 					},
 					error: function(user, error) {
 					// 失败了.
+						console.log(error);
 					}
 				});
 			}

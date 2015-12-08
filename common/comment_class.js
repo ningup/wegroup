@@ -66,13 +66,14 @@ function FeedClass()
 	
 	};
 	
-	this.getCommentInFeedDetail = function(feedObjId,cb){
+	this.getCommentInFeedDetail = function(feedObjId,skip,cb){
 		var commentJson = new Object();
 		commentJson.comments = new Array();
 		var query = new AV.Query('Comment');
 		query.ascending('createdAt');
 		query.equalTo('isReply','0');
 		query.equalTo('inWhichFeed',feedObjId);
+		query.skip(skip);
 		query.limit(20);
 		query.find({
 			success: function(comments) {
