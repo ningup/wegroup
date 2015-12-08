@@ -242,16 +242,16 @@
 
           <div class="feed-top">
             <div class="user-info">
-              <div class="user-photo"><img src="http://q4.qlogo.cn/g?b=qq&k=YAJwtVI1uyWpz5GECUXzZw&s=140&t=1371200833"></div>
+              <div class="user-photo"><img src="<%= feed.get('userHeadImgUrl')%>"></div>
               <div class="user-name">
-                <span class="user-nick">刘元鸿是你爹</span>
+                <span class="user-nick"><%= feed.get('nicknameOfPUser')%></span>
               </div>
               <div class="arrow-right"></div>
             </div>
             <div class="feed-title"><%= feed.get('feedTitle')%></div>
             <div class="feed-info">
-              <span class="time">2015-11-4 18:26</span>
-              <span class="band-name">微群帮手微群帮手</span>
+              <span class="time"><%= feed.getCreatedAt()%></span>
+              <span class="band-name"><%= groupNickname%></span>
             </div>
           </div>
 
@@ -280,108 +280,68 @@
 
           <div class="detail-comment-list">
             <div class="top-comment-wraper">
+            <% if(havecomment==1){ %>
               <ul class="list">
-                <li>
+              <% for(var i=0;i<commentJson.comments.length;i++){ %>
+              <a href="/comment/detail?cid=<%= commentJson.comments[i].id%>&fid=<%= feedObjId%>&toWhom=<%= commentJson.comments[i].toWhom%>">
+                <li data-cid="<%= commentJson.comments[i].id%>">
                   <div class="comment-wrapper">
-                    <div class="user-avatar"><img src="http://q1.qlogo.cn/g?b=qq&k=CBszrbDicUgd6I2rKd2kmmg&s=140&t=1445487305"></div>
+                    <div class="user-avatar"><img src="<%= commentJson.comments[i].headimgurl%>"></div>
                     <div class="name-wrap">
-                      <span class="user-nick">▂▃▅▆█▂▃▅▆█▂</span>
+                      <span class="user-nick"><%= commentJson.comments[i].nickname%></span>
                       <span class="lounum">2楼</span>
                     </div>
                     <div class="content-wrapper">
-                      <div class="ping-content">23333333333333</div>
+                      <div class="ping-content"><%= commentJson.comments[i].content%></div>
                       <div class="ping-container">
-                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
-                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
-                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
-                        <div class="ping-pic"><img src="http://ugc.qpic.cn/gbar_pic/dj4fAQhHmQK7m5ianVeMM4FCdDQqoiarALYa0X1MQGMEricj0faYz0SFw/200"></div>
+                        <% for(var j = 0;j<commentJson.comments[i].imgArray.length;j++){ %>
+                        <div class="ping-pic"><img src="<%= commentJson.comments[i].imgArray[j]%>"></div>
+                        <% } %>
                       </div>
                     </div>
                     <div class="comment-action">
-                      <span class="time">11-4</span>
+                      <span class="time"><%= commentJson.comments[i].time%></span>
                       <span class="reply ">11</span>
                       <span class="like">1181111</span>
                     </div>
                     <div class="reply-wrapper">
                       <ul class="reply-list">
+                      <% for(var a=0;a<commentJson.comments[i].reply.reply.length;a++){ 
+                            if(commentJson.comments[i].reply.reply[a].replyCommentId==commentJson.comments[i].id){ %>
                         <li class="item">
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
-                              <a href="/home/main?un=最爱叶倩彤" class="user_name ">最爱叶倩彤</a>:
-                              <span class="floor_content">播放器一直加载失败，弹幕声音都没事就是黑屏怎么破，今天才有的情况</span>
-                              <span class="list_item_time">5-25 20:46</span>
+                              <a href="" class="user_name "><%= commentJson.comments[i].reply.reply[a].nickname%></a>:
+                              <span class="floor_content"><%= commentJson.comments[i].reply.reply[a].content%></span>
+                              <span class="list_item_time"><%= commentJson.comments[i].reply.reply[a].time%></span>
                             </div>
                           </div>
                         </li>
+                        <% }else{ %>
                         <li class="item">
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
-                              <a href="/home/main?un=艾尔黄金舰队" class="user_name ">艾尔黄金舰队</a>:
+                              <a href="" class="user_name "><%= commentJson.comments[i].reply.reply[a].nickname%></a>:
                               <span class="floor_content">回复&nbsp;
-                              <a href="/home/main?un=最爱叶倩彤">最爱叶倩彤</a>&nbsp;:我前两星期就出现这个问题了，有几个视频一直加载或者直接黑屏，离线下来了也看不了，并且导致客户端崩溃
+                              <a href="/home/main?un=最爱叶倩彤"><%= commentJson.comments[i].reply.reply[a].toNickname%></a>&nbsp;:<%= commentJson.comments[i].reply.reply[a].content%>
                               </span>
-                              <span class="list_item_time">5-28 22:58</span>
+                              <span class="list_item_time"><%= commentJson.comments[i].reply.reply[a].time%></span>
                             </div>
                           </div>
                         </li>
+                        <% } %>
+                        <% } %>
                       </ul>
+                      <% if(commentJson.comments[i].reply.moreReply==1){ %>
                       <span class="more">查看更多评论>></span>
+                      <% } %>
                     </div>
                   </div>
                 </li>
-                <li>
-                  <div class="comment-wrapper">
-                    <div class="user-avatar"><img src="http://q1.qlogo.cn/g?b=qq&k=CBszrbDicUgd6I2rKd2kmmg&s=140&t=1445487305"></div>
-                    <div class="name-wrap">
-                      <span class="user-nick">▂▃▅▆█▂▃▅▆█▂</span>
-                      <span class="lounum">2楼</span>
-                    </div>
-                    <div class="content-wrapper">
-                      <div class="ping-content">23333333333333</div>
-
-                    </div>
-                    <div class="comment-action">
-                      <span class="time">11-4</span>
-                      <span class="reply">11</span>
-                      <span class="like">1181111</span>
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div class="comment-wrapper">
-                    <div class="user-avatar"><img src="http://q1.qlogo.cn/g?b=qq&k=CBszrbDicUgd6I2rKd2kmmg&s=140&t=1445487305"></div>
-                    <div class="name-wrap">
-                      <span class="user-nick">▂▃▅▆█▂▃▅▆█▂</span>
-                      <span class="lounum">2楼</span>
-                    </div>
-                    <div class="content-wrapper">
-                      <div class="ping-content">23333333333333</div>
-                    </div>
-                    <div class="comment-action">
-                      <span class="time">11-4</span>
-                      <span class="reply">11</span>
-                      <span class="like">1181111</span>
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div class="comment-wrapper">
-                    <div class="user-avatar"><img src="http://q1.qlogo.cn/g?b=qq&k=CBszrbDicUgd6I2rKd2kmmg&s=140&t=1445487305"></div>
-                    <div class="name-wrap">
-                      <span class="user-nick">▂▃▅▆█▂▃▅▆█▂</span>
-                      <span class="lounum">2楼</span>
-                    </div>
-                    <div class="content-wrapper">
-                      <div class="ping-content">23333333333333</div>
-                    </div>
-                    <div class="comment-action">
-                      <span class="time">11-4</span>
-                      <span class="reply">11</span>
-                      <span class="like">1181111</span>
-                    </div>
-                  </div>
-                </li>
+                </a>
+              <% } %>  
               </ul>
+            <% } %>
             </div>
           </div>
       </div>

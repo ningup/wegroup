@@ -89,6 +89,7 @@ router.get('/detail', function(req, res, next) {
 		var cid = req.query.cid;
 		var fid = req.query.fid;
 		var toWhom = req.query.toWhom;
+		console.log('detail');
 		var userclass = new UserClass();
 	if (req.AV.user) {
 		var username = req.AV.user.get('username');
