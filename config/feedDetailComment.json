@@ -1,0 +1,25 @@
+{
+	"comments":[
+		{
+			"id":"",
+			"headimgurl":"",
+			"nickname":"",
+			"content":"",
+			"imgArray":"",
+			"time":"",
+			"reply":
+			{
+				"moreReply":"",
+				"reply":[
+					{
+						"id":"",
+						"nickname":"",
+						"toNickname":"",
+						"content":"",
+						"time":"",
+					}
+				]
+		  }
+		}
+	]
+}

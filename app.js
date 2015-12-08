@@ -5,7 +5,10 @@ var path = require('path');
 var bodyParser = require('body-parser');
 //var groupAlbum = require('./routes/groupAlbum');
 //var user = require('./routes/user');
-var cookieSession = require('cookie-session');
+//var cookieSession = require('cookie-session');
+var cookieParser = require('cookie-parser');
+var avosExpressCookieSession = require('avos-express-cookie-session');
+
 var group = require('./routes/group');
 var feed = require('./routes/feed');
 var comment = require('./routes/comment');
@@ -62,14 +65,11 @@ app.use(express.static('public'));
 
 // 加载云代码方法
 app.use(cloud);
-//app.use(express.cookieParser());
-app.use(bodyParser.json());
+//app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
+app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkU', maxAge: 3600000, fetchUser: true,name:'liaoqu'}));
+app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(AV.Cloud.CookieSession({
-		secret: 'wegroup', 
-		maxAge: 3600000, 
-		fetchUser: false,
-		name: 'liaoqu'}));
+app.use(cookieParser());
 app.use(express.query());
 
 app.use('/wechat', wechat(config, function (req, res, next) {
@@ -306,10 +306,10 @@ api.getTicket(function(err,results){
 	
 });*/
 
-//api.createMenu(menu, function (err, result){
-	//if(err)
-	//console.log(JSON.stringify(result));
-//});
+/*api.createMenu(menu, function (err, result){
+	if(err)
+	console.log(JSON.stringify(result));
+});*/
 
 
 //api.getMenu(function(err,results){
@@ -324,7 +324,12 @@ api.getTicket(function(err,results){
 
 // 未处理异常捕获 middleware
 app.use(function(req, res, next) {
-  var d = domain.create();
+   var d = null;
+  if (process.domain) {
+    d = process.domain;
+  } else {
+    d = domain.create();
+  }
   d.add(req);
   d.add(res);
   d.on('error', function(err) {
@@ -339,39 +344,42 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function(req, res) {
-  client.getAccessToken(req.query.code, function (err, result) {
+ 	client.getAccessToken(req.query.code, function (err, result) {
 	  //var accessToken = result.data.access_token;
 	  if(err){
-			//userclass.followedUserRegister(function(){
-					//res.send('ing...');
-			//});
-			var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-			//var username1 = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
-			var openid = username;
-		  AV.User.logIn(openid, "A00000000~", {
-			  success: function(user) {
-						//res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
-						res.redirect("/feed");
-			  },
-			  error: function(user, error) {
-				// 失败了.
-			  }
-		  });
-
-				
+			if(req.AV.user){
+					res.redirect("/feed");
+			}
+			else{
+				var openid = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
+				AV.User.logIn(openid, "A00000000~", {
+					success: function(user) {
+							req.AV.user = user;
+							res.redirect("/feed");
+					},
+					error: function(user, error) {
+					// 失败了.
+					}
+				});
+			}
 	  }else{
-		  var openid = result.data.openid;
-		  AV.User.logIn(openid, "A00000000~", {
-			  success: function(user) {
-						//res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
-						res.redirect("/feed");
-			  },
-			  error: function(user, error) {
-				// 失败了.
-			  }
-		  });
+			if(req.AV.user){
+					res.redirect("/feed");
+			}
+			else{
+				var openid = result.data.openid;
+				AV.User.logIn(openid, "A00000000~", {
+					success: function(user) {
+							req.AV.user = user;
+							res.redirect("/feed");
+					},
+					error: function(user, error) {
+					// 失败了.
+					}
+				});
+			}
 	 }
-  });
+ });
   
 });
 

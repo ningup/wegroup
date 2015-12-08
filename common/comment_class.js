@@ -36,7 +36,7 @@ function FeedClass()
 							queryF.get(feedObjId, {
 								success: function(feed) {
 									// 成功获得实例
-									console.log("found the "+feed.get('feedContent'));
+									console.log("found the feed content"+feed.get('feedContent'));
 									var date = new Date();
 									var relation = feed.relation('feedComment');
 									relation.add(comment);
@@ -65,6 +65,96 @@ function FeedClass()
 		});
 	
 	};
+	
+	this.getCommentInFeedDetail = function(feedObjId,cb){
+		var commentJson = new Object();
+		commentJson.comments = new Array();
+		var query = new AV.Query('Comment');
+		query.ascending('createdAt');
+		query.equalTo('isReply','0');
+		query.equalTo('inWhichFeed',feedObjId);
+		query.limit(20);
+		query.find({
+			success: function(comments) {
+				// 成功了
+				console.log(comments.length);
+				if(comments.length == 0)
+						cb(null,'0',commentJson);
+				else{
+					//console.log(comment);
+					var cnti = 0;
+					var lenc = comments.length;
+					for(var i = 0; i < comments.length ; i++){
+						(function(i){
+							commentJson.comments[i] = new Object();
+							commentJson.comments[i].id = comments[i].getObjectId();
+							commentJson.comments[i].headimgurl = comments[i].get('headimgurl');
+							commentJson.comments[i].nickname = comments[i].get('nickname');
+							commentJson.comments[i].content = comments[i].get('content');
+							commentJson.comments[i].imgArray = new Array();
+							commentJson.comments[i].imgArray=comments[i].get('commentImgArray');
+							commentJson.comments[i].time = comments[i].getCreatedAt();
+							commentJson.comments[i].reply = new Object();
+							commentJson.comments[i].reply.moreReply = '0';
+							commentJson.comments[i].reply.reply = new Array();
+							var queryR = new AV.Query('Comment');
+							queryR.ascending('createdAt');
+							queryR.equalTo('isReply','1');
+							queryR.equalTo('inWhichComment',commentJson.comments[i].id);
+							queryR.limit(3);
+							queryR.find({
+								success: function(replyComments) {
+									var len = replyComments.length;
+									if (replyComments.length >2){
+										var len = 2;
+										console.log('len'+len);
+										commentJson.comments[i].reply.moreReply = '1';
+									}
+									var cntj =0;
+									if(len ==0){
+										cnti++;
+										console.log(i);
+										if(cnti == lenc){
+												cb(null,'1',commentJson);
+										}
+									}else{
+										for (var j = 0; j < len; j++) {
+										commentJson.comments[i].reply.reply[j] = new Object();
+										commentJson.comments[i].reply.reply[j].id = replyComments[j].getObjectId();
+										commentJson.comments[i].reply.reply[j].nickname = replyComments[j].get('nickname');
+										commentJson.comments[i].reply.reply[j].toNickname = replyComments[j].get('toNickname');
+										commentJson.comments[i].reply.reply[j].content = replyComments[j].get('content');
+										commentJson.comments[i].reply.reply[j].replyCommentId= replyComments[j].get('replyCommentId');
+										commentJson.comments[i].reply.reply[j].time = replyComments[j].getCreatedAt();
+										cntj ++;
+										if(cntj == len){
+											cnti++;
+											console.log(i);
+											if(cnti == lenc){
+												cb(null,'1',commentJson);
+											}
+										}
+
+									}	
+								} 
+
+								},
+								error: function(error) {
+									//alert("Error: " + error.code + " " + error.message);
+								}
+							});
+
+						})(i);
+					}
+				}
+
+			},
+			error: function(error) {
+				alert("Error: " + error.code + " " + error.message);
+			}
+		});		
+	};
+	
 	this.rmComment = function(commentObjId){
 		
 	};

@@ -5,6 +5,7 @@ var GroupClass = require('../common/group_class.js'); //引入group_class.js
 var FeedClass = require('../common/feed_class.js');   //引入Feed_class.js
 var LikeClass = require('../common/like_class.js');
 var UserClass = require('../common/user_class.js'); 
+var CommentClass = require('../common/comment_class.js');
 //var voteResults = require('../config/voteResults.json');
 //var vote = require('../config/vote.json');
 //var voteResultsWithoutUser = require('../config/voteResultsWithoutUser.json');
@@ -51,12 +52,12 @@ var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
 router.get('/', function(req, res, next) {
 	//var likeclass = new LikeClass();
 	//likeclass.like('55fc293860b21fbf5733ec7d',req.query.username);
-	var userclass = new UserClass();
-	client.getAccessToken(req.query.code, function (err, result) {
-		if(err){
-					res.send('...');
-		}else{
-				var username = result.data.openid;
+	if (req.AV.user) {
+			// 如果已经登录，发送当前登录用户信息。
+			//res.send(req.AV.user.get('username'));
+			//console.log(req.AV.user);
+		  var username = req.AV.user.get('username');
+			var userclass = new UserClass();
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				 if(err){
 					 res.send('你还没有加入群呢，快去创建一个吧！');
@@ -113,8 +114,10 @@ router.get('/', function(req, res, next) {
 					});
 				 }
 			});
-	    }
-	 });
+	} else {
+			// 没有登录，跳转到登录页面。
+			res.send('你是谁？');
+	}
 
 });
 router.post('/history', function(req, res, next) {
@@ -279,7 +282,7 @@ router.post('/post', function(req, res, next) {
 				feed.set('updateTime',date);
 				feed.set('feedTitle',feedTitle);
 				feed.save();
-				res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+				res.redirect("/feed");
 		   }); 
 	  }
 	  else if (feedType === 'imgtext'){
@@ -293,7 +296,7 @@ router.post('/post', function(req, res, next) {
 				feed.set('updateTime',date);
 				feed.set('feedTitle',feedTitle);
 				feed.save();
-				res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+				res.redirect("/feed");
 		   }); 
 	  }
 	  else if (feedType === 'vote'){
@@ -415,104 +418,67 @@ router.get('/groupNickname', function(req, res, next) {
 	 });
 });
 router.get('/detail',function(req,res,next){
-	 client.getAccessToken(req.query.code, function (err, result){
-		 if(err){
-			//res.send('请从微信进入');
-			var username = 'orSEhuNxAkianv5eFOpTJ3LXWADE';
-		  //var groupObjId = req.query.groupObjId; 
-		  var feedObjId = req.query.feedObjId;
-			feedObjId = '56605d1160b21eab5d3db031';
-			var userclass = new UserClass();
-			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-				 if(err){
-					 res.send('你还没有加入群呢，快去创建一个吧！');
-				 }
-				 else{
-						var groupObjId = whichGroupNow;
-					 	var groupNickname = whichGroupNameNow;
-						userclass.isGroupJoined(username,groupObjId,function(status,obj){
-							if(status === 1){
-								//res.send('已加入');
-								var query = new AV.Query('Feed');
-								query.get(feedObjId, {
-									success: function(feed) {
-											// 成功获得实例
-											res.render('lyh_test_feed', {
-													username: username,
-													groupObjId:groupObjId,
-													feedObjId:feedObjId,
-													groupNickname:groupNickname,
-													feed:feed
-											 });
-										},
-										error: function(error) {
-											// 失败了.
-										}
-								});
-							}	
-							else if (status === 3){
-								res.send('该群已经解散了');
-							}
-							else if (status === 2){
-								res.send('你不在这个群里，不能看该状态');
-							}
-								
-							else if (status === 0)
-								res.send('未关注');
-					});
-						
-				 }
-			});
-			 
-		}else{ 
-			var username = result.data.openid;
-		  //var groupObjId = req.query.groupObjId; 
-		  var feedObjId = req.query.feedObjId;
-			var userclass = new UserClass();
-			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-				 if(err){
-					 res.send('你还没有加入群呢，快去创建一个吧！');
-				 }
-				 else{
-						var groupObjId = whichGroupNow;
-					 	var groupNickname = whichGroupNameNow;
-						userclass.isGroupJoined(username,groupObjId,function(status,obj){
-							if(status === 1){
-								//res.send('已加入');
-								var query = new AV.Query('Feed');
-								query.get(feedObjId, {
-									success: function(feed) {
-											// 成功获得实例
-											res.render('lyh_test_feed', {
-													username: username,
-													groupObjId:groupObjId,
-													feedObjId:feedObjId,
-													groupNickname:groupNickname,
-													feed:feed
-											 });
-										},
-										error: function(error) {
-											// 失败了.
-										}
-								});
-							}	
-							else if (status === 3){
-								res.send('该群已经解散了');
-							}
-							else if (status === 2){
-								res.send('你不在这个群里，不能看该状态');
-							}
-								
-							else if (status === 0)
-								res.send('未关注');
-					});
-						
-				 }
-			});
-			
-	    }
-	 });
+	var feedObjId = req.query.feedObjId;
+	if (req.AV.user) {
+		//console.log(req.AV.user);
+		var username = req.AV.user.get('username');
+		var userclass = new UserClass();
+		var commentclass = new CommentClass();
+		console.log(username);
+		 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+			 if(err){
+				 res.send('你还没有加入群呢，快去创建一个吧！');
+			 }
+			 else{
+					var groupObjId = whichGroupNow;
+					var groupNickname = whichGroupNameNow;
+					userclass.isGroupJoined(username,groupObjId,function(status,obj){
+						if(status === 1){
+							//res.send('已加入');
+							var query = new AV.Query('Feed');
+							query.get(feedObjId, {
+								success: function(feed) {
+										// 成功获得实例
+									commentclass.getCommentInFeedDetail(feedObjId,function(err,havecomment,commentJson){
+										console.log(groupNickname);
+										//console.log(commentJson);
+										res.render('lyh_test_feed', {
+												username: username,
+												groupObjId:groupObjId,
+												feedObjId:feedObjId,
+												groupNickname:groupNickname,
+												feed:feed,
+												havecomment:havecomment,
+												commentJson:commentJson
 
+										 });	
+
+									});
+
+									},
+									error: function(error) {
+										// 失败了.
+									}
+							});
+						}	
+						else if (status === 3){
+							res.send('该群已经解散了');
+						}
+						else if (status === 2){
+							res.send('你不在这个群里，不能看该状态');
+						}
+
+						else if (status === 0)
+							res.send('未关注');
+				});
+
+			 }
+		});
+	}
+	else{
+		res.send('你是谁？');
+	}
+	
 });
 
 module.exports = router;
