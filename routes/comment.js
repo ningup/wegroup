@@ -141,7 +141,7 @@ router.get('/detail', function(req, res, next) {
 			  });
 	}
 	else{
-		res.send('你是谁？');
+		res.send('我不知道你是谁了，重新进入一下吧');
 	}
 });
 

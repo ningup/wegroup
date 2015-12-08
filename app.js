@@ -307,7 +307,7 @@ api.getTicket(function(err,results){
 });*/
 
 /*api.createMenu(menu, function (err, result){
-	if(err)
+	//if(err)
 	console.log(JSON.stringify(result));
 });*/
 
@@ -349,7 +349,9 @@ app.get('/', function(req, res) {
 	  if(err){
 			if(req.AV.user){
 					//AV.User.logOut();
+				//console.log(AV.User.current());
 					res.redirect("/feed");
+				
 			}
 			else{
 				//AV.User.logOut();
@@ -367,11 +369,12 @@ app.get('/', function(req, res) {
 				});
 			}
 	  }else{
-			if(req.AV.user){
+			var openid = result.data.openid;
+			if(req.AV.user && (req.AV.user.get('username')== openid) ){
 					res.redirect("/feed");
 			}
 			else{
-				var openid = result.data.openid;
+				//var openid = result.data.openid;
 				AV.User.logIn(openid, "A00000000~", {
 					success: function(user) {
 							req.AV.user = user;
@@ -379,6 +382,7 @@ app.get('/', function(req, res) {
 					},
 					error: function(user, error) {
 					// 失败了.
+						res.redirect(error);
 					}
 				});
 			}

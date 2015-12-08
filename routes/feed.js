@@ -116,7 +116,7 @@ router.get('/', function(req, res, next) {
 			});
 	} else {
 			// 没有登录，跳转到登录页面。
-			res.send('你是谁？');
+			res.send('我不知道你是谁了，重新进入一下吧');
 	}
 
 });
@@ -476,7 +476,7 @@ router.get('/detail',function(req,res,next){
 		});
 	}
 	else{
-		res.send('你是谁？');
+		res.send('我不知道你是谁了，重新进入一下吧');
 	}
 	
 });
