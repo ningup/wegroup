@@ -385,7 +385,7 @@
     $(document).ready(function(){
         $(".reply").on('click',function(){
           //alert("你妈的");
-          alert("<%= groupObjId%>");
+          //alert("<%= groupObjId%>");
         });
         $(".pub-cancel").click(function(){
             $("#myModal").modal('hide');
@@ -396,7 +396,7 @@
             var img_str = "";
             var content = "";
             var commentType = "";
-            alert("发布");
+            //alert("发布");
             if ($("div.pub-editor textarea").val()==null) {
                 alert("评论内容不能为空");
                 return;
@@ -548,12 +548,12 @@
                         var avFile = new AV.File(name,file);
                         avFile.save().then(function(avFile){
                             file_num++;
-                            alert(file_num);
+                            //alert(file_num);
                             var src = avFile.url();
                             var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
                             $(".pub-pics").prepend(str_pic);
                             $(".btn-del").click(function(){
-                                alert("nima");
+                                //alert("nima");
                                 this.closest("li.up-pic").remove();
                                 file_num--;
                                 if (file_num<0) {file_num=0;}
@@ -567,12 +567,12 @@
                         var avFile = new AV.File(name,file);
                         avFile.save().then(function(avFile){
                             file_num++;
-                            alert(file_num);
+                            //alert(file_num);
                             var src = avFile.url();
                             var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
                             $(".pub-pics").prepend(str_pic);
                             $(".btn-del").click(function(){
-                                alert("nima");
+                                //alert("nima");
                                 this.closest("li.up-pic").remove();
                                 file_num--;
                                 if (file_num<0) {file_num=0;}

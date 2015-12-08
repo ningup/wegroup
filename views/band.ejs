@@ -327,7 +327,7 @@
         $(".pub-publish").click(function(){
             var img_arr = [];
             var img_str = "";
-            alert("发布");
+            //alert("发布");
             $(".pub-pics").find("li.up-pic img").each(function(){
                 var str = this.getAttribute("src");
                 img_arr.push(str);
@@ -347,7 +347,9 @@
         $(".pub-cancel").click(function(){
             $("#myModal").modal("hide");
         });
-        $(".publish-btn").click(function(){alert("diandiandian");})
+        $(".publish-btn").click(function(){
+            //alert("diandiandian");
+        })
         $(".no").click(function(){
         	if ($(".sign_like_button").hasClass("no")){
 	            var aj = $.ajax({
@@ -359,10 +361,10 @@
 	                type:'post',
 	                dataType:'json',
 	                success:function(data){
-	                	alert("coming");
+	                	//alert("coming");
 	                    $(".sign_like_button").removeClass("no");
 	                    $(".sign_like_button").addClass("yes");
-	                    alert($(".sign_like_button").attr("class"));
+	                    //alert($(".sign_like_button").attr("class"));
 	                    $(".sign_like_button").html("已签到");
 	                    $(".day_num").html(data.cnt);
 	                }
@@ -370,14 +372,14 @@
         	}
         });
         $(".feed").click(function(){
-        	alert("尼玛");
+        	//alert("尼玛");
             /*
         	$("#feedObjId").val(this.getAttribute("data-feedid"));
         	$("#feed-post").submit();*/
             //var str = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid")+ "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
             var str = "/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid");
             $("#feed-post").attr("href",str);
-            alert($("#feed-post").attr("href"));
+            //alert($("#feed-post").attr("href"));
             //$("feed-click").click();
             document.getElementById("feed-click").click();
         });
@@ -463,14 +465,14 @@
                             }
                         }
                         $(".feed").click(function(){
-                            alert("尼玛");
+                            //alert("尼玛");
                             /*
                             $("#feedObjId").val(this.getAttribute("data-feedid"));
                             $("#feed-post").submit();*/
                             //var str = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid")+ "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
                             var str = "/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid");
 														$("#feed-post").attr("href",str);
-                            alert($("#feed-post").attr("href"));
+                            //alert($("#feed-post").attr("href"));
                             //$("feed-click").click();
                             document.getElementById("feed-click").click();
                         });
@@ -501,12 +503,12 @@
                         var avFile = new AV.File(name,file);
                         avFile.save().then(function(avFile){
                             file_num++;
-                            alert(file_num);
+                            //alert(file_num);
                             var src = avFile.url();
                             var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
                             $(".pub-pics").prepend(str_pic);
                             $(".btn-del").click(function(){
-                                alert("nima");
+                                //alert("nima");
                                 this.closest("li.up-pic").remove();
                                 file_num--;
                                 if (file_num<0) {file_num=0;}
@@ -520,12 +522,12 @@
                         var avFile = new AV.File(name,file);
                         avFile.save().then(function(avFile){
                             file_num++;
-                            alert(file_num);
+                            //alert(file_num);
                             var src = avFile.url();
                             var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
                             $(".pub-pics").prepend(str_pic);
                             $(".btn-del").click(function(){
-                                alert("nima");
+                                //alert("nima");
                                 this.closest("li.up-pic").remove();
                                 file_num--;
                                 if (file_num<0) {file_num=0;}
