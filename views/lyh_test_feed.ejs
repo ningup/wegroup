@@ -284,7 +284,7 @@
               <ul class="list">
               <% for(var i=0;i<commentJson.comments.length;i++){ %>
               <a href="/comment/detail?cid=<%= commentJson.comments[i].id%>&fid=<%= feedObjId%>&toWhom=<%= commentJson.comments[i].toWhom%>">
-                <li data-cid="<%= commentJson.comments[i].id%>">
+                <li data-cid="<%= commentJson.comments[i].id%>" id="num_flag">
                   <div class="comment-wrapper">
                     <div class="user-avatar"><img src="<%= commentJson.comments[i].headimgurl%>"></div>
                     <div class="name-wrap">
@@ -444,6 +444,7 @@
         var position;
         var flag = 0;
         var page = 0;
+        var num_flag = 0;
         window.onload = function(){
             position = document.getElementById('position');
             myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:true, tap:true});
@@ -468,9 +469,62 @@
                 flag = 0;
             }else if (flag==2) {
                 console.log("上拉加载");
-                for(var i=0;i<20;i++){
-                    $(".container").append("<li>Pretty row 50</li>");
-                }
+                $("li#num_flag").each(function(){
+                  num_flag++;
+                  //alert(num_flag);
+                });
+                //alert(num_flag);
+                var aj = $.ajax({
+                    url:'/feed/detail/comment_more',
+                    data:{
+                        "feedObjId":"<%= feedObjId%>",
+                        "skip":num_flag,
+                        "username":"<%= username%>"
+                    },
+                    type:'post',
+                    dataType:'json',
+                    success:function(data){
+                        //alert("返回ok");
+                        console.log(data);
+                        if(data.havecomment=="1"){
+                            for(var i = 0;i<data.commentJson.comments.length;i++){
+                                var comments = "";
+                                var replys = "";
+                                var pics = "";
+                                for(var a=0;a<data.commentJson.comments[i].reply.reply.length;a++){ 
+                                    if(data.commentJson.comments[i].reply.reply[a].replyCommentId==data.commentJson.comments[i].id){
+                                        var temp = "<li class=\"item\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+data.commentJson.comments[i].reply.reply[a].time+"</span></div></div></li>";
+                                    }else{
+                                        var temp = "<li class=\"item\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.commentJson.comments[i].reply.reply[a].toNickname+"</a>&nbsp;:"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+data.commentJson.comments[i].reply.reply[a].time+"</span></div></div></li>";
+                                    }
+                                    replys = replys + temp;
+                                }
+                                if(data.commentJson.comments[i].reply.moreReply==1){
+                                    replys = "<div class=\"reply-wrapper\"><ul class=\"reply-list\">" + replys + "</ul><span class=\"more\">查看更多评论>></span></div>";
+                                }else{
+                                    replys = "<div class=\"reply-wrapper\"><ul class=\"reply-list\">" + replys + "</ul></div>";
+                                }
+                                for(var j = 0;j<data.commentJson.comments[i].imgArray.length;j++){
+                                    var temp = "<div class=\"ping-pic\"><img src=\""+data.commentJson.comments[i].imgArray[j]+"\"></div>";
+                                    pics = pics + temp;
+                                }
+                                comments = "<a href=\"/comment/detail?cid="+data.commentJson.comments[i].id+"&fid="+"<%= feedObjId%>"+"&toWhom="+data.commentJson.comments[i].toWhom+"\"><li data-cid=\""+data.commentJson.comments[i].id+"\" id=\"num_flag\"><div class=\"comment-wrapper\"><div class=\"user-avatar\"><img src=\""+data.commentJson.comments[i].headimgurl+"\"></div><div class=\"name-wrap\"><span class=\"user-nick\">"+data.commentJson.comments[i].nickname+"</span><span class=\"lounum\">2楼</span></div><div class=\"content-wrapper\"><div class=\"ping-content\">"+data.commentJson.comments[i].content+"</div><div class=\"ping-container\">" + pics + "</div></div><div class=\"comment-action\"><span class=\"time\">"+data.commentJson.comments[i].time+"</span><span class=\"reply \">11</span><span class=\"like\">1181111</span></div>" + replys + "</div></li></a>";
+                                $("ul.list").append(comments);
+                            }
+                        }
+
+
+                        num_flag = 0;
+                        myScroll.refresh();
+                        flag = 0;
+                    },
+                    error:function(){
+                        num_flag = 0;
+                        myScroll.refresh();
+                        flag = 0;
+                    }
+                });
+                //num_flag = 0;
                 myScroll.refresh();
                 flag = 0;
             }else{
