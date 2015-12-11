@@ -24,6 +24,12 @@
         AV.initialize('DKHKFtC7GKQ73o88sUgyEEON', 'vjB7pWwwzSYaaze1nrgwXYWL');
     </script>
 
+    <link href="//cdn.bootcss.com/photoswipe/4.1.0/photoswipe.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/photoswipe/4.1.0/default-skin/default-skin.min.css" rel="stylesheet">
+    <script src="//cdn.bootcss.com/photoswipe/4.1.0/photoswipe.min.js"></script>
+    <script src="//cdn.bootcss.com/photoswipe/4.1.0/photoswipe-ui-default.min.js"></script>
+    <script type="text/javascript" src="/javascript/dist/lrz.all.bundle.js"></script>
+
     <style type="text/css">
     body {overflow: hidden;width: 100%;background-color: #efeff4;} /*background-color: #FBFBFB;*/
     #wrapper {position: absolute;overflow: hidden;left: 0;top: 0;bottom: 0;width: 100%;z-index: 1;}
@@ -38,6 +44,7 @@
         background-color: #fff;
         border-bottom: 1px solid #e1e3e6;
         padding: 12px 0 13px 9px;
+        margin-bottom: 10px;
     }
     .band_top_info .top_portrait{
         float: left;
@@ -70,7 +77,7 @@
     .feed .detail .feed_content .feed_title{display: -webkit-box;overflow: hidden;-webkit-box-orient:vertical;text-overflow:ellipsis;word-break:break-all;-webkit-line-clamp:2;font-size: 21px;line-height: 25px;color: #000;padding: 0;margin: 0;}
     .feed .detail .feed_content .feed_txt{display: -webkit-box;overflow: hidden;-webkit-box-orient:vertical;text-overflow:ellipsis;word-break:break-all;-webkit-line-clamp:2;padding-top: 5px;padding-left: 1px;padding-bottom: 0; margin: 0; font-size: 14px;line-height: 18px;color: #777;}
     .feed .detail .feed_img .feed_img_item{width: 32%;float: left;margin-right: 3px;background: none;overflow: hidden;position: relative;}
-    .feed .detail .feed_img .feed_img_item>img{width: 100%;height: auto;}
+    .feed .detail .feed_img .feed_img_item>img{width: 100%;height: auto;z-index: 10;}
     .feed .detail .feed_img .feed_img_item .total_img{display: block;position: absolute;top: 0;right: 0;border-bottom-left-radius: 3px;width: 35px;height: 21px;font-size: 12px;text-align: right;color: #fff;background-color: rgba(0,0,0,.62);background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3NpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpjZmNjZTgwMC1jNzM0LTg2NDItYWZiZC0xMzlmNTQ4OWQ3ODIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RDM3RjY2QjcyNjA3MTFFNTkwMDBCMTU3RjgyODUzQTQiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RDM3RjY2QjYyNjA3MTFFNTkwMDBCMTU3RjgyODUzQTQiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTk5M2I2MDgtMWRjYy1jOTQwLWE0YWMtMGYwZjQzZGIzMjhiIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOmNmY2NlODAwLWM3MzQtODY0Mi1hZmJkLTEzOWY1NDg5ZDc4MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PvDVvjkAAAF/SURBVHjaYty/f78nAwPDXCCWZKAueA7EyUw0MpwBauZcFiTDGckxxcHBAav4gQMH/oPMZmKgMWBBF+Dl5cWp+PPnzyRbQHMf4LMgFIjfAvEzIA6ktgWgCJ8BxELQRDCNFhYwUiMoWXCI/wPiDKjL/wJxGg518sDkmAmkI4GYD4hXAfF0YNK9AHcpMCf/R84HJKSibCCegkNpDRC34PMBIVALxE0ghqysLIO0tDQDCwsLw5MnTxgePHjAADMcqwVEpPUqmOHKyspgC2BAQUEBbNGdO3dwRp4XEG8G4ndA/BWIz0K9KwqVjwfiVhBDRUUFxXAYkJGRAVuEzYKpQLwViH2AWBCIuYDYCIibgfgVELcD8QKYS0EG4QLIFiAHURaI0NLSYhASEmJgZGRk+PbtG8ObN28YHj58CJKqgIU5sgFEJ1NQRCkqKoLDELlcAmERERGGZ8+eMfDz8zNISEiQlw9AYQpyNTYAskRdXZ2yjHbw4EGaFXZbaViYbgUIMACERVHNbysVPAAAAABJRU5ErkJggg==');background-repeat: no-repeat;background-position-x:5px;background-position-y:5px;background-size: 12px 10px;}
     .feed .detail .feed_img .feed_img_item .total_img .total_img_txt{display: block;margin: 5px;padding-left: 14px;}
     .feed .detail .feed_groupbody{position: relative;margin-top: 10px;margin-bottom: -1px;line-height: 18px;clear: both;}
@@ -249,21 +256,21 @@
                                     for(var q=0;q<3;q++){
                                         if(q==2){ %>
                                             <div class="feed_img_item" >
-                                                  <img src="<%= feeds[i].get('feedImgArray')[q]%>">
+                                                  <img src="<%= feeds[i].get('feedImgArray')[q]%>" data-index="<%= q%>" data-src="">
                                                   <span class="total_img">
                                                       <span class="total_img_txt">9</span>
                                                   </span>
                                               </div>
                                         <% }else{ %>
                                             <div class="feed_img_item" >
-                                              <img src="<%=feeds[i].get('feedImgArray')[q]%>">
+                                              <img src="<%=feeds[i].get('feedImgArray')[q]%>" data-index="<%= q%>" data-src="">
                                           </div>
                                         <% } %>
                                     <% } %>
                                <% }else{ %>
                                <% for(var j=0;j<feeds[i].get('feedImgArray').length;j++){ %>
                                   <div class="feed_img_item" >
-                                      <img src="<%=feeds[i].get('feedImgArray')[j]%>">
+                                      <img src="<%=feeds[i].get('feedImgArray')[j]%>" data-index="<%= j%>" data-src="">
                                   </div>
                                 <% } %>
                             <% } %>
@@ -321,6 +328,64 @@
         </form>-->
         <a href="" style="display:none;" id="feed-post"><span style="display:none;" id="feed-click">跳转</span></a>
     </div>
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+        <!-- Background of PhotoSwipe. 
+             It's a separate element, as animating opacity is faster than rgba(). -->
+        <div class="pswp__bg"></div>
+
+        <!-- Slides wrapper with overflow:hidden. -->
+        <div class="pswp__scroll-wrap">
+
+            <!-- Container that holds slides. PhotoSwipe keeps only 3 slides in DOM to save memory. -->
+            <div class="pswp__container">
+                <!-- don't modify these 3 pswp__item elements, data is added later on -->
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+            </div>
+
+            <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+            <div class="pswp__ui pswp__ui--hidden">
+
+                <div class="pswp__top-bar">
+
+                    <!--  Controls are self-explanatory. Order can be changed. -->
+
+                    <div class="pswp__counter"></div>
+
+                    <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                    <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                    <!-- element will get class pswp__preloader--active when preloader is running -->
+                    <div class="pswp__preloader">
+                        <div class="pswp__preloader__icn">
+                          <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                    <div class="pswp__share-tooltip"></div> 
+                </div>
+
+                <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                </button>
+
+                <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                </button>
+
+                <div class="pswp__caption">
+                    <div class="pswp__caption__center"></div>
+                </div>
+
+              </div>
+
+            </div>
+
+    </div>
     <script type="text/javascript">
     $(document).ready(function(){
         $(".feed .detail .feed_img .feed_img_item").css("height",$(".feed .detail .feed_img .feed_img_item").css("width"));
@@ -371,7 +436,7 @@
 	            });
         	}
         });
-        $(".feed").click(function(){
+        $(".feed").on('click',function(){
         	//alert("尼玛");
             /*
         	$("#feedObjId").val(this.getAttribute("data-feedid"));
@@ -382,6 +447,59 @@
             //alert($("#feed-post").attr("href"));
             //$("feed-click").click();
             document.getElementById("feed-click").click();
+        });
+        $(".feed_img_item>img").on('click',function(event){
+            event.stopPropagation();
+            var pswpElement = $(".pswp")[0];
+            var feedObjId = $(this).closest("li.feed").attr("data-feedid");
+            var img_index = $(this).attr("data-index");
+            //console.log(img_index);
+            var aj = $.ajax({
+                    url:'/feed/img',
+                    data:{
+                        "feedObjId":feedObjId
+                    },
+                    type:'post',
+                    dataType:'json',
+                    success:function(data){
+                        //alert("进来了吗");
+                        //console.log(data);
+                        var items = [];
+                        for(var i=0;i<data.imgArray.length;i++){
+                            var image = new Image();
+                            var width;
+                            var height;
+                            image.src = data.imgArray[i];
+                            width = image.naturalWidth;
+                            height = image.naturalHeight;
+                            items[i] = {
+                                src:data.imgArray[i],
+                                w:width,
+                                h:height
+                            };
+                        }
+                        //console.log(img_index);
+                        img_index = parseInt(img_index);
+                        // define options (if needed)
+                        var options = {
+                            // optionName: 'option value'
+                            // for example:
+                            index: img_index, // start at first slide
+                            history: false,
+                            focus: false,
+                            tapToClose: true,
+                            tapToToggleControls: false,
+                            showAnimationDuration: 0,
+                            hideAnimationDuration: 0
+                        };
+
+                        // Initializes and opens PhotoSwipe
+                        var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+                        gallery.init();
+                    },
+                    error:function(){alert("有错");}
+            });
+
         });
     });
     </script>
@@ -449,14 +567,14 @@
                                 if (data.feeds[i].feedImgArray.length>3) {
                                     for(var q=0;q<3;q++){
                                         if (q==2) {
-                                            feed_img = feed_img + "<div class=\"feed_img_item\" ><img src=\""+data.feeds[i].feedImgArray[q]+"\"><span class=\"total_img\"><span class=\"total_img_txt\">9</span></span></div>";
+                                            feed_img = feed_img + "<div class=\"feed_img_item\" ><img src=\""+data.feeds[i].feedImgArray[q]+"\" data-index=\""+q+"\"><span class=\"total_img\"><span class=\"total_img_txt\">9</span></span></div>";
                                         }else{
-                                            feed_img = feed_img + "<div class=\"feed_img_item\" ><img src=\""+ data.feeds[i].feedImgArray[q] +"\"></div>";
+                                            feed_img = feed_img + "<div class=\"feed_img_item\" ><img src=\""+ data.feeds[i].feedImgArray[q] +"\" data-index=\""+q+"\"></div>";
                                         }
                                     }
                                 }else{
                                     for(var j=0;j<data.feeds[i].feedImgArray.length;j++){
-                                        feed_img = feed_img + "<div class=\"feed_img_item\" ><img src=\""+ data.feeds[i].feedImgArray[j] +"\"></div>";
+                                        feed_img = feed_img + "<div class=\"feed_img_item\" ><img src=\""+ data.feeds[i].feedImgArray[j] +"\" data-index=\""+j+"\"></div>";
                                     }
                                 }
                                 feed_img = "<div class=\"feed_img\">" + feed_img + "</div>";
@@ -464,18 +582,11 @@
                                 $(".container ul").append(feed);
                             }
                         }
-                        $(".feed").click(function(){
-                            //alert("尼玛");
-                            /*
-                            $("#feedObjId").val(this.getAttribute("data-feedid"));
-                            $("#feed-post").submit();*/
-                            //var str = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid")+ "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+                        /*$(".feed").click(function(){
                             var str = "/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid");
-														$("#feed-post").attr("href",str);
-                            //alert($("#feed-post").attr("href"));
-                            //$("feed-click").click();
+							$("#feed-post").attr("href",str);
                             document.getElementById("feed-click").click();
-                        });
+                        });*/
                         myScroll.refresh();
                         flag = 0;
                     }
@@ -489,6 +600,7 @@
     </script>
     <script type="text/javascript">
         var file_num = 0;
+        var windowURL = window.URL || window.webkitURL;
         var inputElement = document.getElementById("inputField");
         inputElement.addEventListener("change", handleFiles, false);
         function handleFiles() {
@@ -499,26 +611,54 @@
                     alert("一次最多上传8张图片");
                     for (var i = 0; i < aaa; i++) {
                         var file = fileList[i];
-                        var name = file.name;
-                        var avFile = new AV.File(name,file);
-                        avFile.save().then(function(avFile){
-                            file_num++;
-                            //alert(file_num);
-                            var src = avFile.url();
-                            var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
-                            $(".pub-pics").prepend(str_pic);
-                            $(".btn-del").click(function(){
-                                //alert("nima");
-                                this.closest("li.up-pic").remove();
-                                file_num--;
-                                if (file_num<0) {file_num=0;}
+                        lrz(file).then(function(ret){
+                            var avFiless = new AV.File(file.name,{base64:ret.base64});
+                            avFiless.save().then(function(avFile){
+                                file_num++;
+                                //alert(file_num);
+                                var src = avFile.url();
+                                var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
+                                $(".pub-pics").prepend(str_pic);
+                                $(".btn-del").click(function(){
+                                    //alert("nima");
+                                    this.closest("li.up-pic").remove();
+                                    file_num--;
+                                    if (file_num<0) {file_num=0;}
+                                });
                             });
                         });
                     };
                 }else{
                     for (var i = 0; i < fileList.length; i++) {
                         var file = fileList[i];
-                        var name = file.name;
+                        /*var file_url = windowURL.createObjectURL(file);
+                        var image = new Image();
+                        image.src = file_url;
+                        console.log(file);
+                        image.onload = function(){
+                            console.log(image.naturalWidth);
+                            console.log(image.naturalHeight);
+                            var avFile = new AV.File(file.name,file);
+                            //var img_url = avFile.thumbnailURL(image.naturalWidth,image.naturalHeight,70,true,"png");
+                            //console.log(img_url);
+                        };*/
+                        lrz(file).then(function(ret){
+                            var avFiless = new AV.File(file.name,{base64:ret.base64});
+                            avFiless.save().then(function(avFile){
+                                file_num++;
+                                //alert(file_num);
+                                var src = avFile.url();
+                                var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
+                                $(".pub-pics").prepend(str_pic);
+                                $(".btn-del").click(function(){
+                                    //alert("nima");
+                                    this.closest("li.up-pic").remove();
+                                    file_num--;
+                                    if (file_num<0) {file_num=0;}
+                                });
+                            });
+                        });
+                        /*var name = file.name;
                         var avFile = new AV.File(name,file);
                         avFile.save().then(function(avFile){
                             file_num++;
@@ -532,8 +672,8 @@
                                 file_num--;
                                 if (file_num<0) {file_num=0;}
                             });
-                        });
-                }
+                        });*/
+                    }
                 }
             }
         }

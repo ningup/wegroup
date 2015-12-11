@@ -464,6 +464,7 @@ app.use(function(req, res, next) {
 app.get('/', function(req, res) {
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
+<<<<<<< HEAD
 /*				userclass.getUserObj('orSEhuNxAkianv5eFOpTJ3LXWADE',function(err,user){
 					if(err)
 						res.send('重试一下');
@@ -472,6 +473,18 @@ app.get('/', function(req, res) {
 					}
 				});*/
 		/*	AV.User.logIn("orSEhuNxAkianv5eFOpTJ3LXWADE", "A00000000~", {
+=======
+			if(req.AV.user){
+					//AV.User.logOut();
+				//console.log(AV.User.current());
+					res.redirect("/feed");
+				
+			}
+			else{
+				//AV.User.logOut();
+				var openid ='orSEhuBllBij-g3Ayx2jujBuuPNY';
+				AV.User.logIn(openid, "A00000000~", {
+>>>>>>> 2dd14ee0feed445b669b2a09f57253d13a3c0131
 					success: function(user) {
 						// 成功了，现在可以做其他事情了.
 						res.send('dengluchengong');

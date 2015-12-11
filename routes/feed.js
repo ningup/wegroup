@@ -167,6 +167,24 @@ router.post('/history', function(req, res, next) {
 		 }
 	 });
 });
+router.post('/img', function(req, res, next) {
+	console.log("comming");
+	var feedObjId = req.body.feedObjId;
+	console.log(feedObjId);
+	var query = new AV.Query('Feed');
+	query.get(feedObjId, {
+	  success: function(feed) {
+	    // 成功获得实例
+	    console.log("fff");
+	    res.json({"status":"0","imgArray":feed.get('feedImgArray')});
+		return ;
+	  },
+	  error: function(error) {
+	    // 失败了.
+	  }
+	});
+			
+});
 
 router.get('/groupMember', function(req, res, next) {
 	var username = req.query.username;
