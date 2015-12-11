@@ -24,6 +24,11 @@
 
     <script type="text/javascript" src="/bower_components/leancloud-realtime/dist/AV.realtime.js"></script>
     <script type="text/javascript" src="/javascript/jquery.qqFace.js"></script>
+    <script type="text/javascript" src="/javascript/dist/lrz.all.bundle.js"></script>
+    <link href="//cdn.bootcss.com/photoswipe/4.1.0/photoswipe.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/photoswipe/4.1.0/default-skin/default-skin.min.css" rel="stylesheet">
+    <script src="//cdn.bootcss.com/photoswipe/4.1.0/photoswipe.min.js"></script>
+    <script src="//cdn.bootcss.com/photoswipe/4.1.0/photoswipe-ui-default.min.js"></script>
 
     <style type="text/css">
     body {background-color: #FBFBFB;}
@@ -148,6 +153,64 @@
               <button class="pub-publish">发表</button>
             </div>
         </div>
+    </div>
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+        <!-- Background of PhotoSwipe. 
+             It's a separate element, as animating opacity is faster than rgba(). -->
+        <div class="pswp__bg"></div>
+
+        <!-- Slides wrapper with overflow:hidden. -->
+        <div class="pswp__scroll-wrap">
+
+            <!-- Container that holds slides. PhotoSwipe keeps only 3 slides in DOM to save memory. -->
+            <div class="pswp__container">
+                <!-- don't modify these 3 pswp__item elements, data is added later on -->
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+            </div>
+
+            <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+            <div class="pswp__ui pswp__ui--hidden">
+
+                <div class="pswp__top-bar">
+
+                    <!--  Controls are self-explanatory. Order can be changed. -->
+
+                    <div class="pswp__counter"></div>
+
+                    <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                    <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                    <!-- element will get class pswp__preloader--active when preloader is running -->
+                    <div class="pswp__preloader">
+                        <div class="pswp__preloader__icn">
+                          <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                    <div class="pswp__share-tooltip"></div> 
+                </div>
+
+                <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                </button>
+
+                <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                </button>
+
+                <div class="pswp__caption">
+                    <div class="pswp__caption__center"></div>
+                </div>
+
+              </div>
+
+            </div>
+
     </div>
     <script type="text/javascript">
       //实时通信test
@@ -439,8 +502,9 @@
                         pre_height = printWall.height();
 
                         var name = file.name;
-                        var avFile = new AV.File(name,file);
-                        avFile.save().then(function(avFile){
+                        lrz(file).then(function(ret){
+                        var avFiless = new AV.File(file.name,{base64:ret.base64});
+                        avFiless.save().then(function(avFile){
                             var src = avFile.url();
                             if($("img.input_img_flag").length>0){
                               $("img.input_img_flag:first").attr("src",src);
@@ -457,6 +521,7 @@
                               
                             });
                         });
+                      });
                     };
                 }else{
                     for (var i = 0; i < fileList.length; i++) {
@@ -470,8 +535,9 @@
                         pre_height = printWall.height();
 
                         var name = file.name;
-                        var avFile = new AV.File(name,file);
-                        avFile.save().then(function(avFile){
+                        lrz(file).then(function(ret){
+                        var avFiless = new AV.File(file.name,{base64:ret.base64});
+                        avFiless.save().then(function(avFile){
                             var src = avFile.url();
                             if($("img.input_img_flag").length>0){
                               console.log("hello world");
@@ -489,6 +555,7 @@
                               
                             });
                         });
+                      });
                     };
                 }
             }
@@ -514,6 +581,37 @@
         str = str.replace(/\[em_([0-9]*)\]/g,'<img src="/images/face/$1.gif" border="0" class="emoji" style="float: none;width: 24px;height: 24px;"/>');
         return str;
       }
+    </script>
+    <script type="text/javascript">
+      $("li img").on('click',function(){
+        event.stopPropagation();
+            var pswpElement = $(".pswp")[0];
+            var items = [];
+            var image = new Image();
+            var width;
+            var height;
+            image.src = $(this).attr("src");
+            width = image.naturalWidth;
+            height = image.naturalHeight;
+            items[0] = {
+                src:$(this).attr("src"),
+                w:width,
+                h:height
+            };
+            var options = {
+                // optionName: 'option value'
+                // for example:
+                index: 0, // start at first slide
+                history: false,
+                focus: false,
+                tapToClose: true,
+                tapToToggleControls: false,
+                showAnimationDuration: 0,
+                hideAnimationDuration: 0
+            };
+            var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+            gallery.init();
+      });
     </script>
   </body>
 </html>

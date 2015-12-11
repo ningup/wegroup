@@ -1,36 +1,148 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'node', '/usr/local/bin/npm', 'start' ]
-2 info using npm@2.14.1
-3 info using node@v0.10.25
-4 verbose node symlink /usr/bin/node
-5 verbose run-script [ 'prestart', 'start', 'poststart' ]
-6 info prestart wegroup@1.0.0
-7 info start wegroup@1.0.0
-8 verbose unsafe-perm in lifecycle true
-9 info wegroup@1.0.0 Failed to exec start script
-10 verbose stack Error: wegroup@1.0.0 start: `node server.js`
-10 verbose stack Exit status 8
-10 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:214:16)
-10 verbose stack     at EventEmitter.emit (events.js:98:17)
-10 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:24:14)
-10 verbose stack     at ChildProcess.EventEmitter.emit (events.js:98:17)
-10 verbose stack     at maybeClose (child_process.js:743:16)
-10 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:810:5)
-11 verbose pkgid wegroup@1.0.0
-12 verbose cwd /home/ning/liaoqu/wegroup
-13 error Linux 3.19.0-37-generic
-14 error argv "node" "/usr/local/bin/npm" "start"
-15 error node v0.10.25
-16 error npm  v2.14.1
-17 error code ELIFECYCLE
-18 error wegroup@1.0.0 start: `node server.js`
-18 error Exit status 8
-19 error Failed at the wegroup@1.0.0 start script 'node server.js'.
-19 error This is most likely a problem with the wegroup package,
-19 error not with npm itself.
-19 error Tell the author that this fails on your system:
-19 error     node server.js
-19 error You can get their info via:
-19 error     npm owner ls wegroup
-19 error There is likely additional logging output above.
-20 verbose exit [ 1, true ]
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', '-g', 'lrz' ]
+2 info using npm@3.4.1
+3 info using node@v0.12.4
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readGlobalPackageData
+7 silly fetchPackageMetaData lrz
+8 silly fetchNamedPackageData lrz
+9 silly mapToRegistry name lrz
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry uri https://registry.npmjs.org/lrz
+13 verbose request uri https://registry.npmjs.org/lrz
+14 verbose request no auth needed
+15 info attempt registry request try #1 at 15:29:45
+16 verbose request id f002b7d0d2b54ea6
+17 http request GET https://registry.npmjs.org/lrz
+18 http 200 https://registry.npmjs.org/lrz
+19 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+19 verbose headers   etag: '"6TJX75A9XW4PUA4PZ16UO6Q5N"',
+19 verbose headers   'content-type': 'application/json',
+19 verbose headers   'cache-control': 'max-age=60',
+19 verbose headers   'content-length': '48028',
+19 verbose headers   'accept-ranges': 'bytes',
+19 verbose headers   date: 'Thu, 10 Dec 2015 07:30:36 GMT',
+19 verbose headers   via: '1.1 varnish',
+19 verbose headers   age: '0',
+19 verbose headers   connection: 'keep-alive',
+19 verbose headers   'x-served-by': 'cache-nrt6128-NRT',
+19 verbose headers   'x-cache': 'MISS',
+19 verbose headers   'x-cache-hits': '0',
+19 verbose headers   'x-timer': 'S1449732636.009178,VS0,VE711',
+19 verbose headers   vary: 'Accept' }
+20 silly get cb [ 200,
+20 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+20 silly get     etag: '"6TJX75A9XW4PUA4PZ16UO6Q5N"',
+20 silly get     'content-type': 'application/json',
+20 silly get     'cache-control': 'max-age=60',
+20 silly get     'content-length': '48028',
+20 silly get     'accept-ranges': 'bytes',
+20 silly get     date: 'Thu, 10 Dec 2015 07:30:36 GMT',
+20 silly get     via: '1.1 varnish',
+20 silly get     age: '0',
+20 silly get     connection: 'keep-alive',
+20 silly get     'x-served-by': 'cache-nrt6128-NRT',
+20 silly get     'x-cache': 'MISS',
+20 silly get     'x-cache-hits': '0',
+20 silly get     'x-timer': 'S1449732636.009178,VS0,VE711',
+20 silly get     vary: 'Accept' } ]
+21 verbose get saving lrz to /Users/liuyuanhong/.npm/registry.npmjs.org/lrz/.cache.json
+22 silly install normalizeTree
+23 silly loadCurrentTree Finishing
+24 silly loadIdealTree Starting
+25 silly install loadIdealTree
+26 silly cloneCurrentTree Starting
+27 silly install cloneCurrentTreeToIdealTree
+28 silly cloneCurrentTree Finishing
+29 silly loadShrinkwrap Starting
+30 silly install loadShrinkwrap
+31 silly loadShrinkwrap Finishing
+32 silly loadAllDepsIntoIdealTree Starting
+33 silly install loadAllDepsIntoIdealTree
+34 silly resolveWithNewModule lrz@4.8.35 checking installable status
+35 silly cache add args [ 'lrz', null ]
+36 verbose cache add spec lrz
+37 silly cache add parsed spec { raw: 'lrz',
+37 silly cache add   scope: null,
+37 silly cache add   name: 'lrz',
+37 silly cache add   rawSpec: '',
+37 silly cache add   spec: 'latest',
+37 silly cache add   type: 'tag' }
+38 silly addNamed lrz@latest
+39 verbose addNamed "latest" is being treated as a dist-tag for lrz
+40 info addNameTag [ 'lrz', 'latest' ]
+41 silly mapToRegistry name lrz
+42 silly mapToRegistry using default registry
+43 silly mapToRegistry registry https://registry.npmjs.org/
+44 silly mapToRegistry uri https://registry.npmjs.org/lrz
+45 verbose addNameTag registry:https://registry.npmjs.org/lrz not in flight; fetching
+46 verbose get https://registry.npmjs.org/lrz not expired, no request
+47 silly addNameTag next cb for lrz with tag latest
+48 silly addNamed lrz@4.8.35
+49 verbose addNamed "4.8.35" is a plain semver version for lrz
+50 silly mapToRegistry name lrz
+51 silly mapToRegistry using default registry
+52 silly mapToRegistry registry https://registry.npmjs.org/
+53 silly mapToRegistry uri https://registry.npmjs.org/lrz
+54 verbose addRemoteTarball https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz not in flight; adding
+55 verbose addRemoteTarball [ 'https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz',
+55 verbose addRemoteTarball   '1a6c1700cd1bf256106057bae6d61c7f2a863e50' ]
+56 info retry fetch attempt 1 at 15:30:37
+57 info attempt registry request try #1 at 15:30:37
+58 http fetch GET https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+59 info retry will retry, error on last attempt: Error: socket hang up
+60 info attempt registry request try #2 at 15:31:53
+61 http fetch GET https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+62 info retry will retry, error on last attempt: Error: socket hang up
+63 info attempt registry request try #3 at 15:33:56
+64 http fetch GET https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+65 error fetch failed https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+66 warn retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org
+67 info retry fetch attempt 2 at 15:34:36
+68 info attempt registry request try #1 at 15:34:36
+69 http fetch GET https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+70 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org
+71 info attempt registry request try #2 at 15:35:16
+72 http fetch GET https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+73 info retry will retry, error on last attempt: Error: socket hang up
+74 info attempt registry request try #3 at 15:37:24
+75 http fetch GET https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+76 error fetch failed https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+77 warn retry will retry, error on last attempt: Error: socket hang up
+78 info retry fetch attempt 3 at 15:39:27
+79 info attempt registry request try #1 at 15:39:27
+80 http fetch GET https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+81 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org
+82 info attempt registry request try #2 at 15:40:07
+83 http fetch GET https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+84 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org
+85 info attempt registry request try #3 at 15:41:37
+86 http fetch GET https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+87 error fetch failed https://registry.npmjs.org/lrz/-/lrz-4.8.35.tgz
+88 silly rollbackFailedOptional Starting
+89 silly rollbackFailedOptional Finishing
+90 silly runTopLevelLifecycles Starting
+91 silly runTopLevelLifecycles Finishing
+92 silly install printInstalled
+93 verbose stack Error: socket hang up
+93 verbose stack     at createHangUpError (_http_client.js:215:15)
+93 verbose stack     at TLSSocket.socketOnEnd (_http_client.js:300:23)
+93 verbose stack     at TLSSocket.emit (events.js:129:20)
+93 verbose stack     at _stream_readable.js:908:16
+93 verbose stack     at process._tickCallback (node.js:355:11)
+94 verbose cwd /Users/liuyuanhong/Documents/band_band/wegroup
+95 error Darwin 14.5.0
+96 error argv "node" "/usr/local/bin/npm" "install" "-g" "lrz"
+97 error node v0.12.4
+98 error npm  v3.4.1
+99 error code ECONNRESET
+100 error network socket hang up
+100 error network This is most likely not a problem with npm itself
+100 error network and is related to network connectivity.
+100 error network In most cases you are behind a proxy or have bad network settings.
+100 error network
+100 error network If you are behind a proxy, please make sure that the
+100 error network 'proxy' config is set properly.  See: 'npm help config'
+101 verbose exit [ 1, true ]

@@ -355,7 +355,7 @@ app.get('/', function(req, res) {
 			}
 			else{
 				//AV.User.logOut();
-				var openid ='orSEhuNxAkianv5eFOpTJ3LXWADE';
+				var openid ='orSEhuBllBij-g3Ayx2jujBuuPNY';
 				AV.User.logIn(openid, "A00000000~", {
 					success: function(user) {
 							console.log('login');

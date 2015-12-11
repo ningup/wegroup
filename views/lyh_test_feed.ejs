@@ -23,6 +23,11 @@
     <script type="text/javascript">
         AV.initialize('zsxn9bhj8fuecdfqgqv1ly7lt70cej7ftbe2hp7r4i916gmn', 'u73ok822ykyc19s1i179tqdf2pgz7bhzrlxwprc6pchs1ioo');
     </script>
+    <script type="text/javascript" src="/javascript/dist/lrz.all.bundle.js"></script>
+    <link href="//cdn.bootcss.com/photoswipe/4.1.0/photoswipe.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/photoswipe/4.1.0/default-skin/default-skin.min.css" rel="stylesheet">
+    <script src="//cdn.bootcss.com/photoswipe/4.1.0/photoswipe.min.js"></script>
+    <script src="//cdn.bootcss.com/photoswipe/4.1.0/photoswipe-ui-default.min.js"></script>
 
     <style type="text/css">
     body {overflow: hidden;width: 100%;background-color: #f8f8f8;} /*background-color: #FBFBFB;*/
@@ -61,7 +66,7 @@
     .comment-header span.ping-num{display: block;float: right;margin-right: 10px;color: gray;}
 
 
-    .detail-comment-list{-webkit-tap-highlight-color:transparent;}
+    .detail-comment-list{-webkit-tap-highlight-color:transparent;margin-bottom: 45px;}
     .detail-comment-list .list{list-style: none;padding: 0;margin: 0;}
     .detail-comment-list .list>li:first-child{margin-top: 1px;}
     .detail-comment-list .list>li{padding: 10px 0 8px;background-color: #fafafa;position: relative;display: list-item;text-align: -webkit-match-parent;}
@@ -83,8 +88,8 @@
     .detail-comment-list .list .comment-wrapper .comment-action .like:after{top: 2px;width: 16px;height: 16px;background: center center no-repeat;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABelBMVEWPj4////+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4/35ViBAAAAfXRSTlMAAAJDlryGEhM1EUhb73qJfiCeuGBp1JSmJs4xRwM/fF3ZqRCMI3Y91iltK4rxrMCialaSDnfEoF/96suCnxwwz/Y3H+AGOcbNMnCPm2SrgGeYlco6xQgFjXLMMwQXk2xMs1inqlUe4QfeIZCZZlQntw8iQA2R8O2EgeTyT1ISZcoAAAEuSURBVHheddJVT/VQEEbhOcJR4Bju7u7u7u7u9rnL+u+UNiU0dNbNm508d7PFYySvhUrLc6qq5W1OkAtArQoikN/YRJ4KSmgV8UJIA+1sGJOiSAN+so3ppU8DBRRaTAGVUGzMMFkKKKPtZSroUEAaPntcQQ095tZR7woaIN0EGVg1t/jegjisWjJgC8h8BZFO8+WoqxsSEk72AwODkC7vGiImSawYkfeNMiaMez0iEyAuTTIlMG0AcQczzMoc8zpYYFGWWNbBCh9ljXUVeCEoYTZVsMW2yA7samCPfRHPAYcKOIJjA5xwqoAzzsUAF1wq4IrrF3DDrTsIwp157nseXEGcRzHBEx/cQBQ+WSDK5y9f4ZsDfM+CgP3l/Lj2Q2yQiP389fvPXwf4l/ovZs/e3m8a8+LLQAAAAABJRU5ErkJggg==');background-size: 100% 100%;position: absolute;/*top: 10px;*/left: 5px;content: "";}
     .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container{margin: 2px 0 7px;}
     .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container:after{display: block;clear: both;content: "";}
-    .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container .ping-pic{width: 96px;height: 96px;float: left;overflow: hidden;margin: 3px 3px 0 0;position: relative;background: #efece9;}
-    .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container .ping-pic>img{margin-top: -12.224px;margin-left: 0px;width: 96px;height: 128px;-webkit-user-select: none;padding: 0;margin: 0;border-radius: 0;outline: 0;-webkit-tap-highlight-color: transparent;}
+    .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container .ping-pic{width: 90px;height: 90px;float: left;overflow: hidden;margin: 3px 3px 0 0;position: relative;background: #efece9;}
+    .detail-comment-list .list .comment-wrapper .content-wrapper .ping-container .ping-pic>img{margin-top: -12.224px;margin-left: 0px;width: 90px;height: 120px;-webkit-user-select: none;padding: 0;margin: 0;border-radius: 0;outline: 0;-webkit-tap-highlight-color: transparent;}
     .detail-comment-list .list .comment-wrapper .reply-wrapper{margin-top: 5px;color: #454545;}
     .detail-comment-list .list .comment-wrapper .reply-wrapper .more{    display: block;line-height: 200%;font-size: 12px;margin: 6px 0;color: #3361a7;text-decoration: none;}
     .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list{list-style: none;}
@@ -250,7 +255,7 @@
             </div>
             <div class="feed-title"><%= feed.get('feedTitle')%></div>
             <div class="feed-info">
-              <span class="time"><%= feed.getCreatedAt()%></span>
+              <span class="time"><%= feed.getCreatedAt().getFullYear()%>-<%= feed.getCreatedAt().getMonth()+1%>-<%= feed.getCreatedAt().getDate()%> <%= feed.getCreatedAt().getHours()%>:<%= feed.getCreatedAt().getMinutes()%></span>
               <span class="band-name"><%= groupNickname%></span>
             </div>
           </div>
@@ -260,7 +265,7 @@
                 <div class="flag">
                   <div class="content"><%= feed.get('feedContent')%></div>
                   <% for(var f=0;f<feed.get('feedImgArray').length;f++){%>
-                  <div class="pic"><img src="<%= feed.get('feedImgArray')[f]%>"></div>
+                  <div class="pic"><img src="<%= feed.get('feedImgArray')[f]%>" data-index="<%= f%>"></div>
                   <% } %>
                 </div>
             </div>
@@ -283,7 +288,7 @@
             <% if(havecomment==1){ %>
               <ul class="list">
               <% for(var i=0;i<commentJson.comments.length;i++){ %>
-              <a href="/comment/detail?cid=<%= commentJson.comments[i].id%>&fid=<%= feedObjId%>&toWhom=<%= commentJson.comments[i].toWhom%>">
+              <a href="/comment/detail?cid=<%= commentJson.comments[i].id%>&fid=<%= feedObjId%>&toWhom=<%= commentJson.comments[i].toWhom%>" data-imgcf="false" onclick="return imgClickFlag(this);">
                 <li data-cid="<%= commentJson.comments[i].id%>" id="num_flag">
                   <div class="comment-wrapper">
                     <div class="user-avatar"><img src="<%= commentJson.comments[i].headimgurl%>"></div>
@@ -295,12 +300,32 @@
                       <div class="ping-content"><%= commentJson.comments[i].content%></div>
                       <div class="ping-container">
                         <% for(var j = 0;j<commentJson.comments[i].imgArray.length;j++){ %>
-                        <div class="ping-pic"><img src="<%= commentJson.comments[i].imgArray[j]%>"></div>
+                        <div class="ping-pic"><img src="<%= commentJson.comments[i].imgArray[j]%>" data-index="<%= j%>"></div>
                         <% } %>
                       </div>
                     </div>
                     <div class="comment-action">
-                      <span class="time"><%= commentJson.comments[i].time%></span>
+                        <%var date = new Date();
+                            var year = date.getFullYear() - commentJson.comments[i].time.getFullYear();
+                            var month = date.getMonth() - commentJson.comments[i].time.getMonth();
+                            var day = date.getDate() - commentJson.comments[i].time.getDate();
+                            var hours = date.getHours() - commentJson.comments[i].time.getHours();
+                            var minute = date.getMinutes() - commentJson.comments[i].time.getMinutes();
+                            var last_time = "";
+                            if(year>0){
+                                last_time= year + "年前";
+                            }else if(month>0){
+                                last_time= month + "月前";
+                            }else if(day>0){
+                                last_time= day + "天前";
+                            }else if(hours>0){
+                                last_time= hours + "小时前";
+                            }else if(minute>0){
+                                last_time= minute + "分钟前";
+                            }else{
+                                last_time= "刚刚";
+                            }%>
+                      <span class="time"><!--<%= commentJson.comments[i].time%>--><%= last_time%></span>
                       <span class="reply ">11</span>
                       <span class="like">1181111</span>
                     </div>
@@ -313,7 +338,27 @@
                             <div class="floor_footer_item">
                               <a href="" class="user_name "><%= commentJson.comments[i].reply.reply[a].nickname%></a>:
                               <span class="floor_content"><%= commentJson.comments[i].reply.reply[a].content%></span>
-                              <span class="list_item_time"><%= commentJson.comments[i].reply.reply[a].time%></span>
+                              <%var date = new Date();
+                                var year = date.getFullYear() - commentJson.comments[i].reply.reply[a].time.getFullYear();
+                                var month = date.getMonth() - commentJson.comments[i].reply.reply[a].time.getMonth();
+                                var day = date.getDate() - commentJson.comments[i].reply.reply[a].time.getDate();
+                                var hours = date.getHours() - commentJson.comments[i].reply.reply[a].time.getHours();
+                                var minute = date.getMinutes() - commentJson.comments[i].reply.reply[a].time.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                    last_time= year + "年前";
+                                }else if(month>0){
+                                    last_time= month + "月前";
+                                }else if(day>0){
+                                    last_time= day + "天前";
+                                }else if(hours>0){
+                                    last_time= hours + "小时前";
+                                }else if(minute>0){
+                                    last_time= minute + "分钟前";
+                                }else{
+                                    last_time= "刚刚";
+                                }%>
+                              <span class="list_item_time"><!--<%= commentJson.comments[i].reply.reply[a].time%>--><%= last_time%></span>
                             </div>
                           </div>
                         </li>
@@ -325,7 +370,27 @@
                               <span class="floor_content">回复&nbsp;
                               <a href="/home/main?un=最爱叶倩彤"><%= commentJson.comments[i].reply.reply[a].toNickname%></a>&nbsp;:<%= commentJson.comments[i].reply.reply[a].content%>
                               </span>
-                              <span class="list_item_time"><%= commentJson.comments[i].reply.reply[a].time%></span>
+                              <%var date = new Date();
+                                var year = date.getFullYear() - commentJson.comments[i].reply.reply[a].time.getFullYear();
+                                var month = date.getMonth() - commentJson.comments[i].reply.reply[a].time.getMonth();
+                                var day = date.getDate() - commentJson.comments[i].reply.reply[a].time.getDate();
+                                var hours = date.getHours() - commentJson.comments[i].reply.reply[a].time.getHours();
+                                var minute = date.getMinutes() - commentJson.comments[i].reply.reply[a].time.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                    last_time= year + "年前";
+                                }else if(month>0){
+                                    last_time= month + "月前";
+                                }else if(day>0){
+                                    last_time= day + "天前";
+                                }else if(hours>0){
+                                    last_time= hours + "小时前";
+                                }else if(minute>0){
+                                    last_time= minute + "分钟前";
+                                }else{
+                                    last_time= "刚刚";
+                                }%>
+                              <span class="list_item_time"><!--<%= commentJson.comments[i].reply.reply[a].time%>--><%= last_time%></span>
                             </div>
                           </div>
                         </li>
@@ -380,6 +445,65 @@
         <input type="hidden" id="commentType" name="commentType" value="">
         <input type="hidden" id="commentImgArray" name="commentImgArray" value="">
     </form>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+        <!-- Background of PhotoSwipe. 
+             It's a separate element, as animating opacity is faster than rgba(). -->
+        <div class="pswp__bg"></div>
+
+        <!-- Slides wrapper with overflow:hidden. -->
+        <div class="pswp__scroll-wrap">
+
+            <!-- Container that holds slides. PhotoSwipe keeps only 3 slides in DOM to save memory. -->
+            <div class="pswp__container">
+                <!-- don't modify these 3 pswp__item elements, data is added later on -->
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+            </div>
+
+            <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+            <div class="pswp__ui pswp__ui--hidden">
+
+                <div class="pswp__top-bar">
+
+                    <!--  Controls are self-explanatory. Order can be changed. -->
+
+                    <div class="pswp__counter"></div>
+
+                    <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                    <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                    <!-- element will get class pswp__preloader--active when preloader is running -->
+                    <div class="pswp__preloader">
+                        <div class="pswp__preloader__icn">
+                          <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                    <div class="pswp__share-tooltip"></div> 
+                </div>
+
+                <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                </button>
+
+                <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                </button>
+
+                <div class="pswp__caption">
+                    <div class="pswp__caption__center"></div>
+                </div>
+
+              </div>
+
+            </div>
+
+    </div>
     
     <script type="text/javascript">
     $(document).ready(function(){
@@ -437,6 +561,83 @@
             $(".publish_form #commentImgArray").val(img_str);
             $(".publish_form").submit();
         });
+        $(".pic>img").on('click',function(event){
+            event.stopPropagation();
+            var pswpElement = $(".pswp")[0];
+            var img_index = $(this).attr("data-index");
+            var items = [];
+            var i=0;
+            //console.log(img_index);
+            $(".pic>img").each(function(){
+                var image = new Image();
+                var width;
+                var height;
+                image.src = $(this).attr("src");
+                width = image.naturalWidth;
+                height = image.naturalHeight;
+                items[i] = {
+                    src:$(this).attr("src"),
+                    w:width,
+                    h:height
+                };
+                i++;
+            });
+            img_index = parseInt(img_index);
+            var options = {
+                // optionName: 'option value'
+                // for example:
+                index: img_index, // start at first slide
+                history: false,
+                focus: false,
+                tapToClose: true,
+                tapToToggleControls: false,
+                showAnimationDuration: 0,
+                hideAnimationDuration: 0
+            };
+            var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+            gallery.init();
+        });
+        $(".ping-pic>img").on('click',function(){
+            //event.stopPropagation();
+            $(this).closest("a").attr("data-imgcf","true");
+            var pswpElement = $(".pswp")[0];
+            var list = $(this).closest(".ping-container");
+            var img_index = $(this).attr("data-index");
+            //console.log(img_index);
+            var items = [];
+            var i = 0;
+            list.find(".ping-pic>img").each(function(){
+                var image = new Image();
+                var width;
+                var height;
+                image.src = $(this).attr("src");
+                width = image.naturalWidth;
+                height = image.naturalHeight;
+                items[i] = {
+                    src:$(this).attr("src"),
+                    w:width,
+                    h:height
+                };
+                i++;
+            });
+            img_index = parseInt(img_index);
+            // define options (if needed)
+            var options = {
+            // optionName: 'option value'
+            // for example:
+                index: img_index, // start at first slide
+                history: false,
+                focus: false,
+                tapToClose: true,
+                tapToToggleControls: false,
+                showAnimationDuration: 0,
+                hideAnimationDuration: 0
+            };
+
+            // Initializes and opens PhotoSwipe
+            var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+            gallery.init();
+        });
     });
     </script>
     <script type="text/javascript">
@@ -493,9 +694,49 @@
                                 var pics = "";
                                 for(var a=0;a<data.commentJson.comments[i].reply.reply.length;a++){ 
                                     if(data.commentJson.comments[i].reply.reply[a].replyCommentId==data.commentJson.comments[i].id){
-                                        var temp = "<li class=\"item\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+data.commentJson.comments[i].reply.reply[a].time+"</span></div></div></li>";
+                                        var date = new Date();
+                                        var year = date.getFullYear() - data.commentJson.comments[i].reply.reply[a].time.getFullYear();
+                                        var month = date.getMonth() - data.commentJson.comments[i].reply.reply[a].time.getMonth();
+                                        var day = date.getDate() - data.commentJson.comments[i].reply.reply[a].time.getDate();
+                                        var hours = date.getHours() - data.commentJson.comments[i].reply.reply[a].time.getHours();
+                                        var minute = date.getMinutes() - data.commentJson.comments[i].reply.reply[a].time.getMinutes();
+                                        var last_time = "";
+                                        if(year>0){
+                                            last_time= year + "年前";
+                                        }else if(month>0){
+                                            last_time= month + "月前";
+                                        }else if(day>0){
+                                            last_time= day + "天前";
+                                        }else if(hours>0){
+                                            last_time= hours + "小时前";
+                                        }else if(minute>0){
+                                            last_time= minute + "分钟前";
+                                        }else{
+                                            last_time= "刚刚";
+                                        }
+                                        var temp = "<li class=\"item\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+/*data.commentJson.comments[i].reply.reply[a].time*/last_time+"</span></div></div></li>";
                                     }else{
-                                        var temp = "<li class=\"item\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.commentJson.comments[i].reply.reply[a].toNickname+"</a>&nbsp;:"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+data.commentJson.comments[i].reply.reply[a].time+"</span></div></div></li>";
+                                        var date = new Date();
+                                        var year = date.getFullYear() - data.commentJson.comments[i].reply.reply[a].time.getFullYear();
+                                        var month = date.getMonth() - data.commentJson.comments[i].reply.reply[a].time.getMonth();
+                                        var day = date.getDate() - data.commentJson.comments[i].reply.reply[a].time.getDate();
+                                        var hours = date.getHours() - data.commentJson.comments[i].reply.reply[a].time.getHours();
+                                        var minute = date.getMinutes() - data.commentJson.comments[i].reply.reply[a].time.getMinutes();
+                                        var last_time = "";
+                                        if(year>0){
+                                            last_time= year + "年前";
+                                        }else if(month>0){
+                                            last_time= month + "月前";
+                                        }else if(day>0){
+                                            last_time= day + "天前";
+                                        }else if(hours>0){
+                                            last_time= hours + "小时前";
+                                        }else if(minute>0){
+                                            last_time= minute + "分钟前";
+                                        }else{
+                                            last_time= "刚刚";
+                                        }
+                                        var temp = "<li class=\"item\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.commentJson.comments[i].reply.reply[a].toNickname+"</a>&nbsp;:"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+/*data.commentJson.comments[i].reply.reply[a].time*/last_time+"</span></div></div></li>";
                                     }
                                     replys = replys + temp;
                                 }
@@ -505,10 +746,30 @@
                                     replys = "<div class=\"reply-wrapper\"><ul class=\"reply-list\">" + replys + "</ul></div>";
                                 }
                                 for(var j = 0;j<data.commentJson.comments[i].imgArray.length;j++){
-                                    var temp = "<div class=\"ping-pic\"><img src=\""+data.commentJson.comments[i].imgArray[j]+"\"></div>";
+                                    var temp = "<div class=\"ping-pic\"><img src=\""+data.commentJson.comments[i].imgArray[j]+"\" data-index=\""+j+"\"></div>";
                                     pics = pics + temp;
                                 }
-                                comments = "<a href=\"/comment/detail?cid="+data.commentJson.comments[i].id+"&fid="+"<%= feedObjId%>"+"&toWhom="+data.commentJson.comments[i].toWhom+"\"><li data-cid=\""+data.commentJson.comments[i].id+"\" id=\"num_flag\"><div class=\"comment-wrapper\"><div class=\"user-avatar\"><img src=\""+data.commentJson.comments[i].headimgurl+"\"></div><div class=\"name-wrap\"><span class=\"user-nick\">"+data.commentJson.comments[i].nickname+"</span><span class=\"lounum\">2楼</span></div><div class=\"content-wrapper\"><div class=\"ping-content\">"+data.commentJson.comments[i].content+"</div><div class=\"ping-container\">" + pics + "</div></div><div class=\"comment-action\"><span class=\"time\">"+data.commentJson.comments[i].time+"</span><span class=\"reply \">11</span><span class=\"like\">1181111</span></div>" + replys + "</div></li></a>";
+                                var date = new Date();
+                                var year = date.getFullYear() - data.commentJson.comments[i].time.getFullYear();
+                                var month = date.getMonth() - data.commentJson.comments[i].time.getMonth();
+                                var day = date.getDate() - data.commentJson.comments[i].time.getDate();
+                                var hours = date.getHours() - data.commentJson.comments[i].time.getHours();
+                                var minute = date.getMinutes() - data.commentJson.comments[i].time.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                    last_time= year + "年前";
+                                }else if(month>0){
+                                    last_time= month + "月前";
+                                }else if(day>0){
+                                    last_time= day + "天前";
+                                }else if(hours>0){
+                                    last_time= hours + "小时前";
+                                }else if(minute>0){
+                                    last_time= minute + "分钟前";
+                                }else{
+                                    last_time= "刚刚";
+                                }
+                                comments = "<a href=\"/comment/detail?cid="+data.commentJson.comments[i].id+"&fid="+"<%= feedObjId%>"+"&toWhom="+data.commentJson.comments[i].toWhom+"\" data-imgcf=\"false\" onclick=\"return imgClickFlag(this);\"><li data-cid=\""+data.commentJson.comments[i].id+"\" id=\"num_flag\"><div class=\"comment-wrapper\"><div class=\"user-avatar\"><img src=\""+data.commentJson.comments[i].headimgurl+"\"></div><div class=\"name-wrap\"><span class=\"user-nick\">"+data.commentJson.comments[i].nickname+"</span><span class=\"lounum\">2楼</span></div><div class=\"content-wrapper\"><div class=\"ping-content\">"+data.commentJson.comments[i].content+"</div><div class=\"ping-container\">" + pics + "</div></div><div class=\"comment-action\"><span class=\"time\">"+/*data.commentJson.comments[i].time*/last_time+"</span><span class=\"reply \">11</span><span class=\"like\">1181111</span></div>" + replys + "</div></li></a>";
                                 $("ul.list").append(comments);
                             }
                         }
@@ -544,44 +805,59 @@
                     alert("一次最多上传8张图片");
                     for (var i = 0; i < aaa; i++) {
                         var file = fileList[i];
-                        var name = file.name;
-                        var avFile = new AV.File(name,file);
-                        avFile.save().then(function(avFile){
-                            file_num++;
-                            //alert(file_num);
-                            var src = avFile.url();
-                            var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
-                            $(".pub-pics").prepend(str_pic);
-                            $(".btn-del").click(function(){
-                                //alert("nima");
-                                this.closest("li.up-pic").remove();
-                                file_num--;
-                                if (file_num<0) {file_num=0;}
+                        lrz(file).then(function(ret){
+                            var avFiless = new AV.File(file.name,{base64:ret.base64});
+                            avFiless.save().then(function(avFile){
+                                file_num++;
+                                //alert(file_num);
+                                var src = avFile.url();
+                                var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
+                                $(".pub-pics").prepend(str_pic);
+                                $(".btn-del").click(function(){
+                                    //alert("nima");
+                                    this.closest("li.up-pic").remove();
+                                    file_num--;
+                                    if (file_num<0) {file_num=0;}
+                                });
                             });
                         });
                     };
                 }else{
                     for (var i = 0; i < fileList.length; i++) {
                         var file = fileList[i];
-                        var name = file.name;
-                        var avFile = new AV.File(name,file);
-                        avFile.save().then(function(avFile){
-                            file_num++;
-                            //alert(file_num);
-                            var src = avFile.url();
-                            var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
-                            $(".pub-pics").prepend(str_pic);
-                            $(".btn-del").click(function(){
-                                //alert("nima");
-                                this.closest("li.up-pic").remove();
-                                file_num--;
-                                if (file_num<0) {file_num=0;}
+                        lrz(file).then(function(ret){
+                            var avFiless = new AV.File(file.name,{base64:ret.base64});
+                            avFiless.save().then(function(avFile){
+                                file_num++;
+                                //alert(file_num);
+                                var src = avFile.url();
+                                var str_pic = "<li class=\"up-pic up-over\" id=\"upPic2\" data-gid=\"2\"><div class=\"clip\"><img src=\""+src+"\" style=\"width: 65px; height: 92px; display: block; margin-top: -13.5px;\"></div> <div class=\"up-mask\"></div> <div class=\"up-progress\"> <div class=\"pos\" style=\"transition: all 1s ease-out; width: 38px;\"></div> </div> <button class=\"btn-del\" id=\"clo-pic\" title=\"关闭\">&nbsp;</button> </li>";
+                                $(".pub-pics").prepend(str_pic);
+                                $(".btn-del").click(function(){
+                                    //alert("nima");
+                                    this.closest("li.up-pic").remove();
+                                    file_num--;
+                                    if (file_num<0) {file_num=0;}
+                                });
                             });
                         });
-                }
+                    }
                 }
             }
         }
+    </script>
+    <script type="text/javascript">
+    function imgClickFlag(obj){
+        if($(obj).attr("data-imgcf")=="true"){
+            $(obj).attr("data-imgcf","false");
+            return false;
+        }else{return true;}
+        //alert(e.attr("data-imgcf"));
+        //if(e.attr("data-imgcf")=="true"){
+        //    e.attr("data-imgcf","false");
+        //    return false;
+        //}
+    }
     </script>
   </body>
 </html>
