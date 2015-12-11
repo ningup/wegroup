@@ -91,8 +91,8 @@ router.get('/detail', function(req, res, next) {
 		var toWhom = req.query.toWhom;
 		console.log('detail');
 		var userclass = new UserClass();
-	if (req.AV.user) {
-		var username = req.AV.user.get('username');
+	if (AV.User.current()) {
+		var username = AV.User.current().get('username');
 				var queryC = new AV.Query('Comment');
 				queryC.get(cid, {
 				  success: function(comment) {
@@ -141,7 +141,7 @@ router.get('/detail', function(req, res, next) {
 			  });
 	}
 	else{
-		res.send('我不知道你是谁了，重新进入一下吧');
+		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 	}
 });
 

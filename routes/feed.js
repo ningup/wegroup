@@ -52,11 +52,11 @@ var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
 router.get('/', function(req, res, next) {
 	//var likeclass = new LikeClass();
 	//likeclass.like('55fc293860b21fbf5733ec7d',req.query.username);
-	if (req.AV.user) {
+	if (AV.User.current()) {
 			// 如果已经登录，发送当前登录用户信息。
 			//res.send(req.AV.user.get('username'));
 			//console.log(req.AV.user);
-		  var username = req.AV.user.get('username');
+		  var username = AV.User.current().get('username');
 			var userclass = new UserClass();
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				 if(err){
@@ -116,7 +116,8 @@ router.get('/', function(req, res, next) {
 			});
 	} else {
 			// 没有登录，跳转到登录页面。
-			res.send('我不知道你是谁了，重新进入一下吧');
+			//res.send('我不知道你是谁了，重新进入一下吧');
+		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 	}
 
 });
@@ -199,47 +200,47 @@ router.get('/groupMember', function(req, res, next) {
 });
 //显示投票
 router.get('/getVote', function(req, res, next) {
-	var userclass = new UserClass();
-	client.getAccessToken(req.query.code, function (err, result) {
-		 if(err){
-			 res.redirect('/group/fini?title=');
-			 
-		}else{ 
-			 var username = result.data.openid;
-			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-				 if(err){
-					 res.send('你还没有加入群呢，快去创建一个吧！');
-				 }
-				 else{
-						var groupObjId = whichGroupNow;
-						var query = new AV.Query('Group');
-						query.get(groupObjId, {
-						  success: function(group) {
-							// 成功获得实例
-							 //console.log('you get into the '+ group.get('nickname'));
-							 var relation = group.relation("feedPosted");
-							 relation.targetClassName = 'Feed';
-							 var queryFeed = relation.query();
-							 queryFeed.descending('createdAt');
-							 queryFeed.equalTo("feedType", "vote");
-							 queryFeed.find().then(function(votes){
-								 res.render('vote', {
-									username: username,
-									votes:votes
-								 });
-
+	if (AV.User.current()) {
+			var userclass = new UserClass();
+		 var username = AV.User.current().get('username');
+		 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+			 if(err){
+				 res.send('你还没有加入群呢，快去创建一个吧！');
+			 }
+			 else{
+					var groupObjId = whichGroupNow;
+					var query = new AV.Query('Group');
+					query.get(groupObjId, {
+						success: function(group) {
+						// 成功获得实例
+						 //console.log('you get into the '+ group.get('nickname'));
+						 var relation = group.relation("feedPosted");
+						 relation.targetClassName = 'Feed';
+						 var queryFeed = relation.query();
+						 queryFeed.descending('createdAt');
+						 queryFeed.equalTo("feedType", "vote");
+						 queryFeed.find().then(function(votes){
+							 res.render('vote', {
+								username: username,
+								votes:votes
 							 });
-							
-						  },
-						  error: function(object, error) {
-							// 失败了.
-						  }
-						});
-				 }
-			});
-		
-	    }
-	 });
+
+						 });
+
+						},
+						error: function(object, error) {
+						// 失败了.
+						}
+					});
+			 }
+		});
+	}
+	else{
+		//res.send('我不知道你是谁了，重新进入一下吧');
+		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+	}
+
+
 });
 //进行投票
 router.post('/vote', function(req, res, next) {
@@ -360,7 +361,7 @@ router.post('/post', function(req, res, next) {
 							feed.set('updateTime',date);
 							feed.set('feedTitle',feedTitle);
 							feed.save();
-							res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/getVote&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+							res.redirect("/feed/getVote");
 						});
 					}
 			}
@@ -419,9 +420,9 @@ router.get('/groupNickname', function(req, res, next) {
 });
 router.get('/detail',function(req,res,next){
 	var feedObjId = req.query.feedObjId;
-	if (req.AV.user) {
+	if (AV.User.current()) {
 		//console.log(req.AV.user);
-		var username = req.AV.user.get('username');
+		var username = AV.User.current().get('username');
 		var userclass = new UserClass();
 		var commentclass = new CommentClass();
 		console.log(username);
@@ -476,7 +477,8 @@ router.get('/detail',function(req,res,next){
 		});
 	}
 	else{
-		res.send('我不知道你是谁了，重新进入一下吧');
+		//res.send('我不知道你是谁了，重新进入一下吧');
+		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 	}
 	
 });

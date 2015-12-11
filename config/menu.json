@@ -21,7 +21,7 @@
 		{
 		   "type":"view",
 		   "name":"成员与设置",
-		   "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/set&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
+		   "url":"http://dev.wegroup.avosapps.com/group/set"
 		},
 		{
 		   "type":"click",
@@ -41,12 +41,12 @@
 		{
 		   "type":"view",
 		   "name":"群投票",
-		   "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/getVote&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
+		   "url":"http://dev.wegroup.avosapps.com/feed/getVote"
 		},
 		{
 		   "type":"view",
 		   "name":"群聊天",
-		   "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/room&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
+		   "url":"http://dev.wegroup.avosapps.com/group/room"
 		}]
     },
     {
@@ -55,7 +55,7 @@
 		{
 		   "type":"view",
 		   "name":"群状态",
-		   "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
+		   "url":"http://dev.wegroup.avosapps.com/feed"
 		}]
     }
   ]

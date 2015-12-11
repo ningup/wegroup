@@ -18,7 +18,7 @@
 10 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:810:5)
 11 verbose pkgid wegroup@1.0.0
 12 verbose cwd /home/ning/liaoqu/wegroup
-13 error Linux 3.19.0-37-generic
+13 error Linux 3.19.0-39-generic
 14 error argv "node" "/usr/local/bin/npm" "start"
 15 error node v0.10.25
 16 error npm  v2.14.1

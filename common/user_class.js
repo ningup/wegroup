@@ -243,9 +243,8 @@ function userFollowed()
 							newUser.set("headimgurlShare", file.thumbnailURL(360,200));
 							newUser.signUp(null, {
 								 success: function(newUser) {
-									// 注册成功，可以使用了.
+									// 注册成功，可以使用了.				
 										cb(0,newUser);
-										
 								 },
 								 error: function(newUser, error) {
 									var query = new AV.Query(AV.User);
@@ -304,9 +303,13 @@ function userFollowed()
 		query.equalTo("username", username);
 		query.first({
 			success: function(queryUser) {
-				cb(null,queryUser);
+				if(queryUser)
+					cb(null,queryUser);
+				else
+					cb(1,null);
 			},
 			error: function(error) {
+				
 			} 
 		});
 	
@@ -318,7 +321,7 @@ function userFollowed()
 		queryUser.equalTo("username",username);
 		queryUser.first({
 			success:function(queryUser){
-				if(queryUser.get('subscribe')===0){
+				if(queryUser == null || queryUser.get('subscribe')===0){
 					status = 0;
 					cb(status,null);
 				}
