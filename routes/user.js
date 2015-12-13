@@ -45,11 +45,12 @@ router.get('/signup', function(req, resa, next) {
 	  }else{
 			var openid = result.data.openid;
 			var accessToken = result.data.access_token;
+			var expires_in = result.data.expires_in;
 					AV.User._logInWith("weixin", {
 					 "authData": {
 							"openid":openid,
 							"access_token": accessToken,
-							"expires_in": 7200
+							"expires_in": expires_in
 						},
 						success: function(newUser){
 								//返回绑定后的用户

@@ -62,7 +62,7 @@ app.use(express.static('public'));
 // 加载云代码方法
 app.use(cloud);
 //app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
-app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkU', maxAge: 86400000, fetchUser: true,name:'liaoqu'}));
+app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkU', maxAge: 20000, fetchUser: true,name:'liaoqu'}));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -417,22 +417,26 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 
 }));
 
+
 /*
 api.getTicket(function(err,results){
 	//console.log(JSON.stringify(results));
 	console.log(results);
 	
-});*/
+});
+*/
 
-/*api.createMenu(menu, function (err, result){
+/*
+api.createMenu(menu, function (err, result){
 	//if(err)
 	console.log(JSON.stringify(result));
-});*/
+});
+*/
 
 
-//api.getMenu(function(err,results){
-	//console.log(JSON.stringify(results));	
-//}); 
+/*api.getMenu(function(err,results){
+	console.log(JSON.stringify(results));	
+}); */
 
 /*api.removeMenu(function(err,results){
 	console.log(JSON.stringify(results));
@@ -464,40 +468,24 @@ app.use(function(req, res, next) {
 app.get('/', function(req, res) {
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
-
-/*				userclass.getUserObj('orSEhuNxAkianv5eFOpTJ3LXWADE',function(err,user){
-					if(err)
-						res.send('重试一下');
-					else{
-						res.send('有你了');
-					}
-				});*/
-			if(req.AV.user){
-					//AV.User.logOut();
-				//console.log(AV.User.current());
-					res.redirect("/feed");
-				
-			}
-			else{
-				//AV.User.logOut();
-				var openid ='orSEhuBllBij-g3Ayx2jujBuuPNY';
-				AV.User.logIn(openid, "A00000000~", {
+				AV.User.logIn("orSEhuNxAkianv5eFOpTJ3LXWADE", "A00000000~", {
 					success: function(user) {
 						// 成功了，现在可以做其他事情了.
-						res.send('dengluchengong');
+							res.redirect('/feed');
 					},
 					error: function(user, error) {
 						// 失败了.
-						res.send(error);
 					}
 				});
-			}
 	  }else{
-			if(AV.User.current() && (AV.User.current().get('username')== openid) ){
+			var openid = result.data.openid;
+			var accessToken = result.data.access_token;
+			if(AV.User.current() && (AV.User.current().get('username') == openid) ){
 					res.redirect("/feed");
 			}
 			else{
-				var openid = result.data.openid;
+				res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+/*				var openid = result.data.openid;
 				var accessToken = result.data.access_token;
 						AV.User._logInWith("weixin", {
 						 "authData": {
@@ -512,7 +500,7 @@ app.get('/', function(req, res) {
 							error: function(err){
 								 console.dir(err);
 							}	
-				});
+				});*/
 			}
 	 }
  });
@@ -541,9 +529,13 @@ app.use(function(req, res, next) {
 // 如果是开发环境，则将异常堆栈输出到页面，方便开发调试
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) { // jshint ignore:line
-    res.status(err.status || 500);
+    var statusCode = err.status || 500;
+    if(statusCode === 500) {
+      console.error(err.stack || err);
+    }
+    res.status(statusCode);
     res.render('error', {
-      message: err.message,
+      message: err.message || err,
       error: err
     });
   });

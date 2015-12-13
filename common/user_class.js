@@ -309,7 +309,7 @@ function userFollowed()
 					cb(1,null);
 			},
 			error: function(error) {
-				
+				cb(1,null);
 			} 
 		});
 	
