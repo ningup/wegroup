@@ -35,7 +35,7 @@
     }
     
     .container>div:first-child{margin-top: 1px;}
-    .container>div{padding: 10px 0 8px;background-color: #fafafa;position: relative;display: list-item;text-align: -webkit-match-parent;}
+    .container>div{padding: 10px 0 0px;background-color: #fafafa;position: relative;display: list-item;text-align: -webkit-match-parent;}
     .comment-wrapper{position: relative;padding: 0 15px 0 60px;}
     .comment-wrapper .user-avatar{position: absolute;top: 0;left: 15px;padding-right: 9px;}
     .comment-wrapper .user-avatar>img{width: 35px;height: 35px;overflow: hidden;position: relative;border-radius: 18px;font-size: 12px;background-color: #efece9;padding: 0;margin: 0;outline: 0;-webkit-tap-highlight-color:transparent;}
@@ -56,9 +56,9 @@
     .comment-wrapper .content-wrapper .ping-container:after{display: block;clear: both;content: "";}
     .comment-wrapper .content-wrapper .ping-container .ping-pic{/*width: 96px;height: 96px;*/width: 100%;height: auto; float: left;overflow: hidden;margin: 3px 3px 0 0;position: relative;background: #efece9;}
     .comment-wrapper .content-wrapper .ping-container .ping-pic>img{margin-top: -12.224px;margin-left: 0px;/*width: 96px;height: 128px;*/width: 100%;height: auto; -webkit-user-select: none;padding: 0;margin: 0;border-radius: 0;outline: 0;-webkit-tap-highlight-color: transparent;}
-    .comment-wrapper .reply-wrapper{margin-top: 5px;color: #454545;margin-bottom: 45px;}
+    .comment-wrapper .reply-wrapper{margin-top: 5px;color: #454545;/*margin-bottom: 45px;*/}
     .comment-wrapper .reply-wrapper .more{    display: block;line-height: 200%;font-size: 12px;margin: 6px 0;color: #3361a7;text-decoration: none;}
-    .comment-wrapper .reply-wrapper .reply-list{list-style: none;padding-left: 0;}
+    .comment-wrapper .reply-wrapper .reply-list{list-style: none;padding-left: 0;margin-bottom: 0px;}
     .comment-wrapper .reply-wrapper .reply-list .item{display: list-item;text-align: -webkit-match-parent;list-style: none;}
     .comment-wrapper .reply-wrapper .reply-list .item .fmain{text-align: left;line-height: 160%;position: relative;margin: 6px 0;word-break: break-all;word-wrap: break-word;}
     .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item{margin: 0;padding: 0;}
@@ -74,6 +74,8 @@
     .publish .pub-con .pub-wrap {position: relative;width: 100%;height: 100%;}
     .publish .pub-con .pub-wrap button{position: absolute;top: 4px;right: 5px; border: 0;border-radius: 4px;width: 20%;height: 35px;font-size: 16px;text-align: center;color: #fff; background-color: #2791dc;outline: 0;-webkit-tap-highlight-color: rgba(255,255,255,0);padding: 0;margin: 0;font: 11px BlinkMacSystemFont;text-rendering: auto;letter-spacing: normal;word-spacing: normal;text-transform: none;text-indent: 0px;text-shadow: none;display: inline-block;}
     .publish .pub-con .pub-wrap input{position: absolute;width: 75%;top: 4px;left: 7px;height: 35px;border-radius: 4px;outline:0; resize:none;box-shadow:0;border-style: solid;border-color:#c8c7cc;border: 1;}
+    .container>div{margin-bottom: 45px;}
+    .loading{width: 100%;height: 30px; text-align:center;line-height: 30px;color: #777;}
     </style>
 
   </head>
@@ -172,6 +174,7 @@
                             <% } %>
                       <% } %>
                       </ul>
+                      <div class="loading"></div>
                     </div>
                   </div>
         </div>
@@ -254,7 +257,8 @@
     var chufa_flag = "0";
     var reply_num = 0;
     $(document).ready(function(){
-        $("li.item").on('click',function(){
+        //$("ul>li:last").css("margin-bottom","45px");
+        $(document).on('click',"li.item",function(){
           //alert("heh");
           reply_flag = $(this).attr("data-reply");
           toWhom = $(this).attr("data-user");
@@ -283,9 +287,6 @@
           chufa_flag = "1";
           var content = $(".editor").val();
           $(".editor").val("");
-          //alert(reply_flag);
-          //alert(toWhom);
-          //alert(content);
           var aj = $.ajax({
                 url:'/comment',
                 data:{
@@ -302,9 +303,8 @@
                 type:'post',
                 dataType:'json',
                 success:function(data){
-                    //alert("okokokokokok");
                     console.log(data);
-                    //alert(isHave);
+                    //$("ul>li:last").css("margin-bottom","");
                     if(isHave=="0"){
                           if(data.replyCommentId=="<%= commentObjId%>"){
                               var date = new Date();
@@ -356,14 +356,17 @@
                               $("ul.reply-list").append(str);
                           } 
                     }
+                    //$("ul>li:last").css("margin-bottom","45px");
                     reply_flag = "<%= commentObjId%>";
                     toWhom = "<%= toWhom%>";
                     $(".editor").attr("placeholder","我也来说一句....");
+                    myScroll.refresh();
                 },
                 error:function(){
                     reply_flag = "<%= commentObjId%>";
                     toWhom = "<%= toWhom%>";
                     $(".editor").attr("placeholder","我也来说一句....");
+                    myScroll.refresh();
                 }
             });
         });
@@ -423,7 +426,8 @@
             if (this.y>5) {
                 flag = 1;
                 //console.log(flag);
-            }else if(this.y<(this.maxScrollY-5)){
+            //}else if(this.y<(this.maxScrollY-5)){
+            }else if(this.y<=this.maxScrollY){
                 flag = 2;
                 //console.log(flag);
             }
@@ -435,6 +439,7 @@
                 flag = 0;
             }else if (flag==2) {
                 console.log("上拉加载");
+                $(".loading").html("载入中,请稍等...");
                 /*for(var i=0;i<20;i++){
                     $(".container").append("<li>Pretty row 50</li>");
                 }*/
@@ -456,7 +461,10 @@
                         //alert("返回ok");
                         console.log(data);
                         isHave = data.elseComment;
+                        //$("ul>li:last").css("margin-bottom","");
                         //alert(isHave);
+                        if(isHave=="1"){
+                        $(".loading").html("");
                         $("#temp").remove();
                         for(var i=0;i<data.comments.length;i++){
                           if(data.comments[i].replyCommentId==data.comments[i].inWhichComment){
@@ -509,6 +517,14 @@
                               $("ul.reply-list").append(str);
                           } 
                         }
+                        }else{
+                          if($("ul.reply-list>li").length>0){
+                            $(".loading").html("这是全部的回复了哦～快去来一发吧～");
+                          }else{
+                            $(".loading").html("现在还没有回复～快去来一发吧～");
+                          }
+                        }
+                        //$("ul>li:last").css("margin-bottom","45px");
                         reply_num = 0;
                         /*$("li.item").click(function(){
                           //alert("heh");
@@ -527,6 +543,7 @@
                         flag = 0;
                     },
                     error:function(){
+                        $(".loading").html("网络好像有点问题,请刷新一下吧～");
                         reply_num = 0;
                         myScroll.refresh();
                         flag = 0;

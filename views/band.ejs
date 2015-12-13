@@ -214,6 +214,7 @@
     content: "";}
 
     #publish-form{display: none;}
+    .loading{width: 100%;height: 30px; text-align:center;line-height: 30px;color: #777;}
     </style>
 
   </head>
@@ -291,6 +292,7 @@
                 <% } %>
                  
               </ul>
+              <div class="loading"></div>
           </div>
       </div>
     </div>
@@ -436,7 +438,7 @@
 	            });
         	}
         });
-        $(".feed").on('click',function(){
+        $(document).on('click',".feed",function(){
         	//alert("尼玛");
             /*
         	$("#feedObjId").val(this.getAttribute("data-feedid"));
@@ -448,7 +450,7 @@
             //$("feed-click").click();
             document.getElementById("feed-click").click();
         });
-        $(".feed_img_item>img").on('click',function(event){
+        $(document).on('click',".feed_img_item>img",function(event){
             event.stopPropagation();
             var pswpElement = $(".pswp")[0];
             var feedObjId = $(this).closest("li.feed").attr("data-feedid");
@@ -521,7 +523,8 @@
             if (this.y>5) {
                 flag = 1;
                 //console.log(flag);
-            }else if(this.y<(this.maxScrollY-5)){
+            //}else if(this.y<(this.maxScrollY-5)){
+            }else if(this.y<=this.maxScrollY){
                 flag = 2;
                 //console.log(flag);
             }
@@ -548,6 +551,7 @@
                 /*for(var i=0;i<20;i++){
                     $(".container ul").append("<li>Pretty row 50</li>");
                 }*/
+                $(".loading").html("载入中,请稍等...");
                 $.ajax({
                     type:'post',
                     url:'/feed/history',
@@ -557,6 +561,7 @@
                         //alert('返回来了');
                         //console.log(datas);
                         if(data.feeds.length>0){
+                            $(".loading").html("");
                             for(var i=0;i<data.feeds.length;i++){
                                 //console.log(data.feeds[i].objectId);
                                 var feed_groupbody = "<div class=\"feed_groupbody\"><div class=\"feed_time\">刚刚</div><div class=\"icon_wrap\"><i class=\"reply-icon\"></i><span class=\"groupreply\">2000</span></div><div class=\"icon_wrap\"><i class=\"read-icon\"></i><span class=\"readnum\">2000</span></div></div>";
@@ -581,6 +586,12 @@
                                 feed = "<li class=\"feed\" data-feedid=\""+data.feeds[i].objectId+"\"><div class=\"detail\">" + feed_content + feed_img + feed_groupbody + "</div></li>";
                                 $(".container ul").append(feed);
                             }
+                        }else{
+                            if($("ul.feed_ul_list>li").length>0){
+                                $(".loading").html("这是全部的帖子了哦～快去来一发吧～");
+                            }else{
+                                $(".loading").html("现在还没有帖子～快去来一发吧～");
+                            }
                         }
                         /*$(".feed").click(function(){
                             var str = "/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid");
@@ -589,6 +600,9 @@
                         });*/
                         myScroll.refresh();
                         flag = 0;
+                    },
+                    error:function(){
+                        $(".loading").html("网络好像有点问题,请刷新一下吧～");
                     }
                 });
                 myScroll.refresh();

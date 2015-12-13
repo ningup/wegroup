@@ -51,7 +51,7 @@
       border-radius: 10px;
       background-color: rgba(25, 147, 147, 0.2);
     }
-    .chat-thread li>img{float: left;width: 150px;height: 150px;}
+    .chat-thread li>img{float: left;width: 150px;height: 150px;z-index: 1;}
     img.emoji{float: none;width: 24px;height: 24px;}
 
     /* Chat - Avatar */
@@ -583,8 +583,10 @@
       }
     </script>
     <script type="text/javascript">
-      $("li img").on('click',function(){
-        event.stopPropagation();
+    $(function(){
+      $(document).on('click',"li>img",function(){
+        //alert("进来了吗");
+        //event.stopPropagation();
             var pswpElement = $(".pswp")[0];
             var items = [];
             var image = new Image();
@@ -612,6 +614,7 @@
             var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
             gallery.init();
       });
+    });
     </script>
   </body>
 </html>

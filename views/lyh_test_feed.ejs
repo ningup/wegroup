@@ -237,6 +237,7 @@
     background: #fff;
     content: "";}
     .publish_form{display: none;}
+    .loading{width: 100%;height: 30px; text-align:center;line-height: 30px;color: #777;}
     </style>
 
   </head>
@@ -288,7 +289,7 @@
             <% if(havecomment==1){ %>
               <ul class="list">
               <% for(var i=0;i<commentJson.comments.length;i++){ %>
-              <a href="/comment/detail?cid=<%= commentJson.comments[i].id%>&fid=<%= feedObjId%>&toWhom=<%= commentJson.comments[i].toWhom%>" data-imgcf="false" onclick="return imgClickFlag(this);">
+              <a href="/comment/detail?cid=<%= commentJson.comments[i].id%>&fid=<%= feedObjId%>&toWhom=<%= commentJson.comments[i].toWhom%>" data-imgcf="false" >
                 <li data-cid="<%= commentJson.comments[i].id%>" id="num_flag">
                   <div class="comment-wrapper">
                     <div class="user-avatar"><img src="<%= commentJson.comments[i].headimgurl%>"></div>
@@ -407,6 +408,7 @@
               <% } %>  
               </ul>
             <% } %>
+            <div class="loading"></div>
             </div>
           </div>
       </div>
@@ -507,7 +509,7 @@
     
     <script type="text/javascript">
     $(document).ready(function(){
-        $(".reply").on('click',function(){
+        $(document).on('click',".reply",function(){
           //alert("你妈的");
           //alert("<%= groupObjId%>");
         });
@@ -561,7 +563,7 @@
             $(".publish_form #commentImgArray").val(img_str);
             $(".publish_form").submit();
         });
-        $(".pic>img").on('click',function(event){
+        $(document).on('click',".pic>img",function(event){
             event.stopPropagation();
             var pswpElement = $(".pswp")[0];
             var img_index = $(this).attr("data-index");
@@ -597,7 +599,7 @@
             var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
             gallery.init();
         });
-        $(".ping-pic>img").on('click',function(){
+        $(document).on('click',".ping-pic>img",function(){
             //event.stopPropagation();
             $(this).closest("a").attr("data-imgcf","true");
             var pswpElement = $(".pswp")[0];
@@ -658,7 +660,8 @@
             if (this.y>5) {
                 flag = 1;
                 //console.log(flag);
-            }else if(this.y<(this.maxScrollY-5)){
+            //}else if(this.y<(this.maxScrollY-5)){
+            }else if(this.y<=this.maxScrollY){
                 flag = 2;
                 //console.log(flag);
             }
@@ -670,6 +673,7 @@
                 flag = 0;
             }else if (flag==2) {
                 console.log("上拉加载");
+                $(".loading").html("载入中,请稍等...");
                 $("li#num_flag").each(function(){
                   num_flag++;
                   //alert(num_flag);
@@ -688,6 +692,7 @@
                         //alert("返回ok");
                         console.log(data);
                         if(data.havecomment=="1"){
+                            $(".loading").html("");
                             for(var i = 0;i<data.commentJson.comments.length;i++){
                                 var comments = "";
                                 var replys = "";
@@ -769,17 +774,23 @@
                                 }else{
                                     last_time= "刚刚";
                                 }
-                                comments = "<a href=\"/comment/detail?cid="+data.commentJson.comments[i].id+"&fid="+"<%= feedObjId%>"+"&toWhom="+data.commentJson.comments[i].toWhom+"\" data-imgcf=\"false\" onclick=\"return imgClickFlag(this);\"><li data-cid=\""+data.commentJson.comments[i].id+"\" id=\"num_flag\"><div class=\"comment-wrapper\"><div class=\"user-avatar\"><img src=\""+data.commentJson.comments[i].headimgurl+"\"></div><div class=\"name-wrap\"><span class=\"user-nick\">"+data.commentJson.comments[i].nickname+"</span><span class=\"lounum\">2楼</span></div><div class=\"content-wrapper\"><div class=\"ping-content\">"+data.commentJson.comments[i].content+"</div><div class=\"ping-container\">" + pics + "</div></div><div class=\"comment-action\"><span class=\"time\">"+/*data.commentJson.comments[i].time*/last_time+"</span><span class=\"reply \">11</span><span class=\"like\">1181111</span></div>" + replys + "</div></li></a>";
+                                comments = "<a href=\"/comment/detail?cid="+data.commentJson.comments[i].id+"&fid="+"<%= feedObjId%>"+"&toWhom="+data.commentJson.comments[i].toWhom+"\" data-imgcf=\"false\" ><li data-cid=\""+data.commentJson.comments[i].id+"\" id=\"num_flag\"><div class=\"comment-wrapper\"><div class=\"user-avatar\"><img src=\""+data.commentJson.comments[i].headimgurl+"\"></div><div class=\"name-wrap\"><span class=\"user-nick\">"+data.commentJson.comments[i].nickname+"</span><span class=\"lounum\">2楼</span></div><div class=\"content-wrapper\"><div class=\"ping-content\">"+data.commentJson.comments[i].content+"</div><div class=\"ping-container\">" + pics + "</div></div><div class=\"comment-action\"><span class=\"time\">"+/*data.commentJson.comments[i].time*/last_time+"</span><span class=\"reply \">11</span><span class=\"like\">1181111</span></div>" + replys + "</div></li></a>";
                                 $("ul.list").append(comments);
                             }
+                        }else{
+                            if($("ul.reply-list>li").length>0){
+                                $(".loading").html("这是全部的评论了哦～快去来一发吧～");
+                            }else{
+                                $(".loading").html("现在还没有评论～快去来一发吧～");
+                            }
                         }
-
 
                         num_flag = 0;
                         myScroll.refresh();
                         flag = 0;
                     },
                     error:function(){
+                        $(".loading").html("网络好像有点问题,请刷新一下吧～");
                         num_flag = 0;
                         myScroll.refresh();
                         flag = 0;
@@ -847,17 +858,13 @@
         }
     </script>
     <script type="text/javascript">
-    function imgClickFlag(obj){
-        if($(obj).attr("data-imgcf")=="true"){
-            $(obj).attr("data-imgcf","false");
+    $(document).on('click',"a",function(){
+        //alert($(this).attr("data-imgcf"));
+        if($(this).attr("data-imgcf")=="true"){
+            $(this).attr("data-imgcf","false");
             return false;
         }else{return true;}
-        //alert(e.attr("data-imgcf"));
-        //if(e.attr("data-imgcf")=="true"){
-        //    e.attr("data-imgcf","false");
-        //    return false;
-        //}
-    }
+    });
     </script>
   </body>
 </html>
