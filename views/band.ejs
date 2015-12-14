@@ -551,11 +551,15 @@
                 /*for(var i=0;i<20;i++){
                     $(".container ul").append("<li>Pretty row 50</li>");
                 }*/
+                var lastFeedId = $("ul.feed_ul_list>li").last().attr("data-feedid");
                 $(".loading").html("载入中,请稍等...");
                 $.ajax({
                     type:'post',
                     url:'/feed/history',
-                    data:{username:"<%= username%>"},
+                    data:{
+                        "username":"<%= username%>",
+                        "lastFeedId":lastFeedId
+                    },
                     dataType:'json',
                     success:function(data){
                         //alert('返回来了');
