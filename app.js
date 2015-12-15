@@ -11,6 +11,7 @@ var cookieParser = require('cookie-parser');
 var group = require('./routes/group');
 var feed = require('./routes/feed');
 var comment = require('./routes/comment');
+var message = require('./routes/message');
 var cloud = require('./cloud');
 var WechatAPI = require('wechat-api');
 var wechat = require('wechat');
@@ -22,11 +23,13 @@ var UserClass = require('./common/user_class.js');
 var GroupClass = require('./common/group_class.js');
 var FeedClass = require('./common/feed_class.js');
 var PublicClass = require('./common/public_class.js');
+//var MsgClass = require('./common/msg_class.js');
 var userclass  = new UserClass();
 var groupclass = new GroupClass();
 var feedclass = new FeedClass();
 var publicclass = new PublicClass();
-var Group=AV.Object.extend('Group');
+//var msgclass  = new MsgClass();
+//var Group=AV.Object.extend('Group');
 var config = require('./config/config.js');	
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var client = new OAuth(config.appid, config.appsecret);
@@ -441,7 +444,7 @@ api.getTicket(function(err,results){
 	
 });
 */
-
+//api.getAccessToken();  //get latest accesstoken
 /*api.createMenu(menu, function (err, result){
 	//if(err)
 	console.log(JSON.stringify(result));
@@ -477,7 +480,20 @@ app.use(function(req, res, next) {
   });
   d.run(next);
 });
-
+var query = new AV.Query('Message');
+query.first({
+  success: function(msg) {
+    var messageType = msg.get('messageType');
+		var cid = msg.get('cid');
+		var fid = msg.get('fid');
+		var toWhom =msg.get('who');
+		var gid = msg.get('gid');
+		console.log('localhost:3000/message?messageType='+messageType+'&cid='+cid+'&fid='+fid+'&toWhom='+toWhom+'&gid='+gid);
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
 app.get('/', function(req, res) {
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
@@ -511,6 +527,7 @@ app.use('/group', group);
 app.use('/feed', feed);
 app.use('/comment', comment);
 app.use('/user', user);
+app.use('/message', message);
 //app.use('/groupAlbum', groupAlbum);
 
 

@@ -46,7 +46,7 @@ var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
    
 });
 //声明一个Group类，为避免堆栈溢出，放到全局变量里面
-var Group = AV.Object.extend('Group');
+//var Group = AV.Object.extend('Group');
 var UserInfo=AV.Object.extend('UserInfo');
 // 搜索 Groups 结果
 router.get('/', function(req, res, next) {
@@ -273,7 +273,7 @@ router.get('/join',function(req,res,next){
 									res.send('该群解散了');
 								}
 								else{
-									var query = new AV.Query(Group);
+									var query = new AV.Query('Group');
 									var userinfo = new UserInfo();
 									userinfo.set('username',username);
 									userinfo.set('groupid',groupObjIdJoined);
@@ -328,7 +328,7 @@ router.get('/join',function(req,res,next){
 									res.send('该群解散了');
 								}
 								else{
-									var query = new AV.Query(Group);
+									var query = new AV.Query('Group');
 									var userinfo = new UserInfo();
 									userinfo.set('username',username);
 									userinfo.set('groupid',groupObjIdJoined);
