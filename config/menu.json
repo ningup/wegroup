@@ -47,11 +47,6 @@
 		   "type":"view",
 		   "name":"群聊天",
 		   "url":"http://dev.wegroup.avosapps.com/group/room"
-		},
-		{
-		   "type":"view",
-		   "name":"test",
-		   "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
 		}]
     },
     {

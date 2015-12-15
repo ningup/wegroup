@@ -106,6 +106,7 @@ router.get('/detail', function(req, res, next) {
 						var query = new AV.Query('Comment');
 						query.ascending('createdAt');
 						query.equalTo('isReply','1');
+						query.equalTo('isRemoved',0);
 						query.equalTo('inWhichComment',cid);
 						query.limit(25);
 						query.find({
@@ -151,6 +152,7 @@ router.post('/more', function(req, res, next) {
 		var query = new AV.Query('Comment');
 		query.ascending('createdAt');
 		query.equalTo('isReply','1');
+		query.equalTo('isRemoved',0);
 		query.equalTo('inWhichComment',cid);
 		query.limit(25);
 		query.skip(skipCount);

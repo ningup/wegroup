@@ -64,6 +64,7 @@ router.get('/', function(req, res, next) {
 				 }
 				 else{
 					var groupObjId = whichGroupNow;
+					var groupNickname = whichGroupNameNow;
 					var query = new AV.Query('Group');
 					query.get(groupObjId, {
 					  success: function(group) {
@@ -73,6 +74,7 @@ router.get('/', function(req, res, next) {
 						 relation.targetClassName = 'Feed';
 						 var queryFeed = relation.query();
 						 queryFeed.notEqualTo('feedType','vote');
+						 queryFeed.notEqualTo('isRemoved',1);
 						 queryFeed.descending('updateTime');
 						 queryFeed.limit(5);
 						 //queryFeed.equalTo("feedType", "vote");
@@ -95,6 +97,9 @@ router.get('/', function(req, res, next) {
 								user.save();
 								res.render('band', {
 									username: username,
+									groupNickname: groupNickname,
+									feedCnt: group.get('feedCnt'),
+									followersNum:group.get('followersNum'),
 									groupObjId:groupObjId,
 									cnt:cnt,
 									isSignIn:isSignIn,
@@ -122,9 +127,10 @@ router.get('/', function(req, res, next) {
 
 });
 router.post('/history', function(req, res, next) {
-		var userclass = new UserClass();
+	 var userclass = new UserClass();
 	 var username = req.body.username;
-	 console.log('history'+username);
+	 var lastFeedId = req.body.lastFeedId;
+	 console.log('lastFeedId'+lastFeedId);
 	 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 		 if(err){
 			 res.send('你还没有加入群呢，快去创建一个吧！');
@@ -142,8 +148,10 @@ router.post('/history', function(req, res, next) {
 						relation.targetClassName = 'Feed';
 						var queryFeed = relation.query();
 						queryFeed.notEqualTo('feedType','vote');
+					 	queryFeed.notEqualTo('objectId',lastFeedId);
+					  queryFeed.notEqualTo('isRemoved',1);
 						queryFeed.descending('updateTime');
-						queryFeed.lessThan("updateTime", loadFeedTime.oldest);
+						queryFeed.lessThanOrEqualTo("updateTime", loadFeedTime.oldest);
 						queryFeed.limit(2);
 						queryFeed.find().then(function(feeds){
 								if(feeds.length != 0){
@@ -267,11 +275,11 @@ router.post('/vote', function(req, res, next) {
 	var choiceId = req.body.choiceId;
 	var feedclass = new FeedClass(); 
 	//console.log('vote');
-	feedclass.set_vote(username,feedObjId,choiceId,function(err,feed,voteResultsWithoutUser){
+	feedclass.set_vote(username,feedObjId,choiceId,function(err,feed,voteResultsWithoutUser,voteCnt){
 		if(err)
-			res.json({"status":"1","feedObjId":feedObjId,"choiceId":choiceId,"voteResultsWithoutUser":voteResultsWithoutUser});
+			res.json({"status":"1","feedObjId":feedObjId,"choiceId":choiceId,"voteResultsWithoutUser":voteResultsWithoutUser,"voteCnt":voteCnt});
 		else
-			res.json({"status":"0","feedObjId":feedObjId,"choiceId":choiceId,"voteResultsWithoutUser":voteResultsWithoutUser});
+			res.json({"status":"0","feedObjId":feedObjId,"choiceId":choiceId,"voteResultsWithoutUser":voteResultsWithoutUser,"voteCnt":voteCnt});
 		return ;
 	});
 	
@@ -458,6 +466,10 @@ router.get('/detail',function(req,res,next){
 							query.get(feedObjId, {
 								success: function(feed) {
 										// 成功获得实例
+									var visitCnt = feed.get('visitCnt');
+									visitCnt +=1;
+									feed.set('visitCnt',visitCnt);
+									feed.save();
 									commentclass.getCommentInFeedDetail(feedObjId,0,function(err,havecomment,commentJson){
 										console.log(groupNickname);
 										//console.log(commentJson);
@@ -503,14 +515,15 @@ router.get('/detail',function(req,res,next){
 
 router.post('/detail/comment_more',function(req,res,next){
 	var feedObjId = req.body.feedObjId;
-	var username = req.body.username
+	var username = req.body.username;
 	var skip = req.body.skip;
 	var userclass = new UserClass();
 	var commentclass = new CommentClass();
 	console.log('skip..'+skip+'\n'+'username'+username);
 	userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 		 if(err){
-			 res.send('你还没有加入群呢，快去创建一个吧！');
+			  res.json({"err":'1',"msg":'没有加入群，去创建一个吧'});
+				return;
 		 }
 		 else{
 				var groupObjId = whichGroupNow;
@@ -525,7 +538,7 @@ router.post('/detail/comment_more',function(req,res,next){
 								commentclass.getCommentInFeedDetail(feedObjId,skip,function(err,havecomment,commentJson){
 									console.log(groupNickname);
 									//console.log(commentJson
-									res.json({"feedObjId":feedObjId,"commentJson":commentJson,"havecomment":havecomment});
+									res.json({"err":'0',"feedObjId":feedObjId,"commentJson":commentJson,"havecomment":havecomment});
 									return;
 								});
 
@@ -545,6 +558,29 @@ router.post('/detail/comment_more',function(req,res,next){
 					else if (status === 0)
 						res.send('未关注');
 			});
+
+		 }
+	});
+
+});
+
+router.post('/remove',function(req,res,next){
+	var feedObjId = req.body.feedObjId;
+	var username = req.body.username;
+	var userclass = new UserClass();
+	var feedclass = new FeedClass();
+	userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+		 if(err){
+			 res.json({"err":'1',"msg":'没有加入群，去创建一个吧'});
+				return;
+		 }
+		 else{
+				var groupObjId = whichGroupNow;
+				var groupNickname = whichGroupNameNow;
+				feedclass.remove_feed(feedObjId,groupObjId,function(){
+				 		res.json({"err":'0',"msg":'删除成功'});
+						return;
+			 });
 
 		 }
 	});

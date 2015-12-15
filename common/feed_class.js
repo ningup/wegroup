@@ -51,6 +51,9 @@ function FeedClass()
 		queryG.get(groupObjId, {
 		success: function(group) {
 			// 成功获得实例
+			var feedCnt = group.get('feedCnt');
+			feedCnt += 1;
+			group.set('feedCnt',feedCnt);
 			console.log("found the "+group.get('nickname'));
 			var relation = group.relation('feedPosted');
             relation.add(feed);
@@ -95,6 +98,9 @@ function FeedClass()
 				queryG.get(groupObjId, {
 				success: function(group) {
 					// 成功获得实例
+					var feedCnt = group.get('feedCnt');
+					feedCnt += 1;
+					group.set('feedCnt',feedCnt);
 					console.log("found the "+group.get('nickname'));
 					var relation = group.relation('feedPosted');
 					relation.add(feed);
@@ -247,6 +253,7 @@ function FeedClass()
 		query.get(feedObjId, {
   		success: function(feed) {
     		// 成功获得实例
+				var voteCnt = feed.get('voteCnt');
     		var voteResults = feed.get('voteResults');
     		var voteResultsWithoutUser = feed.get('voteResultsWithoutUser');
     		var userArray = voteResults.voteResults.voteItemContent.itemResults;
@@ -260,7 +267,7 @@ function FeedClass()
 				
 			//}
 			if(isVoted ===1){
-				cb(1,feed,voteResultsWithoutUser);
+				cb(1,feed,voteResultsWithoutUser,voteCnt);
 			}
 			else{
 				voteResults.voteResults.voteItemContent.choiceItem[choiceId].choiceValue +=1;
@@ -275,10 +282,12 @@ function FeedClass()
 				voteResults.voteResults.voteItemContent.itemResults[num] = new Object();
 				voteResults.voteResults.voteItemContent.itemResults[num].username = username;
 				voteResults.voteResults.voteItemContent.itemResults[num].choice = choiceId;
+				voteCnt += 1;
+				feed.set('voteCnt',voteCnt);
 				feed.set('voteResults',voteResults);
 				feed.set('voteResultsWithoutUser',voteResultsWithoutUser);
 				feed.save().then(function(feed){
-						cb(null,feed,voteResultsWithoutUser);
+						cb(null,feed,voteResultsWithoutUser,voteCnt);
 				});
 				
 			}
@@ -289,6 +298,37 @@ function FeedClass()
     		// 失败了.
   		}
       });
+	};
+	
+	this.remove_feed = function(feedObjId,groupObjId,cb){
+		var query = new AV.Query('Group');
+		query.get(groupObjId, {
+			success: function(group) {
+				// 成功获得实例
+				var relation = group.relation('feedPosted');
+				var feedCnt = group.get('feedCnt');
+				var queryf = new AV.Query('Feed');
+				queryf.get(feedObjId, {
+					success: function(feed) {
+						relation.remove(feed);
+						if(feedCnt >= 1)
+							feedCnt -= 1;
+						group.set('feedCnt',feedCnt);
+						feed.set('isRemoved',1);
+						feed.save();
+						group.save().then(function(g){
+							cb();
+						});
+					},
+					error: function(error) {
+						// 失败了.
+					}
+				});
+			},
+			error: function(error) {
+				// 失败了.
+			}
+		});
 	};
 
 };

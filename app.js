@@ -20,8 +20,12 @@ var AV = require('leanengine');
 var OAuth = require('wechat-oauth');
 var UserClass = require('./common/user_class.js');
 var GroupClass = require('./common/group_class.js');
+var FeedClass = require('./common/feed_class.js');
+var PublicClass = require('./common/public_class.js');
 var userclass  = new UserClass();
 var groupclass = new GroupClass();
+var feedclass = new FeedClass();
+var publicclass = new PublicClass();
 var Group=AV.Object.extend('Group');
 var config = require('./config/config.js');	
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
@@ -62,7 +66,7 @@ app.use(express.static('public'));
 // 加载云代码方法
 app.use(cloud);
 //app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
-app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkU', maxAge: 20000, fetchUser: true,name:'liaoqu'}));
+app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkU', maxAge: 3600000, fetchUser: true,name:'liaoqu'}));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -99,16 +103,28 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				if(message.MsgType === 'text'){
 				//	userclass.getUserObj(message.FromUserName,function(err,user){
 						if(user.get('whichStatus')==='wegroup_create'){
-							user.set('tempGroupName',message.Content);
-							user.save().then(function(userObj){
-								var text = '您是否要创建微群'+'「'+message.Content+'」。'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/create&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击创建</a>';
-								api.sendText(message.FromUserName, text, function(err,results){
-									if(err){
-										api.sendText(message.FromUserName, err, function(err,results){
-										});
-									}							  
-								});
-							});	
+							var len = publicclass.getStrLen(message.Content);
+							if(len > 20 || len < 4){
+									var text = '字数要在2到10之间，嘿嘿~';
+									api.sendText(message.FromUserName, text, function(err,results){
+										if(err){
+											api.sendText(message.FromUserName, err, function(err,results){
+											});
+										}							  
+									});
+							}
+							else{
+								user.set('tempGroupName',message.Content);
+								user.save().then(function(userObj){
+									var text = '您是否要创建微群'+'「'+message.Content+'」。'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/create&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击创建</a>';
+									api.sendText(message.FromUserName, text, function(err,results){
+										if(err){
+											api.sendText(message.FromUserName, err, function(err,results){
+											});
+										}							  
+									});
+								});	
+							}
 						}
 						else if(user.get('whichStatus')==='wegroup_switch'){
 							groupclass.groupSwitch(message.FromUserName,message.Content);		
@@ -426,12 +442,10 @@ api.getTicket(function(err,results){
 });
 */
 
-/*
-api.createMenu(menu, function (err, result){
+/*api.createMenu(menu, function (err, result){
 	//if(err)
 	console.log(JSON.stringify(result));
-});
-*/
+});*/
 
 
 /*api.getMenu(function(err,results){
@@ -464,7 +478,6 @@ app.use(function(req, res, next) {
   d.run(next);
 });
 
-
 app.get('/', function(req, res) {
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
@@ -484,23 +497,8 @@ app.get('/', function(req, res) {
 					res.redirect("/feed");
 			}
 			else{
-				res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
-/*				var openid = result.data.openid;
-				var accessToken = result.data.access_token;
-						AV.User._logInWith("weixin", {
-						 "authData": {
-								"openid":openid,
-								"access_token": accessToken,
-								"expires_in": 7200
-							},
-							success: function(newUser){
-									//返回绑定后的用户
-									res.redirect('/feed');
-							},
-							error: function(err){
-								 console.dir(err);
-							}	
-				});*/
+				res.redirect("https://open.weixin.qq.com/con nect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+
 			}
 	 }
  });

@@ -41,7 +41,22 @@ function FeedClass()
 									var relation = feed.relation('feedComment');
 									relation.add(comment);
 									if(isReply==='0'){
+										var commentCnt = feed.get('commentCnt');
+										commentCnt += 1;
+										feed.set('commentCnt',commentCnt);
 										feed.set('updateTime',date);
+									}
+									else{
+										var queryC = new AV.Query(Comment);
+										queryC.get(inWhichComment,{
+											success: function(c){
+												var replyCnt = c.get('replyCnt');
+												replyCnt += 1;
+												c.set('replyCnt',replyCnt);
+												c.save();
+											},
+											error:function(c,error){}
+										});
 									}
 									feed.save();
 									cb(comment,userinfo.get('nicknameInGroup'),userinfo.get('headimgurl'));
@@ -72,6 +87,7 @@ function FeedClass()
 		var query = new AV.Query('Comment');
 		query.ascending('createdAt');
 		query.equalTo('isReply','0');
+		query.equalTo('isRemoved',0);
 		query.equalTo('inWhichFeed',feedObjId);
 		query.skip(skip);
 		query.limit(20);
@@ -90,6 +106,7 @@ function FeedClass()
 							commentJson.comments[i] = new Object();
 							commentJson.comments[i].id = comments[i].getObjectId();
 							commentJson.comments[i].headimgurl = comments[i].get('headimgurl');
+							commentJson.comments[i].replyCnt = comments[i].get('replyCnt');
 							commentJson.comments[i].nickname = comments[i].get('nickname');
 							commentJson.comments[i].toWhom = comments[i].get('toWhom');
 							commentJson.comments[i].content = comments[i].get('content');
@@ -102,6 +119,7 @@ function FeedClass()
 							var queryR = new AV.Query('Comment');
 							queryR.ascending('createdAt');
 							queryR.equalTo('isReply','1');
+							queryR.equalTo('isRemoved',0);
 							queryR.equalTo('inWhichComment',commentJson.comments[i].id);
 							queryR.limit(3);
 							queryR.find({
@@ -157,8 +175,53 @@ function FeedClass()
 		});		
 	};
 	
-	this.rmComment = function(commentObjId){
-		
+	this.rmComment = function(commentObjId,cb){
+		var query = new AV.Query('Comment');
+		query.get(commentObjId, {
+			success: function(comment) {
+				// 成功获得实例
+				if(comment.get('isReply')=='0'){
+					var queryf = new AV.Query('Feed');
+					queryf.get(comment.get('inWhichFeed'), {
+						success: function(feed) {
+							var commentCnt = feed.get('commentCnt');
+							if(commentCnt >= 1)
+								commentCnt -= 1;
+							feed.save();
+							comment.set('isRemoved',1);
+							comment.save().then(function(c){
+								cb('1');
+							});
+						},
+						error: function(error) {
+							// 失败了.
+						}
+					});
+				}
+				else{
+					var queryc = new AV.Query('Comment');
+					queryc.get(comment.get('inWhichComment'), {
+						success: function(C) {
+							var replyCnt = C.get('replyCnt');
+							if(replyCnt >= 1)
+								replyCnt -= 1;
+							C.save();
+							comment.set('isRemoved',1);
+							comment.save().then(function(c){
+								cb('0');
+							});
+						},
+						error: function(error) {
+							// 失败了.
+						}
+					});
+				}
+
+			},
+			error: function(error) {
+				// 失败了.
+			}
+		});	
 	};
 
 };
