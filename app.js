@@ -23,12 +23,12 @@ var UserClass = require('./common/user_class.js');
 var GroupClass = require('./common/group_class.js');
 var FeedClass = require('./common/feed_class.js');
 var PublicClass = require('./common/public_class.js');
-var MsgClass = require('./common/msg_class.js');
+//var MsgClass = require('./common/msg_class.js');
 var userclass  = new UserClass();
 var groupclass = new GroupClass();
 var feedclass = new FeedClass();
 var publicclass = new PublicClass();
-var msgclass  = new MsgClass();
+//var msgclass  = new MsgClass();
 //var Group=AV.Object.extend('Group');
 var config = require('./config/config.js');	
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
@@ -132,19 +132,6 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 						else if(user.get('whichStatus')==='wegroup_switch'){
 							groupclass.groupSwitch(message.FromUserName,message.Content);		
 						}
-						else if(user.get('whichStatus')==='wegroup_chat'){
-							var text = '我收到了你的消息，可以把你需要的功能告诉我'; 
-							api.sendText(message.FromUserName, text, function(err,results){
-									if(err){
-										api.sendText(message.FromUserName, err, function(err,results){
-										});
-									}							  
-							});
-							/*
-							userclass.groupChat_text(message.FromUserName,user.get('whichGroupNow'),message.Content,function(){
-
-							});	*/
-						}
 						else{
 							//res.reply({type: "text", content: '你发的信息是'+message.Content});
 						}		
@@ -161,20 +148,6 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 									}							  
 							});
 						}
-						else if(user.get('whichStatus')==='wegroup_chat'){ 
-							var text = '我收到了你的消息，可以把你需要的功能告诉我'; 
-							api.sendText(message.FromUserName, text, function(err,results){
-									if(err){
-										api.sendText(message.FromUserName, err, function(err,results){
-										});
-									}							  
-							});
-							/*
-							res.reply('');      //回复空串
-							userclass.groupChat_media(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,function(){
-								//res.reply('');      //回复空串
-							});	*/
-						}	
 						else if(user.get('whichStatus')==='wegroup_switch'){
 							//res.reply('不是数字，请重新输入：');   
 							var text = '不是数字，请重新输入：'; 
@@ -201,18 +174,6 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 									}							  
 							});
 						}
-						else if(user.get('whichStatus')==='wegroup_chat'){
-							var text = '我收到了你的消息，可以把你需要的功能告诉我'; 
-							api.sendText(message.FromUserName, text, function(err,results){
-									if(err){
-										api.sendText(message.FromUserName, err, function(err,results){
-										});
-									}							  
-							});
-							/*userclass.groupChat_video(message.FromUserName,user.get('whichGroupNow'),message.MediaId,message.MsgType,message.thumb_media_id,function(){
-								res.reply('');      //回复空串
-							});	*/
-						}	
 						else if(user.get('whichStatus')==='wegroup_switch'){
 							var text = '不是数字，请重新输入：'; 
 							api.sendText(message.FromUserName, text, function(err,results){
@@ -315,44 +276,6 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 							});			
 						//});
 					}
-					else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_GROUP_CHAT'){
-						userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
-							if(err){
-									var text = '你还没有加入群呢，快去创建一个吧！'; 
-									api.sendText(message.FromUserName, text, function(err,results){
-											if(err){
-												api.sendText(message.FromUserName, err, function(err,results){
-												});
-											}							  
-									}); 
-							}
-							else{
-								msgclass.getFeedMsg(message.FromUserName,function(msgs){
-										var text='';
-										if(msgs.length==0){
-											text = 'no message';
-										}
-										else{
-											for(var i=0 ; i < msgs.length ; i++){
-												var msg = msgs[i];
-												text += '['+i+']'+'msgType:'+msg.get('messageType')+'\nwho:'+msg.get('nickname')+'\ncontent:'+msg.get('msgContent')+'\nmsgUrl:'+'<a href= \"dev.wegroup.avosapps.com'+msg.get('msgUrl')+'\">查看</a>'+'\n';
-											}
-					
-										}
-										api.sendText(message.FromUserName, text, function(err,results){
-												if(err){
-													api.sendText(message.FromUserName, err, function(err,results){
-													});
-												}							  
-										}); 
-										user.set('whichStatus','wegroup_chat');
-										user.set('tempGroupName','');
-										user.set('tempGroupSwitch',[]);
-										user.save();
-								});
-							}
-						});
-					}
 					else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SHARE_JOIN'){
 						userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
 							if(err){
@@ -384,6 +307,10 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 								//});
 							}
 						});
+						user.set('whichStatus','wegroup_chat');
+						user.set('tempGroupName','');
+						user.set('tempGroupSwitch',[]);
+						user.save();
 					}
 					else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_NOTICE'){
 						userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
@@ -434,6 +361,10 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 								});
 							}
 						});
+						user.set('whichStatus','wegroup_chat');
+						user.set('tempGroupName','');
+						user.set('tempGroupSwitch',[]);
+						user.save();
 					}
 					else{}
 				}
@@ -453,12 +384,10 @@ api.getTicket(function(err,results){
 });
 */
 //api.getAccessToken();  //get latest accesstoken
-/*
-api.createMenu(menu, function (err, result){
+/*api.createMenu(menu, function (err, result){
 	//if(err)
 	console.log(JSON.stringify(result));
-});
-*/
+});*/
 
 
 /*api.getMenu(function(err,results){

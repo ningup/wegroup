@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="Keywords" content="微群助手－主页" />
+    <meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>微群帮手测试</title>
+
+    <!-- Bootstrap -->
+    <!--<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">-->
+    <!--<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/weui.css">
+    <script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
+    <!--<script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>-->
+    <!--<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+    <script src="//cdn.bootcss.com/iScroll/5.1.3/iscroll-probe.min.js"></script>
+
+    <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+    <script type="text/javascript">
+        AV.initialize('zsxn9bhj8fuecdfqgqv1ly7lt70cej7ftbe2hp7r4i916gmn', 'u73ok822ykyc19s1i179tqdf2pgz7bhzrlxwprc6pchs1ioo');
+    </script>
+
+    <script type="text/javascript" src="/bower_components/leancloud-realtime/dist/AV.realtime.js"></script>
+    <script type="text/javascript" src="/javascript/jquery.qqFace.js"></script>
+
+    <style type="text/css">
+    body {background-color: #FEFEFE;}
+    #wrapper {position: absolute;overflow: hidden;left: 0;top: 0;bottom: 0;width: 100%;z-index: 1;}
+    .container {position: relative;padding: 0;}
+    ol,ul,li{list-style: none;width: 100%;}
+    ul.news_ul_list>li.news{
+      min-height: 74px;
+      position: relative;
+      background-color: #fefefe;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    ul.news_ul_list>li.read{background-color: #fefdee;}
+    ul.news_ul_list>li div.news_photo>img{
+      position: absolute;
+      left: 10px;
+      top: 13px;
+      border-radius: 50px;
+      width: 50px;
+      height: 50px;
+    }
+    ul.news_ul_list>li div.news_main{
+      padding: 13px 10px 12px 70px;
+    }
+    ul.news_ul_list>li div.news_main .post_head{
+      line-height: 1.1;
+    }
+    ul.news_ul_list>li.img div.news_main{
+      padding-right: 79px;
+    }
+    ul.news_ul_list>li.img div.news_img{
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      margin-top: -25px;
+      font-size: 0;
+      line-height: 0;
+    }
+    ul.news_ul_list>li.img div.news_img>img{
+      width: 50px;
+      height: 50px;
+    }
+    .user_name{
+      max-width: 50%;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13px;
+      color: #333;
+      font-weight: 700;
+      text-decoration: top;
+      margin: 0px;
+      vertical-align: baseline;
+    }
+    .post_type{
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: middle;
+      font-size: 10px;
+      color: #666;
+    }
+    .post_body{
+      font-size: 13px;
+      word-wrap: break-word;
+      line-height: 1.3;
+    }
+    .post_body>p{
+      overflow: hidden;
+      display: -webkit-box;
+      text-overflow: ellipsis;
+      white-space: normal;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      word-wrap: break-word;
+      font-size: 13px;
+      color: #333;
+      text-decoration: none;
+    }
+    .post_info{
+      color: #777;
+      font-size: 11px;
+    }
+    .band_name{
+      border: 1px solid #777;
+      border-radius: 5px;
+    }
+    .registration{
+      margin-left: 5px;
+    }
+    .body_contents{margin: 0px;}
+    .loading{width: 100%;height: 30px; text-align:center;line-height: 30px;color: #777;}
+    </style>
+
+  </head>
+  <body>
+    <!--<div id="monitor">Y position: <strong id="position">0</strong></div>-->
+    <div id="wrapper">
+      <div class="container">
+          <div class="news_list">
+              <ul class="news_ul_list">
+                <li class="news text">
+                  <div class="news_photo"><img src="/images/nba.jpg" width="100" height="100"></div>
+                  <div class="news_main">
+                    <div class="post_head">
+                      <span class="user_name">千纸鹤〃二茶千纸鹤〃二茶千纸鹤〃二茶</span><span class="post_type">回复了你的评论</span>
+                    </div>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents">恩。。。好久没来了呢!!! 发几个千千的吧好吗好久没来了呢!!! 发几个千千的吧.恩。。。好久没来了呢!!! 发几个千千的吧.</p></div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span><span class="registration">刚刚</span></div>
+                  </div>
+                </li>
+                <li class="news img">
+                  <div class="news_photo"><img src="/images/nba.jpg" width="100" height="100"></div>
+                  <div class="news_main">
+                    <div class="post_head">
+                      <span class="user_name">千纸鹤〃二茶</span><span class="post_type">New Post</span>
+                    </div>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents">恩。。。好久没来了呢!!! 发几个千千的吧。</p></div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span><span class="registration">7 hours ago</span></div>
+                  </div>
+                  <div class="news_img"><img src="/images/nba.jpg" width="100" height="100"></div>
+                </li>
+                <li class="news text read">
+                  <div class="news_photo"><img src="/images/nba.jpg" width="100" height="100"></div>
+                  <div class="news_main">
+                    <div class="post_head">
+                      <span class="user_name">千纸鹤〃二茶</span><span class="post_type">New Post</span>
+                    </div>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents">恩。。。好久没来了呢!!! 发几个千千的吧.</p>  </div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span><span class="registration">7 hours ago</span></div>
+                  </div>
+                </li>
+                <li class="news img read">
+                  <div class="news_photo"><img src="/images/nba.jpg" width="100" height="100"></div>
+                  <div class="news_main">
+                    <div class="post_head">
+                      <span class="user_name">千纸鹤〃二茶</span><span class="post_type">New Post</span>
+                    </div>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents">恩。。。好久没来了呢!!! 发几个千千的吧。</p></div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span><span class="registration">7 hours ago</span></div>
+                  </div>
+                  <div class="news_img"><img src="/images/nba.jpg" width="100" height="100"></div>
+                </li>
+              </ul>
+              <div class="loading"></div>
+          </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        var myScroll;
+        var flag = 0;
+        var page = 0;
+        var last_position = 0;
+        window.onload = function(){
+            myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:true, tap:true });
+            myScroll.on("scroll", updataPosition);
+            myScroll.on("scrollEnd", dowmPosition);
+            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        };
+        function updataPosition(){
+            if (this.y>5) {
+                flag = 1;
+                //console.log(flag);
+            //}else if(this.y<(this.maxScrollY-5)){
+            }else if(this.y<=this.maxScrollY){
+                flag = 2;
+                //console.log(flag);
+            }
+            if (this.y<=0) {
+                if ((this.y-last_position)>=0) {
+                    $(".publish-btn").css("display","block");
+                    last_position = this.y;
+                }else{
+                    $(".publish-btn").css("display","none");
+                    last_position = this.y;
+                }
+            }else{
+                $(".publish-btn").css("display","block");
+                last_position = 0;
+            }
+        }
+        function dowmPosition(){
+            if (flag==1) {
+                console.log("下拉加载");
+                myScroll.refresh();
+                flag = 0;
+            }else if (flag==2){
+                console.log("上拉加载");
+                /*for(var i=0;i<20;i++){
+                    $(".container ul").append("<li>Pretty row 50</li>");
+                }*/
+                $(".loading").html("载入中,请稍等...");
+                
+                myScroll.refresh();
+                flag = 0;
+            }else{
+                myScroll.refresh();
+                flag = 0;
+            }
+        }
+    </script>
+  </body>
+</html>

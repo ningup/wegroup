@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>message</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+  </head>
+  <body>
+		<h1>my message</h1>
+    <ul>
+      <% for(var i=0; i<msgs.length; i++) {%>
+      <li><%= msgs[i].get('nickname') %> <%= msgs[i].get('messageType') %> <%= msgs[i].get('msgContent') %> </li>
+			<a href = <%=msgs[i].get('msgUrl')%> >click to view</a>
+      <% } %>
+    </ul>
+  </body>
+</html>

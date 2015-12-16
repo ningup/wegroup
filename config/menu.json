@@ -24,9 +24,9 @@
 		   "url":"http://dev.wegroup.avosapps.com/group/set"
 		},
 		{
-		   "type":"click",
+		   "type":"view",
 		   "name":"我的消息",
-		   "key":"WEGROUP_GROUP_CHAT"
+		   "url":"http://dev.wegroup.avosapps.com/message/list"
 		}]
       
     },

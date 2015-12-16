@@ -27,17 +27,8 @@ function　MsgClass()
 		query.equalTo("username",username);
 		query.find({
 			success: function(msgs) {
-				console.log('hahaha'+msgs);
+				//console.log('hahaha'+msgs);
 				cb(msgs);
-	/*			for(var i=0 ; i < msgs.length ; i++){
-					var msg = msgs[i];
-					console.log('msgType',messageType);
-					console.log('who',msg.get('nickname'));
-					console.log('content',msg.get('msgContent'));
-					console.log('msgUrl',msg.get('msgUrl'));
-					cb(msgs);
-					
-				}*/
 
 			},
 			error: function(error) {
