@@ -281,7 +281,7 @@
           <div class="comment-header">
                 <div class="leftside-all-icon"></div>
                 <span class="ping">全部评论</span>
-                <span class="ping-num">一共XXX条评论</span>
+                <span class="ping-num">一共<%= feed.get('commentCnt')%>条评论</span>
           </div>
 
           <div class="detail-comment-list">
@@ -327,7 +327,7 @@
                                 last_time= "刚刚";
                             }%>
                       <span class="time"><!--<%= commentJson.comments[i].time%>--><%= last_time%></span>
-                      <span class="reply ">11</span>
+                      <span class="reply "><%= commentJson.comments[i].replyCnt%></span>
                       <span class="like">1181111</span>
                     </div>
                     <div class="reply-wrapper">
@@ -414,7 +414,7 @@
       </div>
     </div>
     <div class="bottom-wraper">
-      <span class="reply" data-toggle="modal" data-target="#myModal">100</span>
+      <span class="reply" data-toggle="modal" data-target="#myModal"><%= feed.get('commentCnt')%></span>
       <span class="like">200</span>
     </div>
     <div class="modal fade publish" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
@@ -678,7 +678,7 @@
                   num_flag++;
                   //alert(num_flag);
                 });
-                //alert(num_flag);
+                console.log(num_flag);
                 var aj = $.ajax({
                     url:'/feed/detail/comment_more',
                     data:{
@@ -755,11 +755,12 @@
                                     pics = pics + temp;
                                 }
                                 var date = new Date();
-                                var year = date.getFullYear() - data.commentJson.comments[i].time.getFullYear();
-                                var month = date.getMonth() - data.commentJson.comments[i].time.getMonth();
-                                var day = date.getDate() - data.commentJson.comments[i].time.getDate();
-                                var hours = date.getHours() - data.commentJson.comments[i].time.getHours();
-                                var minute = date.getMinutes() - data.commentJson.comments[i].time.getMinutes();
+                                var date1 = new Date(data.commentJson.comments[i].time);
+                                var year = date.getFullYear() - date1.getFullYear();
+                                var month = date.getMonth() - date1.getMonth();
+                                var day = date.getDate() - date1.getDate();
+                                var hours = date.getHours() - date1.getHours();
+                                var minute = date.getMinutes() - date1.getMinutes();
                                 var last_time = "";
                                 if(year>0){
                                     last_time= year + "年前";
@@ -774,7 +775,7 @@
                                 }else{
                                     last_time= "刚刚";
                                 }
-                                comments = "<a href=\"/comment/detail?cid="+data.commentJson.comments[i].id+"&fid="+"<%= feedObjId%>"+"&toWhom="+data.commentJson.comments[i].toWhom+"\" data-imgcf=\"false\" ><li data-cid=\""+data.commentJson.comments[i].id+"\" id=\"num_flag\"><div class=\"comment-wrapper\"><div class=\"user-avatar\"><img src=\""+data.commentJson.comments[i].headimgurl+"\"></div><div class=\"name-wrap\"><span class=\"user-nick\">"+data.commentJson.comments[i].nickname+"</span><span class=\"lounum\">2楼</span></div><div class=\"content-wrapper\"><div class=\"ping-content\">"+data.commentJson.comments[i].content+"</div><div class=\"ping-container\">" + pics + "</div></div><div class=\"comment-action\"><span class=\"time\">"+/*data.commentJson.comments[i].time*/last_time+"</span><span class=\"reply \">11</span><span class=\"like\">1181111</span></div>" + replys + "</div></li></a>";
+                                comments = "<a href=\"/comment/detail?cid="+data.commentJson.comments[i].id+"&fid="+"<%= feedObjId%>"+"&toWhom="+data.commentJson.comments[i].toWhom+"\" data-imgcf=\"false\" ><li data-cid=\""+data.commentJson.comments[i].id+"\" id=\"num_flag\"><div class=\"comment-wrapper\"><div class=\"user-avatar\"><img src=\""+data.commentJson.comments[i].headimgurl+"\"></div><div class=\"name-wrap\"><span class=\"user-nick\">"+data.commentJson.comments[i].nickname+"</span><span class=\"lounum\">2楼</span></div><div class=\"content-wrapper\"><div class=\"ping-content\">"+data.commentJson.comments[i].content+"</div><div class=\"ping-container\">" + pics + "</div></div><div class=\"comment-action\"><span class=\"time\">"+/*data.commentJson.comments[i].time*/last_time+"</span><span class=\"reply \">"+ data.commentJson.comments[i].replyCnt +"</span><span class=\"like\">1181111</span></div>" + replys + "</div></li></a>";
                                 $("ul.list").append(comments);
                             }
                         }else{

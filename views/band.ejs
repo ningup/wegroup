@@ -54,6 +54,7 @@
         height: 90px;
         background-size: contain;
         box-shadow: 0 0 1px 0 rgba(0,0,0,.3) inset;
+        position: relative;
     }
     .top_title{
         color: #333;
@@ -215,6 +216,17 @@
 
     #publish-form{display: none;}
     .loading{width: 100%;height: 30px; text-align:center;line-height: 30px;color: #777;}
+    .up-entry-one{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        padding: 0;
+        margin: 0;
+        display: inline-block;
+    }
     </style>
 
   </head>
@@ -224,15 +236,16 @@
       <div class="container">
           <div id="band_top_info" class="band_top_info">
               <div class="top_portrait" style="background-image:url(http://m.tiebaimg.com/timg?mowebapp&quality=70&size=b150_150&cut_x=0&cut_w=0&cut_y=0&cut_h=0&sec=1369815402&di=bde46b9852e585f645d8f344fbf712e6&wh_rate=null&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fpic%2Fitem%2F34a85edf8db1cb131afb4e59db54564e93584bed.jpg);">
+              <input class="up-entry-one" id="inputField" type="file" accept="image/*" >
               </div>
               <p class="top_title">
-                  <span class="top_title_txt">逻辑思维</span>
+                  <span class="top_title_txt"><%= groupNickname%></span>
               </p>
               <p class="top_paragraph">
+                  <span class="top_paragraph_label">话题</span>
+                  <span class="top_paragraph_txt"><%= feedCnt%></span>
                   <span class="top_paragraph_label">关注</span>
-                  <span class="top_paragraph_txt">100</span>
-                  <span class="top_paragraph_label">关注</span>
-                  <span class="top_paragraph_txt">100</span>
+                  <span class="top_paragraph_txt"><%= followersNum%></span>
               </p>
               <div class="top_sign_like">
                     <div class="sign_like_time">你已签到<span class="day_num" style="color:#f25824;"><%= cnt%></span>天</div>
@@ -259,7 +272,7 @@
                                             <div class="feed_img_item" >
                                                   <img src="<%= feeds[i].get('feedImgArray')[q]%>" data-index="<%= q%>" data-src="">
                                                   <span class="total_img">
-                                                      <span class="total_img_txt">9</span>
+                                                      <span class="total_img_txt"><%= feeds[i].get('feedImgArray').length%></span>
                                                   </span>
                                               </div>
                                         <% }else{ %>
@@ -277,14 +290,34 @@
                             <% } %>
                           </div>
                           <div class="feed_groupbody">
-                              <div class="feed_time">刚刚</div>
+                                <%var date = new Date();
+                                var year = date.getFullYear() - feeds[i].getCreatedAt().getFullYear();
+                                var month = date.getMonth() - feeds[i].getCreatedAt().getMonth();
+                                var day = date.getDate() - feeds[i].getCreatedAt().getDate();
+                                var hours = date.getHours() - feeds[i].getCreatedAt().getHours();
+                                var minute = date.getMinutes() - feeds[i].getCreatedAt().getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                    last_time= year + "年前";
+                                }else if(month>0){
+                                    last_time= month + "月前";
+                                }else if(day>0){
+                                    last_time= day + "天前";
+                                }else if(hours>0){
+                                    last_time= hours + "小时前";
+                                }else if(minute>0){
+                                    last_time= minute + "分钟前";
+                                }else{
+                                    last_time= "刚刚";
+                                }%>
+                              <div class="feed_time"><%= last_time%></div>
                               <div class="icon_wrap">
                                   <i class="reply-icon"></i>
-                                  <span class="groupreply">2000</span>
+                                  <span class="groupreply"><%= feeds[i].get('commentCnt')%></span>
                               </div>
                               <div class="icon_wrap">
                                   <i class="read-icon"></i>
-                                  <span class="readnum">2000</span>
+                                  <span class="readnum"><%= feeds[i].get('visitCnt')%></span>
                               </div>
                           </div>
                       </div>
@@ -438,7 +471,7 @@
 	            });
         	}
         });
-        $(document).on('click',".feed",function(){
+        $(document).on('tap',".feed",function(){
         	//alert("尼玛");
             /*
         	$("#feedObjId").val(this.getAttribute("data-feedid"));
@@ -450,7 +483,7 @@
             //$("feed-click").click();
             document.getElementById("feed-click").click();
         });
-        $(document).on('click',".feed_img_item>img",function(event){
+        $(document).on('tap',".feed_img_item>img",function(event){
             event.stopPropagation();
             var pswpElement = $(".pswp")[0];
             var feedObjId = $(this).closest("li.feed").attr("data-feedid");
@@ -513,7 +546,7 @@
         var last_position = 0;
         window.onload = function(){
             position = document.getElementById('position');
-            myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:true, tap:true });
+            myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:false, tap:true , preventDefaultException:{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }  });
             myScroll.on("scroll", updataPosition);
             myScroll.on("scrollEnd", dowmPosition);
             document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -563,12 +596,33 @@
                     dataType:'json',
                     success:function(data){
                         //alert('返回来了');
-                        //console.log(datas);
+                        console.log(data);
                         if(data.feeds.length>0){
                             $(".loading").html("");
                             for(var i=0;i<data.feeds.length;i++){
                                 //console.log(data.feeds[i].objectId);
-                                var feed_groupbody = "<div class=\"feed_groupbody\"><div class=\"feed_time\">刚刚</div><div class=\"icon_wrap\"><i class=\"reply-icon\"></i><span class=\"groupreply\">2000</span></div><div class=\"icon_wrap\"><i class=\"read-icon\"></i><span class=\"readnum\">2000</span></div></div>";
+                                var date = new Date();
+                                var date1 = new Date(data.feeds[i].createdAt);
+                                var year = date.getFullYear() - date1.getFullYear();
+                                var month = date.getMonth() - date1.getMonth();
+                                var day = date.getDate() - date1.getDate();
+                                var hours = date.getHours() - date1.getHours();
+                                var minute = date.getMinutes() - date1.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                    last_time= year + "年前";
+                                }else if(month>0){
+                                    last_time= month + "月前";
+                                }else if(day>0){
+                                    last_time= day + "天前";
+                                }else if(hours>0){
+                                    last_time= hours + "小时前";
+                                }else if(minute>0){
+                                    last_time= minute + "分钟前";
+                                }else{
+                                    last_time= "刚刚";
+                                }
+                                var feed_groupbody = "<div class=\"feed_groupbody\"><div class=\"feed_time\">"+ last_time +"</div><div class=\"icon_wrap\"><i class=\"reply-icon\"></i><span class=\"groupreply\">"+ data.feeds[i].commentCnt +"</span></div><div class=\"icon_wrap\"><i class=\"read-icon\"></i><span class=\"readnum\">"+ data.feeds[i].visitCnt +"</span></div></div>";
                                 var feed_content = '';
                                 var feed_img = '';
                                 var feed = '';
@@ -576,7 +630,7 @@
                                 if (data.feeds[i].feedImgArray.length>3) {
                                     for(var q=0;q<3;q++){
                                         if (q==2) {
-                                            feed_img = feed_img + "<div class=\"feed_img_item\" ><img src=\""+data.feeds[i].feedImgArray[q]+"\" data-index=\""+q+"\"><span class=\"total_img\"><span class=\"total_img_txt\">9</span></span></div>";
+                                            feed_img = feed_img + "<div class=\"feed_img_item\" ><img src=\""+data.feeds[i].feedImgArray[q]+"\" data-index=\""+q+"\"><span class=\"total_img\"><span class=\"total_img_txt\">"+data.feeds[i].feedImgArray.length+"</span></span></div>";
                                         }else{
                                             feed_img = feed_img + "<div class=\"feed_img_item\" ><img src=\""+ data.feeds[i].feedImgArray[q] +"\" data-index=\""+q+"\"></div>";
                                         }

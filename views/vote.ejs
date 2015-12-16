@@ -82,9 +82,29 @@
         if(flag==0){ %>
     <div class="vote-feed" data-feedid="<%= votes[i].getObjectId()%>">
         <div class="vote-user">
-            <img src="/images/test_touxiang.jpg">
-            <div class="username">球球虎牙</div>
-            <div class="time">15分钟前</div>
+            <img src="<%= votes[i].get('userHeadImgUrl')%>">
+            <div class="username"><%= votes[i].get('nicknameOfPUser')%></div>
+            <%var date = new Date();
+            var year = date.getFullYear() - votes[i].getCreatedAt().getFullYear();
+            var month = date.getMonth() - votes[i].getCreatedAt().getMonth();
+            var day = date.getDate() - votes[i].getCreatedAt().getDate();
+            var hours = date.getHours() - votes[i].getCreatedAt().getHours();
+            var minute = date.getMinutes() - votes[i].getCreatedAt().getMinutes();
+            var last_time = "";
+            if(year>0){
+                last_time= year + "年前";
+            }else if(month>0){
+                last_time= month + "月前";
+            }else if(day>0){
+                last_time= day + "天前";
+            }else if(hours>0){
+                last_time= hours + "小时前";
+            }else if(minute>0){
+                last_time= minute + "分钟前";
+            }else{
+                last_time= "刚刚";
+            }%>
+            <div class="time"><%= last_time%></div>
         </div>
         <div class="vote-content">
             <div class="content"><%= votes[i].get('voteContent').voteContent.voteDecription%></div>
@@ -97,15 +117,35 @@
             </div>
         </div>
         <div class="vote-info">
-            <div class="sum">24人参与</div>
+            <div class="sum"><%= votes[i].get('voteCnt')%>人参与</div>
         </div>
     </div>
     <% } else{%>
     <div class="vote-feed ok" data-feedid="<%= votes[i].getObjectId()%>">
         <div class="vote-user">
-            <img src="/images/test_touxiang.jpg">
-            <div class="username">球球虎牙</div>
-            <div class="time">15分钟前</div>
+            <img src="<%= votes[i].get('userHeadImgUrl')%>">
+            <div class="username"><%= votes[i].get('nicknameOfPUser')%></div>
+            <%var date = new Date();
+            var year = date.getFullYear() - votes[i].getCreatedAt().getFullYear();
+            var month = date.getMonth() - votes[i].getCreatedAt().getMonth();
+            var day = date.getDate() - votes[i].getCreatedAt().getDate();
+            var hours = date.getHours() - votes[i].getCreatedAt().getHours();
+            var minute = date.getMinutes() - votes[i].getCreatedAt().getMinutes();
+            var last_time = "";
+            if(year>0){
+                last_time= year + "年前";
+            }else if(month>0){
+                last_time= month + "月前";
+            }else if(day>0){
+                last_time= day + "天前";
+            }else if(hours>0){
+                last_time= hours + "小时前";
+            }else if(minute>0){
+                last_time= minute + "分钟前";
+            }else{
+                last_time= "刚刚";
+            }%>
+            <div class="time"><%= last_time%></div>
         </div>
         <div class="vote-content">
             <div class="content"><%= votes[i].get('voteContent').voteContent.voteDecription%></div>
@@ -128,7 +168,7 @@
             </div>
         </div>
         <div class="vote-info">
-            <div class="sum">24人参与</div>
+            <div class="sum"><%= votes[i].get('voteCnt')%>人参与</div>
         </div>
     </div>
     <% } %>
@@ -136,9 +176,29 @@
 		<p>lalalalallalalalala</p>
     	<div class="vote-feed" data-feedid="<%= votes[i].getObjectId()%>">
 	        <div class="vote-user">
-	            <img src="/images/test_touxiang.jpg">
-	            <div class="username">球球虎牙</div>
-	            <div class="time">15分钟前</div>
+	            <img src="<%= votes[i].get('userHeadImgUrl')%>">
+	            <div class="username"><%= votes[i].get('nicknameOfPUser')%></div>
+                <%var date = new Date();
+                var year = date.getFullYear() - votes[i].getCreatedAt().getFullYear();
+                var month = date.getMonth() - votes[i].getCreatedAt().getMonth();
+                var day = date.getDate() - votes[i].getCreatedAt().getDate();
+                var hours = date.getHours() - votes[i].getCreatedAt().getHours();
+                var minute = date.getMinutes() - votes[i].getCreatedAt().getMinutes();
+                var last_time = "";
+                if(year>0){
+                    last_time= year + "年前";
+                }else if(month>0){
+                    last_time= month + "月前";
+                }else if(day>0){
+                    last_time= day + "天前";
+                }else if(hours>0){
+                    last_time= hours + "小时前";
+                }else if(minute>0){
+                    last_time= minute + "分钟前";
+                }else{
+                    last_time= "刚刚";
+                }%>
+	            <div class="time"><%= last_time%></div>
 	        </div>
 	        <div class="vote-content">
 	            <div class="content"><%= votes[i].get('voteContent').voteContent.voteDecription%></div>
@@ -151,7 +211,7 @@
 	            </div>
 	        </div>
 	        <div class="vote-info">
-	            <div class="sum">24人参与</div>
+	            <div class="sum"><%= votes[i].get('voteCnt')%>人参与</div>
 	        </div>
 	    </div>
     <% } %>

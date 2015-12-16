@@ -465,7 +465,13 @@
                         isHave = data.elseComment;
                         //$("ul>li:last").css("margin-bottom","");
                         //alert(isHave);
-                        if(isHave=="1"){
+                        var isGetVal = "0";
+                        if(data.comments.length>0){
+                          isGetVal = "1";
+                        }else{
+                          isGetVal = "0";
+                        }
+                        if(isGetVal=="1"){
                         $(".loading").html("");
                         $("#temp").remove();
                         for(var i=0;i<data.comments.length;i++){

@@ -102,8 +102,28 @@
                       <% } %>
                     </div>
                     <div class="comment-action">
-                      <span class="time">11-4</span>
-                      <span class="reply">11</span>
+                      <%var date = new Date();
+                        var year = date.getFullYear() - c.getCreatedAt().getFullYear();
+                        var month = date.getMonth() - c.getCreatedAt().getMonth();
+                        var day = date.getDate() - c.getCreatedAt().getDate();
+                        var hours = date.getHours() - c.getCreatedAt().getHours();
+                        var minute = date.getMinutes() - c.getCreatedAt().getMinutes();
+                        var last_time = "";
+                        if(year>0){
+                          last_time= year + "年前";
+                        }else if(month>0){
+                          last_time= month + "月前";
+                        }else if(day>0){
+                          last_time= day + "天前";
+                        }else if(hours>0){
+                          last_time= hours + "小时前";
+                        }else if(minute>0){
+                          last_time= minute + "分钟前";
+                        }else{
+                          last_time= "刚刚";
+                        }%>
+                      <span class="time"><%= last_time%></span>
+                      <span class="reply"><%= c.get('replyCnt')%></span>
                       <span class="like">1181111</span>
                     </div>
                     <div class="reply-wrapper">
@@ -463,7 +483,13 @@
                         isHave = data.elseComment;
                         //$("ul>li:last").css("margin-bottom","");
                         //alert(isHave);
-                        if(isHave=="1"){
+                        var isGetVal = "0";
+                        if(data.comments.length>0){
+                          isGetVal = "1";
+                        }else{
+                          isGetVal = "0";
+                        }
+                        if(isGetVal=="1"){
                         $(".loading").html("");
                         $("#temp").remove();
                         for(var i=0;i<data.comments.length;i++){
