@@ -95,6 +95,7 @@ router.get('/', function(req, res, next) {
 								res.render('band', {
 									username: username,
 									groupNickname: groupNickname,
+									groupHeadImg:	group.get('groupHeadImg'),
 									feedCnt: group.get('feedCnt'),
 									followersNum:group.get('followersNum'),
 									groupObjId:groupObjId,
@@ -190,6 +191,7 @@ router.post('/img', function(req, res, next) {
 	});
 			
 });
+
 
 router.get('/groupMember', function(req, res, next) {
 	var username = req.query.username;

@@ -256,61 +256,7 @@ router.post('/search',function(req,res,next){
 router.get('/join',function(req,res,next){
 	 client.getAccessToken(req.query.code, function (err, result) {
 		 if(err){
-			 //res.send('请从微信进入');
-			 var username = 'orSEhuBllBij-g3Ayx2jujBuuPNY';
-		   // var groupObjIdJoined = req.query.id;
-			var userclass = new UserClass();
-			userclass.isGroupJoined(username,'56690a2560b25974ff5cb966',function(status,obj){
-					  if(status === 1)
-							res.send('已加入');
-					  else if (status === 3){
-						  res.send('该群已经解散了');
-					  }
-					  else if (status === 2){
-							var groupclass = new GroupClass();
-							groupclass.joinGroup(groupObjIdJoined,username,function(err,queryUser){
-								if(err){
-									res.send('该群解散了');
-								}
-								else{
-									var query = new AV.Query('Group');
-									var userinfo = new UserInfo();
-									userinfo.set('username',username);
-									userinfo.set('groupid',groupObjIdJoined);
-									userinfo.set('nicknameInGroup',queryUser.get('nickname'));
-									userinfo.set('headimgurl',queryUser.get('headimgurl'));
-									userinfo.set('signInTime',new Date());
-									query.get(groupObjIdJoined,{
-										 success:function(group){
-												var followersNum = group.get('followersNum');
-													followersNum ++;
-													group.set('followersNum',followersNum);
-												var relation = group.relation('followers');
-												relation.add(queryUser);
-												group.save().then(function(group){
-													userinfo.save();
-													var text = '成功加入并切换到「'+group.get('nickname')+'」群'
-															  api.sendText(username, text, function(err,results){
-																  if(err){
-																api.sendText(username, text, function(err,results){
-																});
-														  }
-													});
-													res.send('加入成功');
-												},function(err){});;
 
-										 },
-										  error:function(error){
-										 }
-									});
-								}
-								
-							}); 
-					  }
-							
-					  else if (status === 0)
-							res.send('未关注或者未注册');
-			});
 		}else{ 
 			var username = result.data.openid;
 		    var groupObjIdJoined = req.query.id;
@@ -370,6 +316,30 @@ router.get('/join',function(req,res,next){
 	 });
 
 });
+
+router.post('/head/img', function(req, res, next) {
+	var groupObjId = req.body.groupObjId;
+	var groupHeadImg = req.body.groupHeadImg;
+	//console.log(groupObjId);
+	var query = new AV.Query('Group');
+	query.get(groupObjId, {
+	  success: function(group) {
+	    // 成功获得实例
+	    //console.log("/head/img");
+			group.set('groupHeadImg',groupHeadImg);
+			group.save().then(function(group){
+				res.json({"status":"0","groupHeadImg":groupHeadImg});
+				return ;
+			})
+	   
+	  },
+	  error: function(error) {
+	    // 失败了.
+	  }
+	});
+			
+});
+
 router.get('/set', function(req, res, next) {
 	if (AV.User.current()) {
 		var username = AV.User.current().get('username');
