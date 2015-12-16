@@ -71,11 +71,11 @@ router.post('/', function(req, res, next) {
 		var commentclass = new CommentClass();
 		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl){
 			if(inWhichComment == replyCommentId){
-				msgclass.feedMsg(toWhom,'c_reply',content,'msgUrl',username,nickname,headimgurl,groupObjId,comment.getObjectId(),feedObjId,function(){
+				msgclass.feedMsg(toWhom,'c_reply',content,'msgUrl',username,nickname,headimgurl,groupObjId,inWhichComment,feedObjId,function(){
 				});
 			}
 			else{
-				msgclass.feedMsg(toWhom,'r_reply',content,'msgUrl',username,nickname,headimgurl,groupObjId,comment.getObjectId(),feedObjId,function(){
+				msgclass.feedMsg(toWhom,'r_reply',content,'msgUrl',username,nickname,headimgurl,groupObjId,inWhichComment,feedObjId,function(){
 				});
 			}
 			res.json({"nickname":nickname,"toNickname":comment.get('toNickname'),"content":content,"username":username,"toWhom":toWhom,"commentObjId":comment.getObjectId(),"replyCommentId":comment.get('replyCommentId'),"replyTime":comment.getCreatedAt()});

@@ -25,7 +25,7 @@
 		},
 		{
 		   "type":"click",
-		   "name":"群聊模式",
+		   "name":"我的消息",
 		   "key":"WEGROUP_GROUP_CHAT"
 		}]
       

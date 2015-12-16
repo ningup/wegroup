@@ -108,7 +108,7 @@ function FeedClass()
 							commentJson.comments[i].headimgurl = comments[i].get('headimgurl');
 							commentJson.comments[i].replyCnt = comments[i].get('replyCnt');
 							commentJson.comments[i].nickname = comments[i].get('nickname');
-							commentJson.comments[i].toWhom = comments[i].get('toWhom');
+							commentJson.comments[i].toWhom = comments[i].get('who');
 							commentJson.comments[i].content = comments[i].get('content');
 							commentJson.comments[i].imgArray = new Array();
 							commentJson.comments[i].imgArray=comments[i].get('commentImgArray');

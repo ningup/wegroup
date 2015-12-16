@@ -7,7 +7,7 @@ function　MsgClass()
 		msg.set('username',username);
 		msg.set('messageType',messageType);
 		msg.set('msgContent',msgContent);
-		msg.set('msgUrl',msgUrl);
+		//msg.set('msgUrl',msgUrl);
 		msg.set('who',who);
 		msg.set('nickname',nickname);
 		msg.set('headimgurl',headimgurl);
@@ -15,24 +15,35 @@ function　MsgClass()
 		msg.set('cid',cid);
 		msg.set('fid',fid);
 		msg.set('unRead','1');
-		msg.save().then(function(msg){
+		msg.save().then(function(msgobj){
+			msgUrl = '/message?messageType='+messageType+'&cid='+cid+'&fid='+fid+'&toWhom='+who+'&gid='+gid+'&mid='+msg.id;
+			msgobj.set('msgUrl',msgUrl);
+			msgobj.save();
 			cb();
 		});
 	};
-	this.groupMsg = function(username,messageType,msgContent,msgUrl,who,nickname,headimgurl,gid,cb){
-		var msg = new Msg();
-		//msg.set('username',username);  //不需要username,因为要通知到每一个user,　可以结合UserInfo表一起判断..具体需要斟酌，比如时间问题
-		msg.set('messageType',messageType);
-		msg.set('msgContent',msgContent);
-		msg.set('msgUrl',msgUrl);
-		msg.set('who',who);
-		msg.set('nickname',nickname);
-		msg.set('headimgurl',headimgurl);
-		msg.set('gid',gid);
-		msg.set('unRead','1');
-		msg.save().then(function(msg){
-			cb();
-		});
+	this.getFeedMsg = function(username,cb){
+		var query = new AV.Query('Message');
+		query.equalTo("username",username);
+		query.find({
+			success: function(msgs) {
+				console.log('hahaha'+msgs);
+				cb(msgs);
+	/*			for(var i=0 ; i < msgs.length ; i++){
+					var msg = msgs[i];
+					console.log('msgType',messageType);
+					console.log('who',msg.get('nickname'));
+					console.log('content',msg.get('msgContent'));
+					console.log('msgUrl',msg.get('msgUrl'));
+					cb(msgs);
+					
+				}*/
+
+			},
+			error: function(error) {
+				alert("Error: " + error.code + " " + error.message);
+			}
+		});	
 	};
 
 

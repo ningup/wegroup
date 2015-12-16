@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 	var cid = req.query.cid;
 	var fid = req.query.fid;
 	var toWhom = req.query.toWhom;
-	var groupObjId = req.query.gid;
+	var gid = req.query.gid;
 	if (AV.User.current()) {
 		var username = AV.User.current().get('username');
 		userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
 				res.send('你还没有加入群呢，快去创建一个吧！');
 			}
 			else{
-				res.redirect('/comment/msg/detail?cid='+cid+'&fid='+fid+'&toWhom='+toWhom+'&groupObjId='+groupObjId+'&msgType='+msgType);
+				res.redirect('/comment/msg/detail?cid='+cid+'&fid='+fid+'&toWhom='+toWhom+'&gid='+gid+'&msgType='+msgType);
 			}
 		});
 	}

@@ -23,12 +23,12 @@ var UserClass = require('./common/user_class.js');
 var GroupClass = require('./common/group_class.js');
 var FeedClass = require('./common/feed_class.js');
 var PublicClass = require('./common/public_class.js');
-//var MsgClass = require('./common/msg_class.js');
+var MsgClass = require('./common/msg_class.js');
 var userclass  = new UserClass();
 var groupclass = new GroupClass();
 var feedclass = new FeedClass();
 var publicclass = new PublicClass();
-//var msgclass  = new MsgClass();
+var msgclass  = new MsgClass();
 //var Group=AV.Object.extend('Group');
 var config = require('./config/config.js');	
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
@@ -83,7 +83,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 	userclass.getUserObj(message.FromUserName,function(err,user){
 		if(err){
 			if(message.MsgType === 'event' && message.Event === 'subscribe'){
-					var text = '使用微群帮，开启便捷群生活！'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击注册</a>'; 
+					var text = '还处于开发中，敬请关注！'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击注册</a>'; 
 					api.sendText(message.FromUserName, text, function(err,results){
 							if(err){
 								api.sendText(message.FromUserName, err, function(err,results){
@@ -231,7 +231,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 							user.set('subscribe', 1);
 							user.save();
 							//var text = '使用微群帮，开启便捷群生活！'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击注册</a>'; 
-							var text = '欢迎回来';
+							var text = '还处于开发中，敬请关注！';
 							api.sendText(message.FromUserName, text, function(err,results){
 									if(err){
 										api.sendText(message.FromUserName, err, function(err,results){
@@ -327,21 +327,29 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 									}); 
 							}
 							else{
-								//userclass.getUserObj(message.FromUserName,function(err,user){
-									user.set('whichStatus','wegroup_chat');
-									user.set('tempGroupName','');
-									user.set('tempGroupSwitch',[]);
-									user.save().then(function(userObj){
-										//res.reply({type: "text", content: '群聊功能开启，可以在'+'「'+user.get('whichGroupNameNow')+'」群中与大家聊天了'});
-										var text = '群聊功能开启，可以在'+'「'+user.get('whichGroupNameNow')+'」群中与大家聊天了'; 
+								msgclass.getFeedMsg(message.FromUserName,function(msgs){
+										var text='';
+										if(msgs.length==0){
+											text = 'no message';
+										}
+										else{
+											for(var i=0 ; i < msgs.length ; i++){
+												var msg = msgs[i];
+												text += '['+i+']'+'msgType:'+msg.get('messageType')+'\nwho:'+msg.get('nickname')+'\ncontent:'+msg.get('msgContent')+'\nmsgUrl:'+'<a href= \"dev.wegroup.avosapps.com'+msg.get('msgUrl')+'\">查看</a>'+'\n';
+											}
+					
+										}
 										api.sendText(message.FromUserName, text, function(err,results){
 												if(err){
 													api.sendText(message.FromUserName, err, function(err,results){
 													});
 												}							  
 										}); 
-									});			
-								//}); 
+										user.set('whichStatus','wegroup_chat');
+										user.set('tempGroupName','');
+										user.set('tempGroupSwitch',[]);
+										user.save();
+								});
 							}
 						});
 					}
@@ -445,10 +453,12 @@ api.getTicket(function(err,results){
 });
 */
 //api.getAccessToken();  //get latest accesstoken
-/*api.createMenu(menu, function (err, result){
+/*
+api.createMenu(menu, function (err, result){
 	//if(err)
 	console.log(JSON.stringify(result));
-});*/
+});
+*/
 
 
 /*api.getMenu(function(err,results){
@@ -480,20 +490,7 @@ app.use(function(req, res, next) {
   });
   d.run(next);
 });
-var query = new AV.Query('Message');
-query.first({
-  success: function(msg) {
-    var messageType = msg.get('messageType');
-		var cid = msg.get('cid');
-		var fid = msg.get('fid');
-		var toWhom =msg.get('who');
-		var gid = msg.get('gid');
-		console.log('localhost:3000/message?messageType='+messageType+'&cid='+cid+'&fid='+fid+'&toWhom='+toWhom+'&gid='+gid);
-  },
-  error: function(error) {
-    alert("Error: " + error.code + " " + error.message);
-  }
-});
+
 app.get('/', function(req, res) {
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
