@@ -338,6 +338,14 @@
           </div>
       </div>
     </div>
+    <form action="/message" method="post" id="msg_form">
+      <input type="hidden" name="messageType" id="messageType" value="">
+      <input type="hidden" name="cid" id="cid" value="">
+      <input type="hidden" name="fid" id="fid" value="">
+      <input type="hidden" name="toWhom" id="toWhom" value="">
+      <input type="hidden" name="gid" id="gid" value="">
+      <input type="hidden" name="mid" id="mid" value="">
+    </form>
     <script type="text/javascript">
         var myScroll;
         var flag = 0;
@@ -393,23 +401,13 @@
     </script>
     <script type="text/javascript">
     $(document).on('tap','ul.news_ul_list>li',function(){
-      var aj = $.ajax({
-        url:'/message',
-        data:{
-          "messageType":$(this).attr("data-messagetype"),
-          "cid":$(this).attr("data-cid"),
-          "fid":$(this).attr("data-fid"),
-          "toWhom":$(this).attr("data-towhom"),
-          "gid":$(this).attr("data-gid"),
-          "mid":$(this).attr("data-mid")
-        },
-        type:'post',
-        dataType:'json',
-        success:function(data){
-          alert("ok");    
-        },
-        error:function(){alert("有错");}
-      });
+          $("input#messageType").val($(this).attr("data-messagetype"));
+          $("input#cid").val($(this).attr("data-cid"));
+          $("input#fid").val($(this).attr("data-fid"));
+          $("input#toWhom").val($(this).attr("data-towhom"));
+          $("input#gid").val($(this).attr("data-gid"));
+          $("input#mid").val($(this).attr("data-mid"));
+          $("#msg_form").submit();
     });
     </script>
   </body>
