@@ -126,48 +126,213 @@
       <div class="container">
           <div class="news_list">
               <ul class="news_ul_list">
-                <li class="news text">
-                  <div class="news_photo"><img src="/images/nba.jpg" width="100" height="100"></div>
+              <% for(var i=0;i<msgs.length;i++){ 
+                if(msgs[i].get('unRead')=='1'){ %>
+                <% if(msgs[i].get('messageType')=='f_comment'){ %>
+                <li class="news img read" data-messagetype="<%= msgs[i].get('messageType')%>" data-cid="<%= msgs[i].get('cid')%>" data-fid="<%= msgs[i].get('fid')%>" data-towhom="<%= msgs[i].get('who')%>" data-gid="<%= msgs[i].get('gid')%>" data-mid="<%= msgs[i].getObjectId()%>">
+                  <div class="news_photo"><img src="<%= msgs[i].get('headimgurl')%>" width="100" height="100"></div>
                   <div class="news_main">
                     <div class="post_head">
-                      <span class="user_name">千纸鹤〃二茶千纸鹤〃二茶千纸鹤〃二茶</span><span class="post_type">回复了你的评论</span>
+                      <span class="user_name"><%= msgs[i].get('nickname')%></span><span class="post_type">评论了你</span>
                     </div>
-                    <div class="post_body" data-wordbreak="true"><p class="body_contents">恩。。。好久没来了呢!!! 发几个千千的吧好吗好久没来了呢!!! 发几个千千的吧.恩。。。好久没来了呢!!! 发几个千千的吧.</p></div>
-                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span><span class="registration">刚刚</span></div>
-                  </div>
-                </li>
-                <li class="news img">
-                  <div class="news_photo"><img src="/images/nba.jpg" width="100" height="100"></div>
-                  <div class="news_main">
-                    <div class="post_head">
-                      <span class="user_name">千纸鹤〃二茶</span><span class="post_type">New Post</span>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents"><%= msgs[i].get('msgContent')%></p></div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span>
+                    <%var date = new Date();
+                    var year = date.getFullYear() - msgs[i].getCreatedAt().getFullYear();
+                    var month = date.getMonth() - msgs[i].getCreatedAt().getMonth();
+                    var day = date.getDate() - msgs[i].getCreatedAt().getDate();
+                    var hours = date.getHours() - msgs[i].getCreatedAt().getHours();
+                    var minute = date.getMinutes() - msgs[i].getCreatedAt().getMinutes();
+                    var last_time = "";
+                    if(year>0){
+                      last_time= year + "年前";
+                    }else if(month>0){
+                      last_time= month + "月前";
+                    }else if(day>0){
+                      last_time= day + "天前";
+                    }else if(hours>0){
+                      last_time= hours + "小时前";
+                    }else if(minute>0){
+                      last_time= minute + "分钟前";
+                    }else{
+                      last_time= "刚刚";
+                    }%>
+                    <span class="registration"><%= last_time%></span>
                     </div>
-                    <div class="post_body" data-wordbreak="true"><p class="body_contents">恩。。。好久没来了呢!!! 发几个千千的吧。</p></div>
-                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span><span class="registration">7 hours ago</span></div>
-                  </div>
-                  <div class="news_img"><img src="/images/nba.jpg" width="100" height="100"></div>
-                </li>
-                <li class="news text read">
-                  <div class="news_photo"><img src="/images/nba.jpg" width="100" height="100"></div>
-                  <div class="news_main">
-                    <div class="post_head">
-                      <span class="user_name">千纸鹤〃二茶</span><span class="post_type">New Post</span>
-                    </div>
-                    <div class="post_body" data-wordbreak="true"><p class="body_contents">恩。。。好久没来了呢!!! 发几个千千的吧.</p>  </div>
-                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span><span class="registration">7 hours ago</span></div>
-                  </div>
-                </li>
-                <li class="news img read">
-                  <div class="news_photo"><img src="/images/nba.jpg" width="100" height="100"></div>
-                  <div class="news_main">
-                    <div class="post_head">
-                      <span class="user_name">千纸鹤〃二茶</span><span class="post_type">New Post</span>
-                    </div>
-                    <div class="post_body" data-wordbreak="true"><p class="body_contents">恩。。。好久没来了呢!!! 发几个千千的吧。</p></div>
-                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span><span class="registration">7 hours ago</span></div>
                   </div>
                   <div class="news_img"><img src="/images/nba.jpg" width="100" height="100"></div>
                 </li>
+                <% }else if(msgs[i].get('messageType')=='c_reply'){ %>
+                <li class="news text read" data-messagetype="<%= msgs[i].get('messageType')%>" data-cid="<%= msgs[i].get('cid')%>" data-fid="<%= msgs[i].get('fid')%>" data-towhom="<%= msgs[i].get('who')%>" data-gid="<%= msgs[i].get('gid')%>" data-mid="<%= msgs[i].getObjectId()%>">
+                  <div class="news_photo"><img src="<%= msgs[i].get('headimgurl')%>" width="100" height="100"></div>
+                  <div class="news_main">
+                    <div class="post_head">
+                      <span class="user_name"><%= msgs[i].get('nickname')%></span><span class="post_type">回复了你</span>
+                    </div>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents"><%= msgs[i].get('msgContent')%></p>  </div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span>
+                    <%var date = new Date();
+                    var year = date.getFullYear() - msgs[i].getCreatedAt().getFullYear();
+                    var month = date.getMonth() - msgs[i].getCreatedAt().getMonth();
+                    var day = date.getDate() - msgs[i].getCreatedAt().getDate();
+                    var hours = date.getHours() - msgs[i].getCreatedAt().getHours();
+                    var minute = date.getMinutes() - msgs[i].getCreatedAt().getMinutes();
+                    var last_time = "";
+                    if(year>0){
+                      last_time= year + "年前";
+                    }else if(month>0){
+                      last_time= month + "月前";
+                    }else if(day>0){
+                      last_time= day + "天前";
+                    }else if(hours>0){
+                      last_time= hours + "小时前";
+                    }else if(minute>0){
+                      last_time= minute + "分钟前";
+                    }else{
+                      last_time= "刚刚";
+                    }%>
+                    <span class="registration"><%= last_time%></span>
+                    </div>
+                  </div>
+                </li>
+                <% }else{ %>
+                <li class="news text read" data-messagetype="<%= msgs[i].get('messageType')%>" data-cid="<%= msgs[i].get('cid')%>" data-fid="<%= msgs[i].get('fid')%>" data-towhom="<%= msgs[i].get('who')%>" data-gid="<%= msgs[i].get('gid')%>" data-mid="<%= msgs[i].getObjectId()%>">
+                  <div class="news_photo"><img src="<%= msgs[i].get('headimgurl')%>" width="100" height="100"></div>
+                  <div class="news_main">
+                    <div class="post_head">
+                      <span class="user_name"><%= msgs[i].get('nickname')%></span><span class="post_type">回复了你</span>
+                    </div>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents"><%= msgs[i].get('msgContent')%></p>  </div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span>
+                    <%var date = new Date();
+                    var year = date.getFullYear() - msgs[i].getCreatedAt().getFullYear();
+                    var month = date.getMonth() - msgs[i].getCreatedAt().getMonth();
+                    var day = date.getDate() - msgs[i].getCreatedAt().getDate();
+                    var hours = date.getHours() - msgs[i].getCreatedAt().getHours();
+                    var minute = date.getMinutes() - msgs[i].getCreatedAt().getMinutes();
+                    var last_time = "";
+                    if(year>0){
+                      last_time= year + "年前";
+                    }else if(month>0){
+                      last_time= month + "月前";
+                    }else if(day>0){
+                      last_time= day + "天前";
+                    }else if(hours>0){
+                      last_time= hours + "小时前";
+                    }else if(minute>0){
+                      last_time= minute + "分钟前";
+                    }else{
+                      last_time= "刚刚";
+                    }%>
+                    <span class="registration"><%= last_time%></span>
+                    </div>
+                  </div>
+                </li>
+                <% } %>
+                <% }else{ %>
+                <% if(msgs[i].get('messageType')=='f_comment'){ %>
+                <li class="news img" data-messagetype="<%= msgs[i].get('messageType')%>" data-cid="<%= msgs[i].get('cid')%>" data-fid="<%= msgs[i].get('fid')%>" data-towhom="<%= msgs[i].get('who')%>" data-gid="<%= msgs[i].get('gid')%>" data-mid="<%= msgs[i].getObjectId()%>">
+                  <div class="news_photo"><img src="<%= msgs[i].get('headimgurl')%>" width="100" height="100"></div>
+                  <div class="news_main">
+                    <div class="post_head">
+                      <span class="user_name"><%= msgs[i].get('nickname')%></span><span class="post_type">评论了你</span>
+                    </div>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents"><%= msgs[i].get('msgContent')%></p></div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span>
+                    <%var date = new Date();
+                    var year = date.getFullYear() - msgs[i].getCreatedAt().getFullYear();
+                    var month = date.getMonth() - msgs[i].getCreatedAt().getMonth();
+                    var day = date.getDate() - msgs[i].getCreatedAt().getDate();
+                    var hours = date.getHours() - msgs[i].getCreatedAt().getHours();
+                    var minute = date.getMinutes() - msgs[i].getCreatedAt().getMinutes();
+                    var last_time = "";
+                    if(year>0){
+                      last_time= year + "年前";
+                    }else if(month>0){
+                      last_time= month + "月前";
+                    }else if(day>0){
+                      last_time= day + "天前";
+                    }else if(hours>0){
+                      last_time= hours + "小时前";
+                    }else if(minute>0){
+                      last_time= minute + "分钟前";
+                    }else{
+                      last_time= "刚刚";
+                    }%>
+                    <span class="registration"><%= last_time%></span>
+                    </div>
+                  </div>
+                  <div class="news_img"><img src="/images/nba.jpg" width="100" height="100"></div>
+                </li>
+                <% }else if(msgs[i].get('messageType')=='c_reply'){ %>
+                <li class="news text" data-messagetype="<%= msgs[i].get('messageType')%>" data-cid="<%= msgs[i].get('cid')%>" data-fid="<%= msgs[i].get('fid')%>" data-towhom="<%= msgs[i].get('who')%>" data-gid="<%= msgs[i].get('gid')%>" data-mid="<%= msgs[i].getObjectId()%>">
+                  <div class="news_photo"><img src="<%= msgs[i].get('headimgurl')%>" width="100" height="100"></div>
+                  <div class="news_main">
+                    <div class="post_head">
+                      <span class="user_name"><%= msgs[i].get('nickname')%></span><span class="post_type">回复了你</span>
+                    </div>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents"><%= msgs[i].get('msgContent')%></p></div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span>
+                    <%var date = new Date();
+                    var year = date.getFullYear() - msgs[i].getCreatedAt().getFullYear();
+                    var month = date.getMonth() - msgs[i].getCreatedAt().getMonth();
+                    var day = date.getDate() - msgs[i].getCreatedAt().getDate();
+                    var hours = date.getHours() - msgs[i].getCreatedAt().getHours();
+                    var minute = date.getMinutes() - msgs[i].getCreatedAt().getMinutes();
+                    var last_time = "";
+                    if(year>0){
+                      last_time= year + "年前";
+                    }else if(month>0){
+                      last_time= month + "月前";
+                    }else if(day>0){
+                      last_time= day + "天前";
+                    }else if(hours>0){
+                      last_time= hours + "小时前";
+                    }else if(minute>0){
+                      last_time= minute + "分钟前";
+                    }else{
+                      last_time= "刚刚";
+                    }%>
+                    <span class="registration"><%= last_time%></span>
+                    </div>
+                  </div>
+                </li>
+                <% }else{ %>
+                <li class="news text" data-messagetype="<%= msgs[i].get('messageType')%>" data-cid="<%= msgs[i].get('cid')%>" data-fid="<%= msgs[i].get('fid')%>" data-towhom="<%= msgs[i].get('who')%>" data-gid="<%= msgs[i].get('gid')%>" data-mid="<%= msgs[i].getObjectId()%>">
+                  <div class="news_photo"><img src="<%= msgs[i].get('headimgurl')%>" width="100" height="100"></div>
+                  <div class="news_main">
+                    <div class="post_head">
+                      <span class="user_name"><%= msgs[i].get('nickname')%></span><span class="post_type">回复了你</span>
+                    </div>
+                    <div class="post_body" data-wordbreak="true"><p class="body_contents"><%= msgs[i].get('msgContent')%></p></div>
+                    <div class="post_info"><span class="band_name">TFBOYS的四葉草們</span>
+                    <%var date = new Date();
+                    var year = date.getFullYear() - msgs[i].getCreatedAt().getFullYear();
+                    var month = date.getMonth() - msgs[i].getCreatedAt().getMonth();
+                    var day = date.getDate() - msgs[i].getCreatedAt().getDate();
+                    var hours = date.getHours() - msgs[i].getCreatedAt().getHours();
+                    var minute = date.getMinutes() - msgs[i].getCreatedAt().getMinutes();
+                    var last_time = "";
+                    if(year>0){
+                      last_time= year + "年前";
+                    }else if(month>0){
+                      last_time= month + "月前";
+                    }else if(day>0){
+                      last_time= day + "天前";
+                    }else if(hours>0){
+                      last_time= hours + "小时前";
+                    }else if(minute>0){
+                      last_time= minute + "分钟前";
+                    }else{
+                      last_time= "刚刚";
+                    }%>
+                    <span class="registration"><%= last_time%></span>
+                    </div>
+                  </div>
+                </li>
+                <% } %>
+                <% } %>
+              <% } %>
               </ul>
               <div class="loading"></div>
           </div>
@@ -179,7 +344,7 @@
         var page = 0;
         var last_position = 0;
         window.onload = function(){
-            myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:true, tap:true });
+            myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:false, tap:true });
             myScroll.on("scroll", updataPosition);
             myScroll.on("scrollEnd", dowmPosition);
             document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -225,6 +390,27 @@
                 flag = 0;
             }
         }
+    </script>
+    <script type="text/javascript">
+    $(document).on('tap','ul.news_ul_list>li',function(){
+      var aj = $.ajax({
+        url:'/message',
+        data:{
+          "messageType":$(this).attr("data-messagetype"),
+          "cid":$(this).attr("data-cid"),
+          "fid":$(this).attr("data-fid"),
+          "toWhom":$(this).attr("data-towhom"),
+          "gid":$(this).attr("data-gid"),
+          "mid":$(this).attr("data-mid")
+        },
+        type:'post',
+        dataType:'json',
+        success:function(data){
+          alert("ok");    
+        },
+        error:function(){alert("有错");}
+      });
+    });
     </script>
   </body>
 </html>
