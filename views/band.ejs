@@ -431,6 +431,9 @@
     </div>
     <script type="text/javascript">
     $(document).ready(function(){
+        console.log(window.localStorage.getItem("feedid"));
+        console.log(window.localStorage.getItem("iscroll"));
+        //myScroll.scrollTo(0,-50);
         $(".feed .detail .feed_img .feed_img_item").css("height",$(".feed .detail .feed_img .feed_img_item").css("width"));
         $(".pub-publish").click(function(){
             var img_arr = [];
@@ -488,6 +491,9 @@
             var str = "/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid");
             $("#feed-post").attr("href",str);
             //alert($("#feed-post").attr("href"));
+            //测试一下localstorge能不能用
+            window.localStorage.setItem("feedid",this.getAttribute("data-feedid"));
+            window.localStorage.setItem("iscroll",myScroll.y);
             //$("feed-click").click();
             document.getElementById("feed-click").click();
         });
@@ -551,13 +557,16 @@
         var position;
         var flag = 0;
         var page = 0;
-        var last_position = 0;
         window.onload = function(){
             position = document.getElementById('position');
             myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:false, tap:true , preventDefaultException:{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }  });
             myScroll.on("scroll", updataPosition);
             myScroll.on("scrollEnd", dowmPosition);
             document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+            if(window.localStorage.getItem("iscroll")){
+                var temp_num_flag = parseInt(window.localStorage.getItem("iscroll"));
+                myScroll.scrollTo(0,temp_num_flag);
+            }
         };
         function updataPosition(){
             position.innerHTML = this.y>>0;
@@ -569,17 +578,10 @@
                 flag = 2;
                 //console.log(flag);
             }
-            if (this.y<=0) {
-                if ((this.y-last_position)>=0) {
-                    $(".publish-btn").css("display","block");
-                    last_position = this.y;
-                }else{
-                    $(".publish-btn").css("display","none");
-                    last_position = this.y;
-                }
-            }else{
+            if(this.directionY==(-1)){
                 $(".publish-btn").css("display","block");
-                last_position = 0;
+            }else if(this.directionY==1){
+                $(".publish-btn").css("display","none");
             }
         }
         function dowmPosition(){
