@@ -566,6 +566,8 @@
             if(window.localStorage.getItem("iscroll")){
                 var temp_num_flag = parseInt(window.localStorage.getItem("iscroll"));
                 myScroll.scrollTo(0,temp_num_flag);
+                delCookie("feeds_load");
+                window.localStorage.setItem("iscroll",0);
             }
         };
         function updataPosition(){
@@ -796,6 +798,29 @@
                     });
                 });
             }
+        }
+    </script>
+    <script type="text/javascript">
+        //读取cookies
+        function getCookie(name)
+        {
+            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+         
+            if(arr=document.cookie.match(reg))
+         
+                return (arr[2]);
+            else
+                return null;
+        }
+
+        //删除cookies
+        function delCookie(name)
+        {
+            var exp = new Date();
+            exp.setTime(exp.getTime() - 1);
+            var cval=getCookie(name);
+            if(cval!=null)
+                document.cookie= name + "="+cval+";expires="+exp.toGMTString();
         }
     </script>
   </body>
