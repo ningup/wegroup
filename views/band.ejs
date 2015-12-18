@@ -488,7 +488,12 @@
         	$("#feedObjId").val(this.getAttribute("data-feedid"));
         	$("#feed-post").submit();*/
             //var str = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid")+ "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
-            var str = "/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid");
+            var temp_feed_sum = 0;
+            $(".feed").each(function(){
+                temp_feed_sum++;
+                //alert(num_flag);
+            });
+            var str = "/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid") + "&feedSum=" + temp_feed_sum;
             $("#feed-post").attr("href",str);
             //alert($("#feed-post").attr("href"));
             //测试一下localstorge能不能用
