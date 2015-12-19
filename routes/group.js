@@ -289,6 +289,7 @@ router.get('/join',function(req,res,next){
 												var relation = group.relation('followers');
 												relation.add(queryUser);
 												group.save().then(function(group){
+													userinfo.set('groupName',group.get('nickname'));
 													userinfo.save();
 													var text = '成功加入并切换到「'+group.get('nickname')+'」群'
 															  api.sendText(username, text, function(err,results){

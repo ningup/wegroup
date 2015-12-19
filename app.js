@@ -69,10 +69,14 @@ app.use(express.static('public'));
 // 加载云代码方法
 app.use(cloud);
 //app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
-app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkU', maxAge: 3600000, fetchUser: true,name:'liaoqu'}));
+app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkUUUU', maxAge: 86400000, fetchUser: true,name:'liaoqu'}));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('05XgTktKPMkUUUU',{}));
+/*app.use(cookieSession({
+  name: 'session',
+  keys: ['wegroup', 'liaqqu']
+}));*/
 app.use(express.query());
 
 app.use('/wechat', wechat(config, function (req, res, next) {
@@ -421,6 +425,14 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function(req, res) {
+/*	if (req.cookies.isVisit) {
+    console.log(req.cookies);
+		req.cookies.isVisit+=1;
+    res.send("再次欢迎访问");
+  } else {
+    res.cookie('isVisit', 1);
+    res.send("欢迎第一次访问");
+  }*/
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
 				AV.User.logIn("orSEhuNxAkianv5eFOpTJ3LXWADE", "A00000000~", {

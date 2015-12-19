@@ -2,12 +2,11 @@ var AV = require('leanengine');
 var Msg = AV.Object.extend('Message');
 function　MsgClass()
 {
-	this.feedMsg = function(username,messageType,msgContent,msgUrl,who,nickname,headimgurl,gid,cid,fid,cb){
+	this.feedMsg = function(username,messageType,msgContent,who,nickname,headimgurl,gid,cid,fid,groupName,cb){
 		var msg = new Msg();
 		msg.set('username',username);
 		msg.set('messageType',messageType);
 		msg.set('msgContent',msgContent);
-		//msg.set('msgUrl',msgUrl);
 		msg.set('who',who);
 		msg.set('nickname',nickname);
 		msg.set('headimgurl',headimgurl);
@@ -15,16 +14,16 @@ function　MsgClass()
 		msg.set('cid',cid);
 		msg.set('fid',fid);
 		msg.set('unRead','1');
+		msg.set('groupNickname',groupName);
 		msg.save().then(function(msgobj){
-			msgUrl = '/message?messageType='+messageType+'&cid='+cid+'&fid='+fid+'&toWhom='+who+'&gid='+gid+'&mid='+msg.id;
-			msgobj.set('msgUrl',msgUrl);
-			msgobj.save();
 			cb();
 		});
 	};
 	this.getFeedMsg = function(username,cb){
 		var query = new AV.Query('Message');
+		query.descending('createdAt');
 		query.equalTo("username",username);
+		query.limit(20);
 		query.find({
 			success: function(msgs) {
 				//console.log('hahaha'+msgs);

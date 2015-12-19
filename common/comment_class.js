@@ -59,7 +59,7 @@ function FeedClass()
 										});
 									}
 									feed.save();
-									cb(comment,userinfo.get('nicknameInGroup'),userinfo.get('headimgurl'));
+									cb(comment,userinfo.get('nicknameInGroup'),userinfo.get('headimgurl'),userinfo.get('groupName'));
 								},
 								error: function(feed, error) {
 									// 失败了.

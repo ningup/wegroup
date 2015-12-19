@@ -53,6 +53,20 @@ router.get('/', function(req, res, next) {
 			// 如果已经登录，发送当前登录用户信息。
 			//res.send(req.AV.user.get('username'));
 			//console.log(req.AV.user);
+			//console.log(req.cookies)
+			var limit;
+			if (req.cookies.feeds_load) {
+    		limit = req.cookies.feeds_load;
+				if(req.cookies.cookies_feeds_load ){
+					if (parseInt(req.cookies.cookies_feeds_load) > 20)
+						limit = req.cookies.cookies_feeds_load;
+				}
+					console.log('limit'+limit);
+  		} 
+			else {
+				res.cookie('feeds_load', 20);
+				var limit = 20;
+  		}
 		  var username = AV.User.current().get('username');
 			var userclass = new UserClass();
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -73,7 +87,7 @@ router.get('/', function(req, res, next) {
 						 queryFeed.notEqualTo('feedType','vote');
 						 queryFeed.notEqualTo('isRemoved',1);
 						 queryFeed.descending('updateTime');
-						 queryFeed.limit(5);
+						 	queryFeed.limit(limit);
 						 //queryFeed.equalTo("feedType", "vote");
 						 queryFeed.find().then(function(feeds){
 						   userclass.getUserObj(username,function(err,user){
@@ -92,6 +106,8 @@ router.get('/', function(req, res, next) {
 									
 								}
 								user.save();
+								res.cookie('feeds_load', 20);
+								res.clearCookie('cookies_feeds_load');
 								res.render('band', {
 									username: username,
 									groupNickname: groupNickname,
@@ -149,18 +165,33 @@ router.post('/history', function(req, res, next) {
 					 	queryFeed.notEqualTo('objectId',lastFeedId);
 					  queryFeed.notEqualTo('isRemoved',1);
 						queryFeed.descending('updateTime');
-						queryFeed.lessThanOrEqualTo("updateTime", loadFeedTime.oldest);
-						queryFeed.limit(2);
+						//queryFeed.lessThanOrEqualTo("updateTime", loadFeedTime.oldest);
+					  queryFeed.lessThan("updateTime", loadFeedTime.oldest);
+						queryFeed.limit(20);
 						queryFeed.find().then(function(feeds){
-								if(feeds.length != 0){
-										loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
-										user.set('loadFeedTime',loadFeedTime);
-										user.save();			
-								}
-								//res.json({"status":"0","feeds":1});
+							if (req.cookies.feeds_load) {
+								var feeds_load = parseInt(req.cookies.feeds_load)+parseInt(feeds.length);
+								console.log('feed cookie length'+feeds_load);
+								res.cookie('feeds_load', feeds_load);
+							}
+							else
+							{
+								var feeds_load = 20 + parseInt(feeds.length);
+								//console.log('feed cookie length'+feeds_load);
+								res.cookie('feeds_load', feeds_load);
+							}
+							if(feeds.length != 0){
+									loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
+									user.set('loadFeedTime',loadFeedTime);
+									//user.save();	
+								console.log('usersave');
+									
+							}
+							//res.json({"status":"0","feeds":1});
+							user.save().then(function(user){
 								res.json({"status":"0","feeds":feeds});
 								return ;
-								
+							});			
 						});
 
 				 });
@@ -173,6 +204,7 @@ router.post('/history', function(req, res, next) {
 		 }
 	 });
 });
+
 router.post('/img', function(req, res, next) {
 	console.log("comming");
 	var feedObjId = req.body.feedObjId;
@@ -221,7 +253,6 @@ router.get('/groupMember', function(req, res, next) {
 	  }
 	});
 	
-
 });
 //显示投票
 router.get('/getVote', function(req, res, next) {
@@ -244,6 +275,7 @@ router.get('/getVote', function(req, res, next) {
 						 var queryFeed = relation.query();
 						 queryFeed.descending('createdAt');
 						 queryFeed.equalTo("feedType", "vote");
+						 queryFeed.limit(20);
 						 queryFeed.find().then(function(votes){
 							 res.render('vote', {
 								username: username,
@@ -264,9 +296,46 @@ router.get('/getVote', function(req, res, next) {
 		//res.send('我不知道你是谁了，重新进入一下吧');
 		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 	}
-
-
 });
+
+router.post('/vote/history', function(req, res, next) {
+	 var userclass = new UserClass();
+	 var username = req.body.username;
+	 var skip = req.body.skip;
+	 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+		 if(err){
+			 res.send('你还没有加入群呢，快去创建一个吧！');
+		 }
+		 else{
+			var groupObjId = whichGroupNow;
+			var query = new AV.Query('Group');
+			query.get(groupObjId, {
+				success: function(group) {
+				// 成功获得实例
+				 userclass.getUserObj(username,function(err,user){
+						relation.targetClassName = 'Feed';
+						var queryFeed = relation.query();
+						queryFeed.EqualTo('feedType','vote');
+					  queryFeed.notEqualTo('isRemoved',1);
+						queryFeed.descending('updateTime');
+					 	queryFeed.skip(skip);
+						queryFeed.limit(10);
+						queryFeed.find().then(function(votes){
+								res.json({"status":"0","votes":votes});
+								return ;			
+						});
+
+				 });
+				 
+				},
+				error: function(object, error) {
+				// 失败了.
+				}
+			});
+		 }
+	 });
+});
+
 //进行投票
 router.post('/vote', function(req, res, next) {
 	var username = req.body.username;
@@ -445,11 +514,13 @@ router.get('/groupNickname', function(req, res, next) {
 });
 router.get('/detail',function(req,res,next){
 	var feedObjId = req.query.feedObjId;
+	var cookies_feeds_load = req.query.feedSum;
 	if (AV.User.current()) {
 		//console.log(req.AV.user);
 		var username = AV.User.current().get('username');
 		var userclass = new UserClass();
 		var commentclass = new CommentClass();
+		res.cookie('cookies_feeds_load',cookies_feeds_load);
 		console.log(username);
 		 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 			 if(err){

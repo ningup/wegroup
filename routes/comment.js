@@ -69,13 +69,13 @@ router.post('/', function(req, res, next) {
 		var replyCommentId = req.body.replyCommentId;
 		var inWhichComment = req.body.inWhichComment;
 		var commentclass = new CommentClass();
-		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl){
+		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl,groupName){
 			if(inWhichComment == replyCommentId){
-				msgclass.feedMsg(toWhom,'c_reply',content,'msgUrl',username,nickname,headimgurl,groupObjId,inWhichComment,feedObjId,function(){
+				msgclass.feedMsg(toWhom,'c_reply',content,username,nickname,headimgurl,groupObjId,inWhichComment,feedObjId,groupName,function(){
 				});
 			}
 			else{
-				msgclass.feedMsg(toWhom,'r_reply',content,'msgUrl',username,nickname,headimgurl,groupObjId,inWhichComment,feedObjId,function(){
+				msgclass.feedMsg(toWhom,'r_reply',content,username,nickname,headimgurl,groupObjId,inWhichComment,feedObjId,groupName,function(){
 				});
 			}
 			res.json({"nickname":nickname,"toNickname":comment.get('toNickname'),"content":content,"username":username,"toWhom":toWhom,"commentObjId":comment.getObjectId(),"replyCommentId":comment.get('replyCommentId'),"replyTime":comment.getCreatedAt()});
@@ -86,9 +86,9 @@ router.post('/', function(req, res, next) {
 		var replyCommentId = '0';
 		var inWhichComment = '0';
 		var commentclass = new CommentClass();
-		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl){
+		commentclass.addComment(groupObjId,feedObjId,content,username,toWhom,commentType,isReply,commentImgArray,replyCommentId,inWhichComment,function(comment,nickname,headimgurl,groupName){
 			res.redirect('/comment/detail?cid='+comment.getObjectId()+'&toWhom='+comment.get('who')+'&fid='+feedObjId);
-			msgclass.feedMsg(toWhom,'f_comment',content,'msgUrl',username,nickname,headimgurl,groupObjId,comment.getObjectId(),feedObjId,function(){
+			msgclass.feedMsg(toWhom,'f_comment',content,username,nickname,headimgurl,groupObjId,comment.getObjectId(),feedObjId,groupName,function(){
 				//res.redirect('/comment/detail?cid='+comment.getObjectId()+'&toWhom='+comment.get('who')+'&fid='+feedObjId);
 			});
 	});

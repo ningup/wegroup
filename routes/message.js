@@ -6,13 +6,14 @@ var userclass = new UserClass();
 var msgclass  = new MsgClass();
 //var Msg = AV.Object.extend('Message');
 
-router.get('/', function(req, res, next) {
-	var msgType = req.query.messageType;
-	var cid = req.query.cid;
-	var fid = req.query.fid;
-	var toWhom = req.query.toWhom;
-	var gid = req.query.gid;
-	var mid = req.query.mid;
+router.post('/', function(req, res, next) {
+	var msgType = req.body.messageType;
+	var cid = req.body.cid;
+	var fid = req.body.fid;
+	var toWhom = req.body.toWhom;
+	var gid = req.body.gid;
+	var mid = req.body.mid;
+	//console.log('ha');
 	if (AV.User.current()) {
 		var username = AV.User.current().get('username');
 		userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -53,10 +54,6 @@ router.get('/list', function(req, res, next) {
 							msgs:msgs,
 							username: username
 						});
-						/*msg.get('messageType')
-						msg.get('nickname')
-						msg.get('msgContent')
-						'dev.wegroup.avosapps.com'+msg.get('msgUrl')*/
 			 });	
 			}
 		});
@@ -66,8 +63,24 @@ router.get('/list', function(req, res, next) {
 	}
 });
 
-router.post('/', function(req, res, next) {
-
-})
+router.post('/history', function(req, res, next) {
+	var skip = req.body.skip;
+	var username = req.body.username;
+	var query = new AV.Query('Message');
+	query.descending('createdAt');
+	query.equalTo("username",username);
+	query.limit(20);
+	query.limit(skip);
+	query.find({
+		success: function(msgs) {
+			//console.log('hahaha'+msgs);
+			res.json({"msgs":msgs});
+			return;
+		},
+		error: function(error) {
+			alert("Error: " + error.code + " " + error.message);
+		}
+	});
+});
 
 module.exports = router;
