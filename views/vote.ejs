@@ -66,6 +66,7 @@
     .modal .modal-dialog .modal-content .body textarea {width: 100%; height: 150px;border-width: 0;margin-top: 10px;margin-bottom: 10px;}
     .modal .modal-dialog .modal-content .body input {width: 100%; height: 40px;border-width: 0;background-color: #dedede;color: #7A7A7A;text-align: center;line-height: 40px;margin-bottom: 1px;}
     .modal .modal-dialog .modal-content .footer button {width: 100%;height: 40px;font-size:20px;text-align: center;line-height:40px;color: #0080FF;border-width: 0;background-color: #FFFFFF;}
+    .loading{width: 100%;height: 30px; text-align:center;line-height: 30px;color: #777;}
     </style>
 
   </head>
@@ -221,6 +222,7 @@
 	    </div>
     <% } %>
     <% } %>
+        <div class="loading"></div>
         </div>
     </div>
     <button class="vote-new" type="button" data-toggle="modal" data-target="#myModal">发起投票</button>
@@ -396,9 +398,45 @@
                 flag = 0;
             }else if (flag==2) {
                 console.log("上拉加载");
-                /*for(var i=0;i<20;i++){
-                    $(".container ul").append("<li>Pretty row 50</li>");
-                }*/
+                $(".loading").html("载入中,请稍等...");
+                var skip_num = 0;
+                $("div.vote-feed").each(function(){
+                  skip_num++;
+                });
+                console.log(skip_num);
+                $.ajax({
+                    type:'post',
+                    url:'/feed/vote/history',
+                    data:{
+                        "username":"<%= username%>",
+                        "skip":skip_num
+                    },
+                    dataType:'json',
+                    success:function(data){
+                        //alert('返回来了');
+                        console.log(data);
+                        /*if(data.feeds.length>0){
+                            $(".loading").html("");
+                            
+                        }else{
+                            if($("ul.feed_ul_list>li").length>0){
+                                $(".loading").html("这是全部的帖子了哦～快去来一发吧～");
+                            }else{
+                                $(".loading").html("现在还没有帖子～快去来一发吧～");
+                            }
+                        }*/
+                        skip_num = 0;
+                        myScroll.refresh();
+                        flag = 0;
+                    },
+                    error:function(){
+                        $(".loading").html("网络好像有点问题,请刷新一下吧～");
+                        skip_num = 0;
+                        myScroll.refresh();
+                        flag = 0;
+                    }
+                });
+                skip_num = 0;
                 myScroll.refresh();
                 flag = 0;
             }else{

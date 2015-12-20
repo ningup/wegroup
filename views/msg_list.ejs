@@ -389,8 +389,193 @@
                 /*for(var i=0;i<20;i++){
                     $(".container ul").append("<li>Pretty row 50</li>");
                 }*/
+                var skip_num = 0;
                 $(".loading").html("载入中,请稍等...");
-                
+                $("ul.news_ul_list>li").each(function(){
+                  skip_num++;
+                });
+                console.log(skip_num);
+                $.ajax({
+                    type:'post',
+                    url:'/message/history',
+                    data:{
+                        "username":"<%= username%>",
+                        "skip":skip_num
+                    },
+                    dataType:'json',
+                    success:function(data){
+                        //alert('返回来了');
+                        console.log(data);
+                        if(data.msgs.length>0){
+                          $(".loading").html("");
+                          for(var i=0;i<data.msgs.length;i++){
+                            if(data.msgs[i].unRead=="1"){
+                              if(data.msgs[i].messageType=="f_comment"){
+                                var date = new Date();
+                                var date1 = new Date(data.msgs[i].createdAt);
+                                var year = date.getFullYear() - date1.getFullYear();
+                                var month = date.getMonth() - date1.getMonth();
+                                var day = date.getDate() - date1.getDate();
+                                var hours = date.getHours() - date1.getHours();
+                                var minute = date.getMinutes() - date1.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                  last_time= year + "年前";
+                                }else if(month>0){
+                                  last_time= month + "月前";
+                                }else if(day>0){
+                                  last_time= day + "天前";
+                                }else if(hours>0){
+                                  last_time= hours + "小时前";
+                                }else if(minute>0){
+                                  last_time= minute + "分钟前";
+                                }else{
+                                  last_time= "刚刚";
+                                }
+                                var str = "<li class=\"news img read\" data-messagetype=\""+ data.msgs[i].messageType +"\" data-cid=\""+ data.msgs[i].cid +"\" data-fid=\""+ data.msgs[i].fid +"\" data-towhom=\""+ data.msgs[i].who +"\" data-gid=\""+ data.msgs[i].gid +"\" data-mid=\""+ data.msgs[i].objectId +"\"><div class=\"news_photo\"><img src=\""+ data.msgs[i].headimgurl +"\" width=\"100\" height=\"100\"></div><div class=\"news_main\"><div class=\"post_head\"><span class=\"user_name\">"+ data.msgs[i].nickname +"</span><span class=\"post_type\">评论了你</span></div><div class=\"post_body\" data-wordbreak=\"true\"><p class=\"body_contents\">"+ data.msgs[i].msgContent +"</p></div><div class=\"post_info\"><span class=\"band_name\">"+ data.msgs[i].groupNickname +"</span><span class=\"registration\">"+last_time+"</span></div></div><div class=\"news_img\"><img src=\"/images/nba.jpg\" width=\"100\" height=\"100\"></div></li>";
+                                $("ul.news_ul_list").append(str);
+                              }else if(data.msgs[i].messageType=="c_reply"){
+                                var date = new Date();
+                                var date1 = new Date(data.msgs[i].createdAt);
+                                var year = date.getFullYear() - date1.getFullYear();
+                                var month = date.getMonth() - date1.getMonth();
+                                var day = date.getDate() - date1.getDate();
+                                var hours = date.getHours() - date1.getHours();
+                                var minute = date.getMinutes() - date1.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                  last_time= year + "年前";
+                                }else if(month>0){
+                                  last_time= month + "月前";
+                                }else if(day>0){
+                                  last_time= day + "天前";
+                                }else if(hours>0){
+                                  last_time= hours + "小时前";
+                                }else if(minute>0){
+                                  last_time= minute + "分钟前";
+                                }else{
+                                  last_time= "刚刚";
+                                }
+                                var str = "<li class=\"news text read\" data-messagetype=\""+ data.msgs[i].messageType +"\" data-cid=\""+ data.msgs[i].cid +"\" data-fid=\""+ data.msgs[i].fid +"\" data-towhom=\""+ data.msgs[i].who +"\" data-gid=\""+ data.msgs[i].gid +"\" data-mid=\""+ data.msgs[i].objectId +"\"><div class=\"news_photo\"><img src=\""+ data.msgs[i].headimgurl +"\" width=\"100\" height=\"100\"></div><div class=\"news_main\"><div class=\"post_head\"><span class=\"user_name\">"+ data.msgs[i].nickname +"</span><span class=\"post_type\">评论了你</span></div><div class=\"post_body\" data-wordbreak=\"true\"><p class=\"body_contents\">"+ data.msgs[i].msgContent +"</p></div><div class=\"post_info\"><span class=\"band_name\">"+ data.msgs[i].groupNickname +"</span><span class=\"registration\">"+last_time+"</span></div></div></li>";
+                                $("ul.news_ul_list").append(str);
+                              }else{
+                                var date = new Date();
+                                var date1 = new Date(data.msgs[i].createdAt);
+                                var year = date.getFullYear() - date1.getFullYear();
+                                var month = date.getMonth() - date1.getMonth();
+                                var day = date.getDate() - date1.getDate();
+                                var hours = date.getHours() - date1.getHours();
+                                var minute = date.getMinutes() - date1.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                  last_time= year + "年前";
+                                }else if(month>0){
+                                  last_time= month + "月前";
+                                }else if(day>0){
+                                  last_time= day + "天前";
+                                }else if(hours>0){
+                                  last_time= hours + "小时前";
+                                }else if(minute>0){
+                                  last_time= minute + "分钟前";
+                                }else{
+                                  last_time= "刚刚";
+                                }
+                                var str = "<li class=\"news text read\" data-messagetype=\""+ data.msgs[i].messageType +"\" data-cid=\""+ data.msgs[i].cid +"\" data-fid=\""+ data.msgs[i].fid +"\" data-towhom=\""+ data.msgs[i].who +"\" data-gid=\""+ data.msgs[i].gid +"\" data-mid=\""+ data.msgs[i].objectId +"\"><div class=\"news_photo\"><img src=\""+ data.msgs[i].headimgurl +"\" width=\"100\" height=\"100\"></div><div class=\"news_main\"><div class=\"post_head\"><span class=\"user_name\">"+ data.msgs[i].nickname +"</span><span class=\"post_type\">评论了你</span></div><div class=\"post_body\" data-wordbreak=\"true\"><p class=\"body_contents\">"+ data.msgs[i].msgContent +"</p></div><div class=\"post_info\"><span class=\"band_name\">"+ data.msgs[i].groupNickname +"</span><span class=\"registration\">"+last_time+"</span></div></div></li>";
+                                $("ul.news_ul_list").append(str);
+                              }
+                            }else{
+                              if(data.msgs[i].messageType=="f_comment"){
+                                var date = new Date();
+                                var date1 = new Date(data.msgs[i].createdAt);
+                                var year = date.getFullYear() - date1.getFullYear();
+                                var month = date.getMonth() - date1.getMonth();
+                                var day = date.getDate() - date1.getDate();
+                                var hours = date.getHours() - date1.getHours();
+                                var minute = date.getMinutes() - date1.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                  last_time= year + "年前";
+                                }else if(month>0){
+                                  last_time= month + "月前";
+                                }else if(day>0){
+                                  last_time= day + "天前";
+                                }else if(hours>0){
+                                  last_time= hours + "小时前";
+                                }else if(minute>0){
+                                  last_time= minute + "分钟前";
+                                }else{
+                                  last_time= "刚刚";
+                                }
+                                var str = "<li class=\"news img\" data-messagetype=\""+ data.msgs[i].messageType +"\" data-cid=\""+ data.msgs[i].cid +"\" data-fid=\""+ data.msgs[i].fid +"\" data-towhom=\""+ data.msgs[i].who +"\" data-gid=\""+ data.msgs[i].gid +"\" data-mid=\""+ data.msgs[i].objectId +"\"><div class=\"news_photo\"><img src=\""+ data.msgs[i].headimgurl +"\" width=\"100\" height=\"100\"></div><div class=\"news_main\"><div class=\"post_head\"><span class=\"user_name\">"+ data.msgs[i].nickname +"</span><span class=\"post_type\">评论了你</span></div><div class=\"post_body\" data-wordbreak=\"true\"><p class=\"body_contents\">"+ data.msgs[i].msgContent +"</p></div><div class=\"post_info\"><span class=\"band_name\">"+ data.msgs[i].groupNickname +"</span><span class=\"registration\">"+last_time+"</span></div></div><div class=\"news_img\"><img src=\"/images/nba.jpg\" width=\"100\" height=\"100\"></div></li>";
+                                $("ul.news_ul_list").append(str);
+                              }else if(data.msgs[i].messageType=="c_reply"){
+                                var date = new Date();
+                                var date1 = new Date(data.msgs[i].createdAt);
+                                var year = date.getFullYear() - date1.getFullYear();
+                                var month = date.getMonth() - date1.getMonth();
+                                var day = date.getDate() - date1.getDate();
+                                var hours = date.getHours() - date1.getHours();
+                                var minute = date.getMinutes() - date1.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                  last_time= year + "年前";
+                                }else if(month>0){
+                                  last_time= month + "月前";
+                                }else if(day>0){
+                                  last_time= day + "天前";
+                                }else if(hours>0){
+                                  last_time= hours + "小时前";
+                                }else if(minute>0){
+                                  last_time= minute + "分钟前";
+                                }else{
+                                  last_time= "刚刚";
+                                }
+                                var str = "<li class=\"news text\" data-messagetype=\""+ data.msgs[i].messageType +"\" data-cid=\""+ data.msgs[i].cid +"\" data-fid=\""+ data.msgs[i].fid +"\" data-towhom=\""+ data.msgs[i].who +"\" data-gid=\""+ data.msgs[i].gid +"\" data-mid=\""+ data.msgs[i].objectId +"\"><div class=\"news_photo\"><img src=\""+ data.msgs[i].headimgurl +"\" width=\"100\" height=\"100\"></div><div class=\"news_main\"><div class=\"post_head\"><span class=\"user_name\">"+ data.msgs[i].nickname +"</span><span class=\"post_type\">评论了你</span></div><div class=\"post_body\" data-wordbreak=\"true\"><p class=\"body_contents\">"+ data.msgs[i].msgContent +"</p></div><div class=\"post_info\"><span class=\"band_name\">"+ data.msgs[i].groupNickname +"</span><span class=\"registration\">"+last_time+"</span></div></div></li>";
+                                $("ul.news_ul_list").append(str);
+                              }else{
+                                var date = new Date();
+                                var date1 = new Date(data.msgs[i].createdAt);
+                                var year = date.getFullYear() - date1.getFullYear();
+                                var month = date.getMonth() - date1.getMonth();
+                                var day = date.getDate() - date1.getDate();
+                                var hours = date.getHours() - date1.getHours();
+                                var minute = date.getMinutes() - date1.getMinutes();
+                                var last_time = "";
+                                if(year>0){
+                                  last_time= year + "年前";
+                                }else if(month>0){
+                                  last_time= month + "月前";
+                                }else if(day>0){
+                                  last_time= day + "天前";
+                                }else if(hours>0){
+                                  last_time= hours + "小时前";
+                                }else if(minute>0){
+                                  last_time= minute + "分钟前";
+                                }else{
+                                  last_time= "刚刚";
+                                }
+                                var str = "<li class=\"news text\" data-messagetype=\""+ data.msgs[i].messageType +"\" data-cid=\""+ data.msgs[i].cid +"\" data-fid=\""+ data.msgs[i].fid +"\" data-towhom=\""+ data.msgs[i].who +"\" data-gid=\""+ data.msgs[i].gid +"\" data-mid=\""+ data.msgs[i].objectId +"\"><div class=\"news_photo\"><img src=\""+ data.msgs[i].headimgurl +"\" width=\"100\" height=\"100\"></div><div class=\"news_main\"><div class=\"post_head\"><span class=\"user_name\">"+ data.msgs[i].nickname +"</span><span class=\"post_type\">评论了你</span></div><div class=\"post_body\" data-wordbreak=\"true\"><p class=\"body_contents\">"+ data.msgs[i].msgContent +"</p></div><div class=\"post_info\"><span class=\"band_name\">"+ data.msgs[i].groupNickname +"</span><span class=\"registration\">"+last_time+"</span></div></div></li>";
+                                $("ul.news_ul_list").append(str);
+                              }
+                            }
+                          }
+                        }else{
+                            if($("ul.news_ul_list>li").length>0){
+                                $(".loading").html("这是全部的帖子了哦～快去来一发吧～");
+                            }else{
+                                $(".loading").html("现在还没有帖子～快去来一发吧～");
+                            }
+                        }
+                        skip_num = 0;
+                        myScroll.refresh();
+                        flag = 0;
+                    },
+                    error:function(){
+                        skip_num = 0;
+                        $(".loading").html("网络好像有点问题,请刷新一下吧～");
+                    }
+                });
+                skip_num = 0;
                 myScroll.refresh();
                 flag = 0;
             }else{
