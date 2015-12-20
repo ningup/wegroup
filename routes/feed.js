@@ -322,21 +322,18 @@ router.post('/vote/history', function(req, res, next) {
 			query.get(groupObjId, {
 				success: function(group) {
 				// 成功获得实例
-				 userclass.getUserObj(username,function(err,user){
-						relation.targetClassName = 'Feed';
-						var queryFeed = relation.query();
-						queryFeed.EqualTo('feedType','vote');
-					  queryFeed.notEqualTo('isRemoved',1);
-						queryFeed.descending('updateTime');
-					 	queryFeed.skip(skip);
-						queryFeed.limit(10);
-						queryFeed.find().then(function(votes){
-								res.json({"status":"0","votes":votes});
-								return ;			
-						});
-
-				 });
-				 
+					var relation = group.relation("feedPosted");
+					relation.targetClassName = 'Feed';
+					var queryFeed = relation.query();
+					queryFeed.EqualTo('feedType','vote');
+					queryFeed.notEqualTo('isRemoved',1);
+					queryFeed.descending('updateTime');
+					queryFeed.skip(skip);
+					queryFeed.limit(10);
+					queryFeed.find().then(function(votes){
+							res.json({"status":"0","votes":votes});
+							return ;			
+					});
 				},
 				error: function(object, error) {
 				// 失败了.
