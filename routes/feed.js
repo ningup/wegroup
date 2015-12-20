@@ -325,7 +325,7 @@ router.post('/vote/history', function(req, res, next) {
 					var relation = group.relation("feedPosted");
 					relation.targetClassName = 'Feed';
 					var queryFeed = relation.query();
-					queryFeed.EqualTo('feedType','vote');
+					queryFeed.equalTo('feedType','vote');
 					queryFeed.notEqualTo('isRemoved',1);
 					queryFeed.descending('updateTime');
 					queryFeed.skip(skip);
