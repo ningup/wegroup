@@ -225,34 +225,44 @@ router.post('/img', function(req, res, next) {
 });
 
 
-router.get('/groupMember', function(req, res, next) {
-	var username = req.query.username;
-	var groupObjIdGotInto = req.query.groupObjIdGotInto;
-	//username = username.trim();
-	var query = new AV.Query('Group');
-	query.get(groupObjIdGotInto, {
-	  success: function(group) {
-		// 成功获得实例
-		 console.log('you get into the '+ group.get('nickname'));
-		 var relation = group.relation('followers');
-		 //relation.targetClassName = AV.User;
-		 var queryFollowers = relation.query();
-		 queryFollowers.find().then(function(users){
-				res.render('feed_member', {
-				groupObjIdGotInto:groupObjIdGotInto,
-				users: users,
-				followersNum:group.get('followersNum'),
-				username: username
-			  });
-		
-		 });
-		
-	  },
-	  error: function(object, error) {
-		// 失败了.
-	  }
-	});
-	
+router.get('/group/member', function(req, res, next) {
+		if (AV.User.current()) {
+		 var userclass = new UserClass();
+		 var username = AV.User.current().get('username');
+		 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+			 if(err){
+				 res.send('你还没有加入群呢，快去创建一个吧！');
+			 }
+			 else{
+					var groupObjId = whichGroupNow;
+					var query = new AV.Query('Group');
+					query.get(groupObjId, {
+						success: function(group) {
+						// 成功获得实例
+						 //console.log('you get into the '+ group.get('nickname'));
+						 var relation = group.relation("followers");
+						 //relation.targetClassName = 'Feed';
+						 var queryFollowers = relation.query();
+						 //queryFollowers.limit(20);
+						 queryFeed.find().then(function(users){
+							 res.render('group_member', {
+								users: users,
+							 });
+
+						 });
+
+						},
+						error: function(object, error) {
+						// 失败了.
+						}
+					});
+			 }
+		});
+	}
+	else{
+		//res.send('我不知道你是谁了，重新进入一下吧');
+		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+	}	
 });
 //显示投票
 router.get('/getVote', function(req, res, next) {

@@ -350,9 +350,30 @@ router.get('/set', function(req, res, next) {
 				res.send('你还没有加入群呢，快去创建一个吧！');
 			}
 			else{
-				res.render('group_set_new', {
-							//title: 'Groups 列表',
-					});
+				var groupObjId = whichGroupNow;
+				var groupNickname = whichGroupNameNow;
+				var groupObjId = whichGroupNow;
+				var query = new AV.Query('Group');
+				query.get(groupObjId, {
+					success: function(group) {
+					// 成功获得实例
+					 //console.log('you get into the '+ group.get('nickname'));
+					 var relation = group.relation("followers");
+					 //relation.targetClassName = 'Feed';
+					 var queryFollowers = relation.query();
+					 queryFollowers.limit(20);
+					 queryFeed.find().then(function(users){
+						 res.render('group_set_new', {
+							users: users,
+							groupNickname:groupNickname
+						 });
+
+					 });
+					},
+					error: function(object, error) {
+					// 失败了.
+					}
+				});
 			}
 		});
 	}

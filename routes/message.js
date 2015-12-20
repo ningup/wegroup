@@ -70,7 +70,7 @@ router.post('/history', function(req, res, next) {
 	query.descending('createdAt');
 	query.equalTo("username",username);
 	query.limit(20);
-	query.limit(skip);
+	query.skip(skip);
 	query.find({
 		success: function(msgs) {
 			//console.log('hahaha'+msgs);

@@ -190,14 +190,26 @@ router.post('/more', function(req, res, next) {
 router.post('/like', function(req, res, next) {
 	username = req.body.username;
 	feedObjId = req.body.feedObjId;
-	username = username.trim();
+	//username = username.trim();
 	var likeclass = new LikeClass();
 	likeclass.like(feedObjId,username,function(err, feedObj){
 		res.json({"status":1,"msg":"like successful","likeNum":feedObj.get('likeNum'),"feedObjId":feedObj.getObjectId()});
 		return ;
 	});
 	
-})
+});
+
+router.post('/unlike', function(req, res, next) {
+	username = req.body.username;
+	feedObjId = req.body.feedObjId;
+	//username = username.trim();
+	var likeclass = new LikeClass();
+	likeclass.unlike(feedObjId,username,function(err, feedObj){
+		res.json({"status":1,"msg":"unlike successful","likeNum":feedObj.get('likeNum'),"feedObjId":feedObj.getObjectId()});
+		return ;
+	});
+	
+});
 
 router.get('/msg/detail', function(req, res, next) {
 	var cid = req.query.cid;
