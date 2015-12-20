@@ -2,7 +2,7 @@ var AV = require('leanengine');
 var Msg = AV.Object.extend('Message');
 function　MsgClass()
 {
-	this.feedMsg = function(username,messageType,msgContent,who,nickname,headimgurl,gid,cid,fid,groupName,cb){
+	this.feedMsg = function(username,messageType,msgContent,who,nickname,headimgurl,gid,cid,fid,groupName,imgurl,cb){
 		var msg = new Msg();
 		msg.set('username',username);
 		msg.set('messageType',messageType);
@@ -13,6 +13,7 @@ function　MsgClass()
 		msg.set('gid',gid);
 		msg.set('cid',cid);
 		msg.set('fid',fid);
+		msg.set('imgurl',imgurl);
 		msg.set('unRead','1');
 		msg.set('groupNickname',groupName);
 		msg.save().then(function(msgobj){
