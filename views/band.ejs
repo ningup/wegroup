@@ -52,7 +52,8 @@
         border-radius: 3px;
         width: 90px;
         height: 90px;
-        background-size: 90px 90px;
+        /*background-size: 90px 90px;*/
+        background-size: cover;
         box-shadow: 0 0 1px 0 rgba(0,0,0,.3) inset;
         position: relative;
         background-repeat: no-repeat;
@@ -238,12 +239,16 @@
           <div id="band_top_info" class="band_top_info">
             <% if(groupHeadImg=='default'){ %>
                 <div class="top_portrait" style="background-image:url(http://m.tiebaimg.com/timg?mowebapp&quality=70&size=b150_150&cut_x=0&cut_w=0&cut_y=0&cut_h=0&sec=1369815402&di=bde46b9852e585f645d8f344fbf712e6&wh_rate=null&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fpic%2Fitem%2F34a85edf8db1cb131afb4e59db54564e93584bed.jpg);">
+                <% if(username==groupOwner){ %>
                 <input class="up-entry-one" id="up-entry-one" type="file" accept="image/*" >
+                <% } %>
                 </div>
             <% }else{ %>
                 <% var temp_groupHeadImg = "background-image:url(" + groupHeadImg + ");"; %>
                 <div class="top_portrait" style="<%= temp_groupHeadImg%>">
+                <% if(username==groupOwner){ %>
                 <input class="up-entry-one" id="up-entry-one" type="file" accept="image/*" >
+                <% } %>
                 </div>
             <% } %>
               <p class="top_title">
@@ -431,8 +436,6 @@
     </div>
     <script type="text/javascript">
     $(document).ready(function(){
-        console.log(window.localStorage.getItem("feedid"));
-        console.log(window.localStorage.getItem("iscroll"));
         //myScroll.scrollTo(0,-50);
         $(".feed .detail .feed_img .feed_img_item").css("height",$(".feed .detail .feed_img .feed_img_item").css("width"));
         $(".pub-publish").click(function(){
@@ -493,12 +496,10 @@
                 temp_feed_sum++;
                 //alert(num_flag);
             });
-            var str = "/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid") + "&feedSum=" + temp_feed_sum;
+            var str = "/feed/detail?"+ "feedObjId="+ this.getAttribute("data-feedid") + "&feedSum=" + temp_feed_sum + "&scroll=" + myScroll.y;
             $("#feed-post").attr("href",str);
             //alert($("#feed-post").attr("href"));
             //测试一下localstorge能不能用
-            window.localStorage.setItem("feedid",this.getAttribute("data-feedid"));
-            window.localStorage.setItem("iscroll",myScroll.y);
             //$("feed-click").click();
             document.getElementById("feed-click").click();
         });
@@ -568,12 +569,11 @@
             myScroll.on("scroll", updataPosition);
             myScroll.on("scrollEnd", dowmPosition);
             document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-            if(window.localStorage.getItem("iscroll")){
-                var temp_num_flag = parseInt(window.localStorage.getItem("iscroll"));
+
+                var temp_num_flag = parseInt("<%= scroll%>");
                 myScroll.scrollTo(0,temp_num_flag);
                 //delCookie("cookies_feeds_load");
-                window.localStorage.setItem("iscroll",0);
-            }
+
         };
         function updataPosition(){
             position.innerHTML = this.y>>0;
