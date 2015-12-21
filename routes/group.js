@@ -89,7 +89,8 @@ router.get('/create', function(req, res, next){
 									var clientId = username;
 									var realtimeObject = realtime.realtime({
 										 appId: appId,
-										 clientId: clientId
+										 clientId: clientId,
+										 secure: false
 									});
 									realtimeObject.on('open', function(data){
 									var room = realtimeObject.room({
@@ -362,7 +363,7 @@ router.get('/set', function(req, res, next) {
 					 //relation.targetClassName = 'Feed';
 					 var queryFollowers = relation.query();
 					 queryFollowers.limit(20);
-					 queryFeed.find().then(function(users){
+					 queryFollowers.find().then(function(users){
 						 res.render('group_set_new', {
 							users: users,
 							groupNickname:groupNickname

@@ -54,19 +54,20 @@ router.get('/', function(req, res, next) {
 			//res.send(req.AV.user.get('username'));
 			//console.log(req.AV.user);
 			//console.log(req.cookies)
-			var limit;
-			if (req.cookies.feeds_load) {
-    		limit = req.cookies.feeds_load;
-				if(req.cookies.cookies_feeds_load ){
-					if (parseInt(req.cookies.cookies_feeds_load) > 20)
-						limit = req.cookies.cookies_feeds_load;
+			var limit=20;
+			var feedloadsum = AV.User.current().get('feed_cookies');
+			var feed_scroll = AV.User.current().get('feed_scroll');
+			/*if (req.cookies.feeds_load) {
+    		limit = req.cookies.feeds_load;*/
+				if(feedloadsum > 20){
+						limit = feedloadsum;
 				}
 					console.log('limit'+limit);
-  		} 
-			else {
-				res.cookie('feeds_load', 20);
+  		//} 
+/*			else {
+				//res.cookie('feeds_load', 20);
 				var limit = 20;
-  		}
+  		}*/
 		  var username = AV.User.current().get('username');
 			var userclass = new UserClass();
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -87,7 +88,7 @@ router.get('/', function(req, res, next) {
 						 queryFeed.notEqualTo('feedType','vote');
 						 queryFeed.notEqualTo('isRemoved',1);
 						 queryFeed.descending('updateTime');
-						 	queryFeed.limit(limit);
+						 queryFeed.limit(limit);
 						 //queryFeed.equalTo("feedType", "vote");
 						 queryFeed.find().then(function(feeds){
 						   userclass.getUserObj(username,function(err,user){
@@ -105,13 +106,16 @@ router.get('/', function(req, res, next) {
 									user.set('loadFeedTime',loadFeedTime);
 									
 								}
+								user.set('feed_cookies',0);
 								user.save();
-								res.cookie('feeds_load', 20);
-								res.clearCookie('cookies_feeds_load');
+								//res.cookie('feeds_load', 20);
+								//res.clearCookie('cookies_feeds_load');
+								//res.clearCookie('feeds_load');
 								res.render('band', {
 									username: username,
 									groupNickname: groupNickname,
 									groupHeadImg:	group.get('groupHeadImg'),
+									feed_scroll:feed_scroll,
 									feedCnt: group.get('feedCnt'),
 									followersNum:group.get('followersNum'),
 									groupObjId:groupObjId,
@@ -169,7 +173,7 @@ router.post('/history', function(req, res, next) {
 					  queryFeed.lessThan("updateTime", loadFeedTime.oldest);
 						queryFeed.limit(20);
 						queryFeed.find().then(function(feeds){
-							if (req.cookies.feeds_load) {
+/*							if (req.cookies.feeds_load) {
 								var feeds_load = parseInt(req.cookies.feeds_load)+parseInt(feeds.length);
 								console.log('feed cookie length'+feeds_load);
 								res.cookie('feeds_load', feeds_load);
@@ -179,7 +183,7 @@ router.post('/history', function(req, res, next) {
 								var feeds_load = 20 + parseInt(feeds.length);
 								//console.log('feed cookie length'+feeds_load);
 								res.cookie('feeds_load', feeds_load);
-							}
+							}*/
 							if(feeds.length != 0){
 									loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
 									user.set('loadFeedTime',loadFeedTime);
@@ -522,12 +526,17 @@ router.get('/groupNickname', function(req, res, next) {
 router.get('/detail',function(req,res,next){
 	var feedObjId = req.query.feedObjId;
 	var cookies_feeds_load = req.query.feedSum;
+	var cookies_feeds_scroll = req.query.feedSum;
 	if (AV.User.current()) {
 		//console.log(req.AV.user);
+		var user = AV.User.current();
 		var username = AV.User.current().get('username');
 		var userclass = new UserClass();
 		var commentclass = new CommentClass();
-		res.cookie('cookies_feeds_load',cookies_feeds_load);
+		user.set('feed_cookies',parseInt(cookies_feeds_load));
+		user.set('feed_scroll',parseInt(cookies_feeds_scroll));
+		user.save();
+		//res.cookie('cookies_feeds_load',cookies_feeds_load);
 		console.log(username);
 		 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 			 if(err){

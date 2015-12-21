@@ -194,7 +194,10 @@ router.post('/like', function(req, res, next) {
 	//username = username.trim();
 	var likeclass = new LikeClass();
 	likeclass.like(feedObjId,username,function(err, feedObj){
-		res.json({"status":1,"msg":"like successful","likeNum":feedObj.get('likeNum'),"feedObjId":feedObj.getObjectId()});
+		var msg = '1';
+		if(err == 1)
+			msg = '0';
+		res.json({"status":1,"msg":msg,"likeNum":feedObj.get('likeNum'),"feedObjId":feedObj.getObjectId()});
 		return ;
 	});
 	
