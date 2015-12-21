@@ -103,7 +103,7 @@
     .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .floor_content{color: #000;margin-right: 6px;}
     .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .floor_content a{color: #3361a7;text-decoration: none;}
     .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .list_item_time{display: inline-block;margin-right: 8px;color: #c5c9cd;font-size: 12px;}
-
+    .detail-comment-list .list .comment-wrapper .reply-wrapper .reply-list .item .fmain .floor_footer_item .del{display: inline-block;margin-right: 8px;color: #324d82;font-size: 12px;}
     .bottom-wraper{position: fixed;display: -webkit-box;overflow: hidden;bottom: 0;left: 0;z-index: 99;width: 100%;height: 44px;line-height: 44px;color: #00a5e0;background: -webkit-gradient(linear,0 0,0 100%,from(#fff),to(#fafafa));box-shadow: 0 0 2px rgba(0,0,0,.3);visibility: visible;}
     .bottom-wraper .reply{display: block;-webkit-box-flex:1;position: relative;width:0;font-size: 16px;text-align: center;vertical-align: middle;color: #777;}
     .bottom-wraper .reply:before{top: -2px;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAArlBMVEV3d3f///93d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3fZnHjLAAAAOXRSTlMAAAMEBQYHCAsMDRESFBUZGxweHzI0NTg9YWJmZ2hqbG1ub3t9kJGSlZaZuru/wsfKy83q8vP09/l6oG0XAAAA60lEQVR4XuXSS0/CQBhG4VehFW+oKIIWL+WmhQoitnL+/x+TJl8mTWgnJK7Us3oXT2bzjQ727P9CSY1osaai9SJqSHLwDk/3DhZu1m+ronZ/VkiDIYxV2xiaBp95kadXHg2+c+uDPZYGvzjywRM+DYK8wW+EnXk275RmLUyBt9KshRmwKc2fv9hJ8/R6Zwr+4mU2BD53TGZwSW+/Hx4z9cEpscEQRvVuBKFBDWDSbVWpVncCDzIoRVgkVyq6SHAN5KAUDFe5ycuyy1fDQCXoOk22snDJuVxVUGdbc2OuHprEnB/q8OkjbmoHfgMsUz0uWZEOqwAAAABJRU5ErkJggg==');background-size: 20px 20px;display: inline-block;position: relative;margin-right: 5px;width: 20px;height: 20px;font-size: 0;line-height: 0;vertical-align: middle;color: #324d86;content: "";}
@@ -348,7 +348,7 @@
                       <ul class="reply-list">
                       <% for(var a=0;a<commentJson.comments[i].reply.reply.length;a++){ 
                             if(commentJson.comments[i].reply.reply[a].replyCommentId==commentJson.comments[i].id){ %>
-                        <li class="item">
+                        <li class="item" data-replyid="<%= commentJson.comments[i].reply.reply[j].id%>">
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
                               <a href="" class="user_name "><%= commentJson.comments[i].reply.reply[a].nickname%></a>:
@@ -374,11 +374,14 @@
                                     last_time= "刚刚";
                                 }%>
                               <span class="list_item_time"><!--<%= commentJson.comments[i].reply.reply[a].time%>--><%= last_time%></span>
+                              <% if(commentJson.comments[i].reply.reply[j].who==username){ %>
+                                <span class="del">删除</span>
+                              <% } %>
                             </div>
                           </div>
                         </li>
                         <% }else{ %>
-                        <li class="item">
+                        <li class="item" data-replyid="<%= commentJson.comments[i].reply.reply[j].id%>">
                           <div class="fmain j_floor_main">
                             <div class="floor_footer_item">
                               <a href="" class="user_name "><%= commentJson.comments[i].reply.reply[a].nickname%></a>:
@@ -406,6 +409,9 @@
                                     last_time= "刚刚";
                                 }%>
                               <span class="list_item_time"><!--<%= commentJson.comments[i].reply.reply[a].time%>--><%= last_time%></span>
+                              <% if(commentJson.comments[i].reply.reply[j].who==username){ %>
+                                <span class="del">删除</span>
+                              <% } %>
                             </div>
                           </div>
                         </li>
@@ -635,6 +641,28 @@
                     }
                 });
         });
+        $(document).on('click',".floor_footer_item .del",function(){
+            $(this).closest("a").attr("data-imgcf","true");
+            var commentObjId = $(this).closest("li.item").attr("data-replyid");
+            var aj = $.ajax({
+                    url:'/comment/remove',
+                    data:{
+                        "commentObjId":commentObjId
+                    },
+                    type:'post',
+                    dataType:'json',
+                    success:function(data){
+                        //alert("coming");
+                        if(data.isComment=="0"){
+                            $("li.item").each(function(){
+                                if($(this).attr("data-replyid")==data.cid){
+                                    $(this).remove();
+                                }
+                            });
+                        }
+                    }
+                });
+        });
         $(document).on('click',".pic>img",function(event){
             event.stopPropagation();
             var pswpElement = $(".pswp")[0];
@@ -772,11 +800,12 @@
                                 for(var a=0;a<data.commentJson.comments[i].reply.reply.length;a++){ 
                                     if(data.commentJson.comments[i].reply.reply[a].replyCommentId==data.commentJson.comments[i].id){
                                         var date = new Date();
-                                        var year = date.getFullYear() - data.commentJson.comments[i].reply.reply[a].time.getFullYear();
-                                        var month = date.getMonth() - data.commentJson.comments[i].reply.reply[a].time.getMonth();
-                                        var day = date.getDate() - data.commentJson.comments[i].reply.reply[a].time.getDate();
-                                        var hours = date.getHours() - data.commentJson.comments[i].reply.reply[a].time.getHours();
-                                        var minute = date.getMinutes() - data.commentJson.comments[i].reply.reply[a].time.getMinutes();
+                                        var date1 = new Date(data.commentJson.comments[i].reply.reply[a].time);
+                                        var year = date.getFullYear() - date1.getFullYear();
+                                        var month = date.getMonth() - date1.getMonth();
+                                        var day = date.getDate() - date1.getDate();
+                                        var hours = date.getHours() - date1.getHours();
+                                        var minute = date.getMinutes() - date1.getMinutes();
                                         var last_time = "";
                                         if(year>0){
                                             last_time= year + "年前";
@@ -791,14 +820,19 @@
                                         }else{
                                             last_time= "刚刚";
                                         }
-                                        var temp = "<li class=\"item\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+/*data.commentJson.comments[i].reply.reply[a].time*/last_time+"</span></div></div></li>";
+                                        if(data.commentJson.comments[i].reply.reply[j].who!="<%= username%>"){
+                                        var temp = "<li class=\"item\" data-replyid=\""+ data.commentJson.comments[i].reply.reply[j].id +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+/*data.commentJson.comments[i].reply.reply[a].time*/last_time+"</span></div></div></li>";
+                                        }else{
+                                            var temp = "<li class=\"item\" data-replyid=\""+ data.commentJson.comments[i].reply.reply[j].id +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+/*data.commentJson.comments[i].reply.reply[a].time*/last_time+"</span><span class=\"del\">删除</span></div></div></li>";
+                                        }
                                     }else{
                                         var date = new Date();
-                                        var year = date.getFullYear() - data.commentJson.comments[i].reply.reply[a].time.getFullYear();
-                                        var month = date.getMonth() - data.commentJson.comments[i].reply.reply[a].time.getMonth();
-                                        var day = date.getDate() - data.commentJson.comments[i].reply.reply[a].time.getDate();
-                                        var hours = date.getHours() - data.commentJson.comments[i].reply.reply[a].time.getHours();
-                                        var minute = date.getMinutes() - data.commentJson.comments[i].reply.reply[a].time.getMinutes();
+                                        var date1 = new Date(data.commentJson.comments[i].reply.reply[a].time);
+                                        var year = date.getFullYear() - date1.getFullYear();
+                                        var month = date.getMonth() - date1.getMonth();
+                                        var day = date.getDate() - date1.getDate();
+                                        var hours = date.getHours() - date1.getHours();
+                                        var minute = date.getMinutes() - date1.getMinutes();
                                         var last_time = "";
                                         if(year>0){
                                             last_time= year + "年前";
@@ -813,7 +847,11 @@
                                         }else{
                                             last_time= "刚刚";
                                         }
-                                        var temp = "<li class=\"item\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.commentJson.comments[i].reply.reply[a].toNickname+"</a>&nbsp;:"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+/*data.commentJson.comments[i].reply.reply[a].time*/last_time+"</span></div></div></li>";
+                                        if(commentJson.comments[i].reply.reply[j].who!="<%= username%>"){
+                                        var temp = "<li class=\"item\" data-replyid=\""+ data.commentJson.comments[i].reply.reply[j].id +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.commentJson.comments[i].reply.reply[a].toNickname+"</a>&nbsp;:"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+/*data.commentJson.comments[i].reply.reply[a].time*/last_time+"</span></div></div></li>";
+                                        }else{
+                                            var temp = "<li class=\"item\" data-replyid=\""+ data.commentJson.comments[i].reply.reply[j].id +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.commentJson.comments[i].reply.reply[a].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.commentJson.comments[i].reply.reply[a].toNickname+"</a>&nbsp;:"+data.commentJson.comments[i].reply.reply[a].content+"</span><span class=\"list_item_time\">"+/*data.commentJson.comments[i].reply.reply[a].time*/last_time+"</span><span class=\"del\">删除</span></div></div></li>";
+                                        }
                                     }
                                     replys = replys + temp;
                                 }
