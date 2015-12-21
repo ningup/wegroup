@@ -145,6 +145,7 @@ function FeedClass()
 										commentJson.comments[i].reply.reply[j].toNickname = replyComments[j].get('toNickname');
 										commentJson.comments[i].reply.reply[j].content = replyComments[j].get('content');
 										commentJson.comments[i].reply.reply[j].replyCommentId= replyComments[j].get('replyCommentId');
+										commentJson.comments[i].reply.reply[j].who= replyComments[j].get('who');
 										commentJson.comments[i].reply.reply[j].time = replyComments[j].getCreatedAt();
 										cntj ++;
 										if(cntj == len){

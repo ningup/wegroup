@@ -332,5 +332,14 @@ router.post('/msg/more', function(req, res, next) {
   
 });
 
+router.post('/remove', function(req, res, next) {
+		var cid = req.body.commentObjId;
+		var commentclass = new CommentClass();
+		commentclass.rmComment(cid,function(r){
+			res.json({"isComment":r,"cid":cid});
+			return;
+		})
+});
+
 
 module.exports = router;
