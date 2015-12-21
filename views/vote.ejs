@@ -91,7 +91,7 @@
             <img src="<%= votes[i].get('userHeadImgUrl')%>">
             <div class="username"><%= votes[i].get('nicknameOfPUser')%></div>
             <%var date = new Date();
-            var year = date.getFullYear() - votes[i].getCreatedAt().getFullYear();
+            var year = date.getFullYear() - votes[i].getCreatedAt().getFullYear();  
             var month = date.getMonth() - votes[i].getCreatedAt().getMonth();
             var day = date.getDate() - votes[i].getCreatedAt().getDate();
             var hours = date.getHours() - votes[i].getCreatedAt().getHours();
@@ -179,7 +179,6 @@
     </div>
     <% } %>
     <% }else{ %>
-		<p>lalalalallalalalala</p>
     	<div class="vote-feed" data-feedid="<%= votes[i].getObjectId()%>">
 	        <div class="vote-user">
 	            <img src="<%= votes[i].get('userHeadImgUrl')%>">
@@ -300,7 +299,7 @@
                     }
                 }
             });
-            $(".vote-content .xuanxiang > div").click(function(){
+            $(document).on('click',".vote-content .xuanxiang > div",function(){
 				//alert("click OK");
             	var feed = $(this).closest(".vote-feed");
             	var flag = 0;
@@ -415,16 +414,110 @@
                     success:function(data){
                         //alert('返回来了');
                         console.log(data);
-                        /*if(data.feeds.length>0){
+                        if(data.votes.length>0){
                             $(".loading").html("");
-                            
+                            for(var i = 0;i<data.votes.length;i++){
+                                if(data.votes[i].voteResults.voteResults.voteItemContent.itemResults!=null){
+                                    var itemresults = data.votes[i].voteResults.voteResults.voteItemContent.itemResults;
+                                    var flag = 0;
+                                    var choicewhat ;
+                                    for(var j=0;j<itemresults.length;j++){
+                                        if (itemresults[j].username=="<%= username%>") {
+                                            flag = 1;
+                                            choicewhat = itemresults[j].choice;
+                                        }
+                                    }
+                                    if(flag==0){
+                                        var date = new Date();
+                                        var date1 = new Date(data.votes[i].createdAt);
+                                        var year = date.getFullYear() - date1.getFullYear();  
+                                        var month = date.getMonth() - date1.getMonth();
+                                        var day = date.getDate() - date1.getDate();
+                                        var hours = date.getHours() - date1.getHours();
+                                        var minute = date.getMinutes() - date1.getMinutes();
+                                        var last_time = "";
+                                        if(year>0){
+                                            last_time= year + "年前";
+                                        }else if(month>0){
+                                            last_time= month + "月前";
+                                        }else if(day>0){
+                                            last_time= day + "天前";
+                                        }else if(hours>0){
+                                            last_time= hours + "小时前";
+                                        }else if(minute>0){
+                                            last_time= minute + "分钟前";
+                                        }else{
+                                            last_time= "刚刚";
+                                        }
+                                        var str = "<div class=\"vote-feed\" data-feedid=\""+ data.votes[i].objectId +"\"><div class=\"vote-user\"><img src=\""+ data.votes[i].userHeadImgUrl +"\"><div class=\"username\">"+ data.votes[i].nicknameOfPUser +"</div>"+"<div class=\"time\">"+ last_time +"</div></div><div class=\"vote-content\"><div class=\"content\">"+ data.votes[i].voteContent.voteContent.voteDecription +"</div><div class=\"xuanxiang\">";
+                                        var str1 = "";
+                                        for(var y=0;y<data.votes[i].voteContent.voteContent.choiceItem.length;y++){
+                                            str1 = str1 + "<div class=\"\"><span id=\""+ y +"\">"+ data.votes[i].voteContent.voteContent.choiceItem[y] +"</span></div>";
+                                        }
+                                        var str2 = "</div></div><div class=\"vote-info\"><div class=\"sum\">"+ data.votes[i].voteCnt +"人参与</div></div></div>";
+                                        str = str + str1 + str2;
+                                        $(".container").append(str);
+                                    }else{
+                                        var date = new Date();
+                                        var date1 = new Date(data.votes[i].createdAt);
+                                        var year = date.getFullYear() - date1.getFullYear();  
+                                        var month = date.getMonth() - date1.getMonth();
+                                        var day = date.getDate() - date1.getDate();
+                                        var hours = date.getHours() - date1.getHours();
+                                        var minute = date.getMinutes() - date1.getMinutes();
+                                        var last_time = "";
+                                        var str = "<div class=\"vote-feed ok\" data-feedid=\""+ data.votes[i].objectId +"\"><div class=\"vote-user\"><img src=\""+ data.votes[i].userHeadImgUrl +"\"><div class=\"username\">"+ data.votes[i].nicknameOfPUser +"</div><div class=\"time\">"+ last_time +"</div></div><div class=\"vote-content\"><div class=\"content\">"+ data.votes[i].voteContent.voteContent.voteDecription +"</div><div class=\"xuanxiang\">";
+                                        var str1 = "";
+                                        for(var y=0;y<data.votes[i].voteContent.voteContent.choiceItem.length;y++){
+                                            if(choicewhat==y){ 
+                                            str1 = str1 + "<div class=\"user-click\"><div class=\"percent\" style=\"width:"+data.votes[i].voteResults.voteResults.voteItemContent.choiceItem[y].percent+"%;\"></div><span class=\"n\" id=\""+y+"\">"+data.votes[i].voteContent.voteContent.choiceItem[y]+"</span><span class=\"b\" id=\""+y+"\">"+data.votes[i].voteResults.voteResults.voteItemContent.choiceItem[y].percent+"%</span></div>";
+                                            }else{
+                                            str1 = str1 + "<div class=\"\"><div class=\"percent\" style=\"width:"+data.votes[i].voteResults.voteResults.voteItemContent.choiceItem[y].percent+"%;\"></div><span class=\"n\" id=\""+ y +"\">"+data.votes[i].voteContent.voteContent.choiceItem[y]+"</span><span class=\"b\" id=\""+ y +"\">"+ data.votes[i].voteResults.voteResults.voteItemContent.choiceItem[y].percent+"%</span></div>";
+                                            }
+                                        } 
+                                        var str2 = "</div></div><div class=\"vote-info\"><div class=\"sum\">"+ data.votes[i].voteCnt +"人参与</div></div></div>";
+                                        str = str + str1 + str2;
+                                        $(".container").append(str);
+                                    }
+                                }else{
+                                    var date = new Date();
+                                        var date1 = new Date(data.votes[i].createdAt);
+                                        var year = date.getFullYear() - date1.getFullYear();  
+                                        var month = date.getMonth() - date1.getMonth();
+                                        var day = date.getDate() - date1.getDate();
+                                        var hours = date.getHours() - date1.getHours();
+                                        var minute = date.getMinutes() - date1.getMinutes();
+                                        var last_time = "";
+                                        if(year>0){
+                                            last_time= year + "年前";
+                                        }else if(month>0){
+                                            last_time= month + "月前";
+                                        }else if(day>0){
+                                            last_time= day + "天前";
+                                        }else if(hours>0){
+                                            last_time= hours + "小时前";
+                                        }else if(minute>0){
+                                            last_time= minute + "分钟前";
+                                        }else{
+                                            last_time= "刚刚";
+                                        }
+                                        var str = "<div class=\"vote-feed\" data-feedid=\""+ data.votes[i].objectId +"\"><div class=\"vote-user\"><img src=\""+ data.votes[i].userHeadImgUrl +"\"><div class=\"username\">"+ data.votes[i].nicknameOfPUser +"</div>"+"<div class=\"time\">"+ last_time +"</div></div><div class=\"vote-content\"><div class=\"content\">"+ data.votes[i].voteContent.voteContent.voteDecription +"</div><div class=\"xuanxiang\">";
+                                        var str1 = "";
+                                        for(var y=0;y<data.votes[i].voteContent.voteContent.choiceItem.length;y++){
+                                            str1 = str1 + "<div class=\"\"><span id=\""+ y +"\">"+ data.votes[i].voteContent.voteContent.choiceItem[y] +"</span></div>";
+                                        }
+                                        var str2 = "</div></div><div class=\"vote-info\"><div class=\"sum\">"+ data.votes[i].voteCnt +"人参与</div></div></div>";
+                                        str = str + str1 + str2;
+                                        $(".container").append(str);
+                                }
+                            }
                         }else{
                             if($("ul.feed_ul_list>li").length>0){
                                 $(".loading").html("这是全部的帖子了哦～快去来一发吧～");
                             }else{
                                 $(".loading").html("现在还没有帖子～快去来一发吧～");
                             }
-                        }*/
+                        }
                         skip_num = 0;
                         myScroll.refresh();
                         flag = 0;
