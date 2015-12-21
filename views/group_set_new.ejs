@@ -22,7 +22,7 @@
     body {background-color: #FBFBFB;}
     .photo_list {background-color: #FFFFFF;}
     .tx {padding-top: 15px; }
-    .tx span{display: block;}
+    .tx span{display: block;width: 100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align: center;}
     img {width: 100%;border-radius: 10px;}
     .tuichu {margin-right: 0.3em;margin-left: 0.3em;margin-top: 0.8em;margin-bottom: 0.4em;}
     .number_sum {margin-top: 0em;}
@@ -32,21 +32,11 @@
   <body>
     <div class="container photo_list">
       <div class="row">
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 tx">
-          <img src="/images/test_touxiang.jpg"><span>b</span>
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 tx">
-          <img src="/images/test_touxiang.jpg"><span>blod</span>
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 tx">
-          <img src="/images/test_touxiang.jpg"><span>blod</span>
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 tx">
-          <img src="/images/test_touxiang.jpg"><span>blod</span>
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 tx">
-          <img src="/images/test_touxiang.jpg"><span>blod</span>
-        </div>
+        <% for(var i = 0;i<users.length;i++){ %>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 tx">
+                <img src="<%= users[i].get('headimgurl')%>"><span><%= users[i].get('nickname')%></span>
+            </div>
+        <% } %>
       </div>
     </div>
     
@@ -58,7 +48,7 @@
                 
             </div>
             <div class="weui_cell_bd weui_cell_primary">
-                <p>全部群成员(69)</p>
+                <p>全部群成员(<%= groupFollowersNum%>)</p>
             </div>
             <div class="weui_cell_ft">
                 
@@ -76,7 +66,7 @@
                 <p>群聊名称</p>
             </div>
             <div class="weui_cell_ft">
-                聊趣test群
+                <%= groupNickname%>
             </div>
         </a>
         <a class="weui_cell" href="javascript:;">
