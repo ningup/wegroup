@@ -87,14 +87,13 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 	userclass.getUserObj(message.FromUserName,function(err,user){
 		if(err){
 			if(message.MsgType === 'event' && message.Event === 'subscribe'){
-					var text = '还处于开发中，敬请关注！'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击注册</a>'; 
-					api.sendText(message.FromUserName, text, function(err,results){
-							if(err){
-								api.sendText(message.FromUserName, err, function(err,results){
-								});
-							}							  
-					});
-
+				var text = '还处于开发中，敬请关注！'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击注册</a>'; 
+				api.sendText(message.FromUserName, text, function(err,results){
+					if(err){
+						api.sendText(message.FromUserName, err, function(err,results){
+						});
+					}							  
+				});
 			}
 			else {
 				var text = '您需要先注册一下，秒注册！'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击注册</a>';
@@ -107,272 +106,252 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 			}
 		}
 		else{
-				if(message.MsgType === 'text'){
-				//	userclass.getUserObj(message.FromUserName,function(err,user){
-						if(user.get('whichStatus')==='wegroup_create'){
-							var len = publicclass.getStrLen(message.Content);
-							if(len > 20 || len < 4){
-									var text = '字数要在2到10之间，嘿嘿~';
-									api.sendText(message.FromUserName, text, function(err,results){
-										if(err){
-											api.sendText(message.FromUserName, err, function(err,results){
-											});
-										}							  
-									});
-							}
-							else{
-								user.set('tempGroupName',message.Content);
-								user.save().then(function(userObj){
-									var text = '您是否要创建微群'+'「'+message.Content+'」。'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/create&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击创建</a>';
-									api.sendText(message.FromUserName, text, function(err,results){
-										if(err){
-											api.sendText(message.FromUserName, err, function(err,results){
-											});
-										}							  
-									});
-								});	
-							}
-						}
-						else if(user.get('whichStatus')==='wegroup_switch'){
-							groupclass.groupSwitch(message.FromUserName,message.Content);		
-						}
-						else{
-							//res.reply({type: "text", content: '你发的信息是'+message.Content});
-						}		
-				//	});
-				}
-				else if(message.MsgType === 'image' || message.MsgType === 'voice'){
-				//	userclass.getUserObj(message.FromUserName,function(err,user){
-						if(user.get('whichStatus')==='wegroup_create'){	
-							var text = '群名字只能是文字哦'; 
-							api.sendText(message.FromUserName, text, function(err,results){
-									if(err){
-										api.sendText(message.FromUserName, err, function(err,results){
-										});
-									}							  
-							});
-						}
-						else if(user.get('whichStatus')==='wegroup_switch'){
-							//res.reply('不是数字，请重新输入：');   
-							var text = '不是数字，请重新输入：'; 
-							api.sendText(message.FromUserName, text, function(err,results){
-									if(err){
-										api.sendText(message.FromUserName, err, function(err,results){
-										});
-									}							  
-							});
-						}
-						else{
-							//res.reply('');
-						}		
-				//	});
-				}
-				else if(message.MsgType === 'video'){
-					//userclass.getUserObj(message.FromUserName,function(err,user){
-						if(user.get('whichStatus')==='wegroup_create'){	
-							var text = '群名字只能是文字哦'; 
-							api.sendText(message.FromUserName, text, function(err,results){
-									if(err){
-										api.sendText(message.FromUserName, err, function(err,results){
-										});
-									}							  
-							});
-						}
-						else if(user.get('whichStatus')==='wegroup_switch'){
-							var text = '不是数字，请重新输入：'; 
-							api.sendText(message.FromUserName, text, function(err,results){
-									if(err){
-										api.sendText(message.FromUserName, err, function(err,results){
-										});
-									}							  
-							});     	
-						}	
-						else{
-						}		
-				//	});
-				}
-				else if(message.MsgType === 'event'){
-					if(message.Event === 'subscribe'){
-							user.set('subscribe', 1);
-							user.save();
-							//var text = '使用微群帮，开启便捷群生活！'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击注册</a>'; 
-							var text = '还处于开发中，敬请关注！';
-							api.sendText(message.FromUserName, text, function(err,results){
-									if(err){
-										api.sendText(message.FromUserName, err, function(err,results){
-										});
-									}							  
-							});
-
-					}
-					else if(message.Event === 'unsubscribe'){
-						userclass.getUserObj(message.FromUserName,function(err,user){
+			if(message.MsgType === 'text'){
+				if(user.get('whichStatus')==='wegroup_create'){
+					var len = publicclass.getStrLen(message.Content);
+					if(len > 20 || len < 4){
+						var text = '字数要在2到10之间，嘿嘿~';
+						api.sendText(message.FromUserName, text, function(err,results){
 							if(err){
-								
+								api.sendText(message.FromUserName, err, function(err,results){
+								});
+							}							  
+						});
+					}
+					else{
+						user.set('tempGroupName',message.Content);
+						user.save().then(function(userObj){
+							var text = '您是否要创建微群'+'「'+message.Content+'」。'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/create&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击创建</a>';
+							api.sendText(message.FromUserName, text, function(err,results){
+								if(err){
+									api.sendText(message.FromUserName, err, function(err,results){
+									});
+								}							  
+							});
+						});	
+					}
+				}
+				else if(user.get('whichStatus')==='wegroup_switch'){
+					groupclass.groupSwitch(message.FromUserName,message.Content);		
+				}
+				else{
+
+				}		
+			}
+			else if(message.MsgType === 'image' || message.MsgType === 'voice'){
+				if(user.get('whichStatus')==='wegroup_create'){	
+					var text = '群名字只能是文字哦'; 
+					api.sendText(message.FromUserName, text, function(err,results){
+						if(err){
+							api.sendText(message.FromUserName, err, function(err,results){
+							});
+						}							  
+					});
+				}
+				else if(user.get('whichStatus')==='wegroup_switch'){ 
+					var text = '不是数字，请重新输入：'; 
+					api.sendText(message.FromUserName, text, function(err,results){
+						if(err){
+							api.sendText(message.FromUserName, err, function(err,results){
+							});
+						}							  
+					});
+				}
+				else{
+				}		
+			}
+			else if(message.MsgType === 'video'){
+				if(user.get('whichStatus')==='wegroup_create'){	
+					var text = '群名字只能是文字哦'; 
+					api.sendText(message.FromUserName, text, function(err,results){
+						if(err){
+							api.sendText(message.FromUserName, err, function(err,results){
+							});
+						}							  
+					});
+				}
+				else if(user.get('whichStatus')==='wegroup_switch'){
+					var text = '不是数字，请重新输入：'; 
+					api.sendText(message.FromUserName, text, function(err,results){
+						if(err){
+							api.sendText(message.FromUserName, err, function(err,results){
+							});
+						}							  
+					});     	
+				}	
+				else{
+				}		
+			}
+			else if(message.MsgType === 'event'){
+				if(message.Event === 'subscribe'){
+					user.set('subscribe', 1);
+					user.save();
+					var text = '还处于开发中，敬请关注！';
+					api.sendText(message.FromUserName, text, function(err,results){
+						if(err){
+							api.sendText(message.FromUserName, err, function(err,results){
+							});
+						}							  
+					});
+				}
+				else if(message.Event === 'unsubscribe'){
+					userclass.getUserObj(message.FromUserName,function(err,user){
+						if(err){
+						}
+						else{
+							user.set('subscribe', 0);
+							user.save();
+						}
+					});
+				} 
+				else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SWITCH'){
+					user.set('whichStatus','wegroup_switch');
+					user.set('tempGroupName','');
+					user.save().then(function(userObj){
+						userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+							if(err){
+								var text = '你还没有加入群呢，快去创建一个吧！'; 
+								api.sendText(message.FromUserName, text, function(err,results){
+									if(err){
+										api.sendText(message.FromUserName, err, function(err,results){
+										});
+									}							  
+								}); 
 							}
 							else{
-								user.set('subscribe', 0);
-								user.save();
+								userclass.getUserAllGroup(message.FromUserName,function(err,queryUser,results){
+									var tempGroupSwitch = new Array();
+									var content = '';
+									content = '当前所在群是:'+'<'+whichGroupNameNow+'>\n'; 
+									content += '所有群群如下,输入序号切换。\n';
+									var j=0;
+									for(var i=0; i<results.length; i++){
+										j++;
+										content +='['+i+']'+results[i].get('nickname')+'\n';
+										tempGroupSwitch[i]=new Object();
+										tempGroupSwitch[i].gid = results[i].getObjectId();
+										tempGroupSwitch[i].nickname = results[i].get('nickname');
+										if(j===results.length){
+											user.set('tempGroupSwitch',tempGroupSwitch);
+											user.save();
+											var text = content;
+											api.sendText(message.FromUserName, text, function(err,results){
+												if(err){
+													api.sendText(message.FromUserName, err, function(err,results){
+													});
+												}							  
+											}); 
+										}						
+									}
+								}); 	 
 							}
 						});
-					} 
-					else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SWITCH'){
-					//	userclass.getUserObj(message.FromUserName,function(err,user){
-							user.set('whichStatus','wegroup_switch');
-							user.set('tempGroupName','');
-							user.save().then(function(userObj){
-								userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
-									if(err){
-										//res.reply({type: "text", content: '你还没有加入群呢，快去创建一个吧！'});
-											var text = '你还没有加入群呢，快去创建一个吧！'; 
-											api.sendText(message.FromUserName, text, function(err,results){
-													if(err){
-														api.sendText(message.FromUserName, err, function(err,results){
-														});
-													}							  
-											}); 
+					});
+				}
+				else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_CREATE'){
+					user.set('whichStatus','wegroup_create');
+					user.set('tempGroupName','');
+					user.save().then(function(userObj){
+						var text = '进入创建群功能，群聊功能关闭，请输入你想创建的群名';
+						api.sendText(message.FromUserName, text, function(err,results){
+							if(err){
+								api.sendText(message.FromUserName, err, function(err,results){
+								});
+							}							  
+						}); 
+					});			
+				}
+				else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SHARE_JOIN'){
+					userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+						if(err){
+							var text = '你还没有加入群呢，快去创建一个吧！'; 
+							api.sendText(message.FromUserName, text, function(err,results){
+								if(err){
+									api.sendText(message.FromUserName, err, function(err,results){
+									});
+								}							  
+							}); 
+						}
+						else{
+							var whichGroupNow = user.get('whichGroupNow');
+							var whichGroupNameNow = user.get('whichGroupNameNow');
+							var articles = [
+								{
+								 "title":	'群名：'+whichGroupNameNow+' 点击加入',
+								 "description":'微群帮',
+								 "url":'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/join?id='+whichGroupNow+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect',
+								 "picurl":user.get('headimgurlShare')
+								}];
+								api.sendNews(message.FromUserName, articles, function(err,results){
+								if(err){
+									api.sendText(message.FromUserName, err, function(err,results){
+									});
+								}							  
+							}); 
+						}
+					});
+					user.set('whichStatus','wegroup_chat');
+					user.set('tempGroupName','');
+					user.set('tempGroupSwitch',[]);
+					user.save();
+				}
+				else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_NOTICE'){
+					userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+						if(err){
+							var text = '你还没有加入群呢，快去创建一个吧！'; 
+							api.sendText(message.FromUserName, text, function(err,results){
+								if(err){
+									api.sendText(message.FromUserName, err, function(err,results){
+									});
+								}							  
+							}); 
+						}
+						else{
+							userclass.getGroupNotice(message.FromUserName,function(isOwner,queryUser,group,groupNotice){
+								if(isOwner===1){  //是群主
+									var text='' ;
+									if(groupNotice ==='void'){
+										console.log('notice',groupNotice);
+										text = '你还没有设置群公告';
 									}
 									else{
-										userclass.getUserAllGroup(message.FromUserName,function(err,queryUser,results){
-											var tempGroupSwitch = new Array();
-											var content = '';
-											content = '当前所在群是:'+'<'+whichGroupNameNow+'>\n'; 
-											content += '所有群群如下,输入序号切换。\n';
-											var j=0;
-											for(var i=0; i<results.length; i++){
-												j++;
-												//content += '<a href=\"'+'dev.wegroup.avosapps.com/group/switchPre?id='+results[i].getObjectId()+'\">'+'「'+results[i].get('nickname')+'」'+'<\/a>';	
-												content +='['+i+']'+results[i].get('nickname')+'\n';
-												tempGroupSwitch[i]=new Object();
-												tempGroupSwitch[i].gid = results[i].getObjectId();
-												tempGroupSwitch[i].nickname = results[i].get('nickname');
-												if(j===results.length){
-													user.set('tempGroupSwitch',tempGroupSwitch);
-													user.save();
-													//res.reply({type: "text", content: content});
-														var text = content;
-														api.sendText(message.FromUserName, text, function(err,results){
-																if(err){
-																	api.sendText(message.FromUserName, err, function(err,results){
-																	});
-																}							  
-														}); 
-												}						
-											}
-										}); 	 
+										text = groupNotice;
 									}
-								});
+									text += '\n';
+									text+='<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/notice&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击编辑群公告</a>';
+									api.sendText(message.FromUserName, text, function(err,results){
+										if(err){
+											api.sendText(message.FromUserName, text, function(err,results){
+											});
+										}							  
+									});
+								}
+								else{				//不是群主
+									var text='';
+									if(groupNotice==='void'){
+										text += '群主还没有设置群公告';
+									}
+									else{
+										text = groupNotice;
+									}
+									api.sendText(message.FromUserName, text, function(err,results){
+										if(err){
+											api.sendText(message.FromUserName, text, function(err,results){
+											});
+										}							  
+									});
+								}
 							});
-					//	});
-					}
-					else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_CREATE'){
-					//userclass.getUserObj(message.FromUserName,function(err,user){
-							user.set('whichStatus','wegroup_create');
-							user.set('tempGroupName','');
-							user.save().then(function(userObj){
-								var text = '进入创建群功能，群聊功能关闭，请输入你想创建的群名';
-								api.sendText(message.FromUserName, text, function(err,results){
-										if(err){
-											api.sendText(message.FromUserName, err, function(err,results){
-											});
-										}							  
-								}); 
-							});			
-						//});
-					}
-					else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SHARE_JOIN'){
-						userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
-							if(err){
-								var text = '你还没有加入群呢，快去创建一个吧！'; 
-								api.sendText(message.FromUserName, text, function(err,results){
-										if(err){
-											api.sendText(message.FromUserName, err, function(err,results){
-											});
-										}							  
-								}); 
-							}
-							else{
-								//userclass.getUserObj(message.FromUserName,function(err,user){
-									var whichGroupNow = user.get('whichGroupNow');
-									var whichGroupNameNow = user.get('whichGroupNameNow');
-									var articles = [
-									  {
-									   "title":	'群名：'+whichGroupNameNow+' 点击加入',
-									   "description":'微群帮',
-									   "url":'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/join?id='+whichGroupNow+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect',
-									   "picurl":user.get('headimgurlShare')
-									  }];
-										api.sendNews(message.FromUserName, articles, function(err,results){
-										if(err){
-											api.sendText(message.FromUserName, err, function(err,results){
-											});
-										}							  
-									}); 
-								//});
-							}
-						});
-						user.set('whichStatus','wegroup_chat');
-						user.set('tempGroupName','');
-						user.set('tempGroupSwitch',[]);
-						user.save();
-					}
-					else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_NOTICE'){
-						userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
-							if(err){
-								var text = '你还没有加入群呢，快去创建一个吧！'; 
-								api.sendText(message.FromUserName, text, function(err,results){
-										if(err){
-											api.sendText(message.FromUserName, err, function(err,results){
-											});
-										}							  
-								}); 
-							}
-							else{
-								userclass.getGroupNotice(message.FromUserName,function(isOwner,queryUser,group,groupNotice){
-									if(isOwner===1){  //是群主
-										var text='' ;
-										if(groupNotice ==='void'){
-											console.log('notice',groupNotice);
-											text = '你还没有设置群公告';
-										}
-										else{
-											text = groupNotice;
-										}
-										text += '\n';
-										text+='<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/notice&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击编辑群公告</a>';
-										api.sendText(message.FromUserName, text, function(err,results){
-											if(err){
-												api.sendText(message.FromUserName, text, function(err,results){
-												});
-											}							  
-										});
-									}
-									else{				//不是群主
-										var text='';
-										if(groupNotice==='void'){
-											text += '群主还没有设置群公告';
-										}
-										else{
-											text = groupNotice;
-										}
-										api.sendText(message.FromUserName, text, function(err,results){
-											if(err){
-												api.sendText(message.FromUserName, text, function(err,results){
-												});
-											}							  
-										});
-									}
-								});
-							}
-						});
-						user.set('whichStatus','wegroup_chat');
-						user.set('tempGroupName','');
-						user.set('tempGroupSwitch',[]);
-						user.save();
-					}
-					else{}
+						}
+					});
+					user.set('whichStatus','wegroup_chat');
+					user.set('tempGroupName','');
+					user.set('tempGroupSwitch',[]);
+					user.save();
 				}
-				else {} 
+				else{}
+			}
+			else {} 
 			
 		}
 	});
@@ -425,38 +404,29 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function(req, res) {
-/*	if (req.cookies.isVisit) {
-    console.log(req.cookies);
-		req.cookies.isVisit+=1;
-    res.send("再次欢迎访问");
-  } else {
-    res.cookie('isVisit', 1);
-    res.send("欢迎第一次访问");
-  }*/
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
-				AV.User.logIn("orSEhuNxAkianv5eFOpTJ3LXWADE", "A00000000~", {
-					success: function(user) {
-						// 成功了，现在可以做其他事情了.
-							res.redirect('/feed');
-					},
-					error: function(user, error) {
-						// 失败了.
-					}
-				});
+			AV.User.logIn("orSEhuNxAkianv5eFOpTJ3LXWADE", "A00000000~", {
+				success: function(user) {
+					// 成功了，现在可以做其他事情了.
+						res.redirect('/feed');
+				},
+				error: function(user, error) {
+					// 失败了.
+				}
+			});
 	  }else{
 			var openid = result.data.openid;
 			var accessToken = result.data.access_token;
 			if(AV.User.current() && (AV.User.current().get('username') == openid) ){
-					res.redirect("/feed");
+				res.redirect("/feed");
 			}
 			else{
 				res.redirect("https://open.weixin.qq.com/con nect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 
 			}
 	 }
- });
-  
+ }); 
 });
 
 // 可以将一类的路由单独保存在一个文件中

@@ -188,6 +188,7 @@ function FeedClass()
 							var commentCnt = feed.get('commentCnt');
 							if(commentCnt >= 1)
 								commentCnt -= 1;
+							feed.set('commentCnt',commentCnt);
 							feed.save();
 							comment.set('isRemoved',1);
 							comment.save().then(function(c){
@@ -206,6 +207,7 @@ function FeedClass()
 							var replyCnt = C.get('replyCnt');
 							if(replyCnt >= 1)
 								replyCnt -= 1;
+							C.set('replyCnt',replyCnt);
 							C.save();
 							comment.set('isRemoved',1);
 							comment.save().then(function(c){
