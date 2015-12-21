@@ -118,6 +118,7 @@ router.get('/', function(req, res, next) {
 									feed_scroll:feed_scroll,
 									feedCnt: group.get('feedCnt'),
 									followersNum:group.get('followersNum'),
+									groupOwner:group.get('createdBy'),
 									groupObjId:groupObjId,
 									cnt:cnt,
 									isSignIn:isSignIn,
