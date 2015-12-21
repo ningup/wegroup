@@ -533,6 +533,7 @@ router.get('/detail',function(req,res,next){
 		var username = AV.User.current().get('username');
 		var userclass = new UserClass();
 		var commentclass = new CommentClass();
+		var likeclass = new LikeClass();
 		user.set('feed_cookies',parseInt(cookies_feeds_load));
 		user.set('feed_scroll',parseInt(cookies_feeds_scroll));
 		user.save();
@@ -557,18 +558,22 @@ router.get('/detail',function(req,res,next){
 									feed.set('visitCnt',visitCnt);
 									feed.save();
 									commentclass.getCommentInFeedDetail(feedObjId,0,function(err,havecomment,commentJson){
-										console.log(groupNickname);
+										//console.log(groupNickname);
 										//console.log(commentJson);
-										res.render('lyh_test_feed', {
+										likeclass.isLike(feed,function(islike){
+												res.render('lyh_test_feed', {
 												username: username,
 												groupObjId:groupObjId,
 												feedObjId:feedObjId,
 												groupNickname:groupNickname,
 												feed:feed,
+												islike:islike,
 												havecomment:havecomment,
 												commentJson:commentJson
 
 										 });	
+											
+										});
 
 									});
 

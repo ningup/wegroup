@@ -87,6 +87,25 @@ function LikeClass()
 			    }
 		});
 	};
+	this.isLike = function(feed,username,cb){
+			var relation = feed.relation("likeUsers");
+			var queryUser = relation.query();
+			queryUser.equalTo("username",username);
+			queryUser.first({
+				success:function(queryUser){
+					if(queryUser != null){
+						cb(1);
+					}
+					else
+						cb(0);
+
+				},
+				error:function(error){
+						cb(0);
+				}
+			});
+	};
 
 };
+
 module.exports = LikeClass;
