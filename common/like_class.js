@@ -87,6 +87,7 @@ function LikeClass()
 			    }
 		});
 	};
+	
 	this.isLike = function(feed,username,cb){
 			var relation = feed.relation("likeUsers");
 			var queryUser = relation.query();

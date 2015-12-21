@@ -364,9 +364,11 @@ router.get('/set', function(req, res, next) {
 					 var queryFollowers = relation.query();
 					 queryFollowers.limit(20);
 					 queryFollowers.find().then(function(users){
+						 console.log(users)
 						 res.render('group_set_new', {
 							users: users,
-							groupNickname:groupNickname
+							groupNickname:groupNickname,
+							groupFollowersNum:group.get('followersNum')
 						 });
 
 					 });
