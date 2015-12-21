@@ -338,7 +338,9 @@
                                 last_time= "刚刚";
                             }%>
                       <span class="time"><!--<%= commentJson.comments[i].time%>--><%= last_time%></span>
-                      <span class="delete">删除</span>
+                      <% if(commentJson.comments[i].toWhom==username){ %>
+                        <span class="delete">删除</span>
+                        <% } %>
                       <span class="reply "><%= commentJson.comments[i].replyCnt%></span>
                       <span class="like">1181111</span>
                     </div>
@@ -611,6 +613,28 @@
             $(".publish_form #commentImgArray").val(img_str);
             $(".publish_form").submit();
         });
+        $(document).on('click',".comment-action .delete",function(){
+            $(this).closest("a").attr("data-imgcf","true");
+            var commentObjId = $(this).closest("li#num_flag").attr("data-cid");
+            var aj = $.ajax({
+                    url:'/comment/remove',
+                    data:{
+                        "commentObjId":commentObjId
+                    },
+                    type:'post',
+                    dataType:'json',
+                    success:function(data){
+                        //alert("coming");
+                        if(data.isComment=="1"){
+                            $("li#num_flag").each(function(){
+                                if($(this).attr("data-cid")==data.cid){
+                                    $(this).remove();
+                                }
+                            });
+                        }
+                    }
+                });
+        });
         $(document).on('click',".pic>img",function(event){
             event.stopPropagation();
             var pswpElement = $(".pswp")[0];
@@ -823,13 +847,18 @@
                                 }else{
                                     last_time= "刚刚";
                                 }
+                                if(data.commentJson.comments[i].toWhom=="<%= username%>"){
                                 comments = "<a href=\"/comment/detail?cid="+data.commentJson.comments[i].id+"&fid="+"<%= feedObjId%>"+"&toWhom="+data.commentJson.comments[i].toWhom+"\" data-imgcf=\"false\" ><li data-cid=\""+data.commentJson.comments[i].id+"\" id=\"num_flag\"><div class=\"comment-wrapper\"><div class=\"user-avatar\"><img src=\""+data.commentJson.comments[i].headimgurl+"\"></div><div class=\"name-wrap\"><span class=\"user-nick\">"+data.commentJson.comments[i].nickname+"</span><span class=\"lounum\">2楼</span></div><div class=\"content-wrapper\"><div class=\"ping-content\">"+data.commentJson.comments[i].content+"</div><div class=\"ping-container\">" + pics + "</div></div><div class=\"comment-action\"><span class=\"time\">"+/*data.commentJson.comments[i].time*/last_time+"</span><span class=\"delete\">删除</span><span class=\"reply \">"+ data.commentJson.comments[i].replyCnt +"</span><span class=\"like\">1181111</span></div>" + replys + "</div></li></a>";
+                                }else{
+                                    comments = "<a href=\"/comment/detail?cid="+data.commentJson.comments[i].id+"&fid="+"<%= feedObjId%>"+"&toWhom="+data.commentJson.comments[i].toWhom+"\" data-imgcf=\"false\" ><li data-cid=\""+data.commentJson.comments[i].id+"\" id=\"num_flag\"><div class=\"comment-wrapper\"><div class=\"user-avatar\"><img src=\""+data.commentJson.comments[i].headimgurl+"\"></div><div class=\"name-wrap\"><span class=\"user-nick\">"+data.commentJson.comments[i].nickname+"</span><span class=\"lounum\">2楼</span></div><div class=\"content-wrapper\"><div class=\"ping-content\">"+data.commentJson.comments[i].content+"</div><div class=\"ping-container\">" + pics + "</div></div><div class=\"comment-action\"><span class=\"time\">"+/*data.commentJson.comments[i].time*/last_time+"</span><span class=\"reply \">"+ data.commentJson.comments[i].replyCnt +"</span><span class=\"like\">1181111</span></div>" + replys + "</div></li></a>";
+                                }
                                 $("ul.list").append(comments);
                             }
                         }else{
-                            if($("ul.reply-list>li").length>0){
-                                $(".loading").html("这是全部的评论了哦～快去来一发吧～");
+                            if($("ul.reply-list>li")!=null){
+                                $(".loading").html("这是全部的评论了哦～");
                             }else{
+                                console.log("没有吗");
                                 $(".loading").html("现在还没有评论～快去来一发吧～");
                             }
                         }
