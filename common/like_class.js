@@ -13,10 +13,7 @@ function LikeClass()
 					if(like_cnt < 0){
 						console.log('获取当前点赞数失败');
 				    }else{
-						/*like_cnt += 1;
-						feed.set('likeNum',like_cnt);*/
-						var relation = feed.relation("likeUsers");
-						var queryUser = relation.query();
+						var queryUser = new AV.Query(AV.User);
 						queryUser.equalTo("username",username);
 						queryUser.first({
 							success:function(queryUser){
@@ -24,18 +21,18 @@ function LikeClass()
 									like_cnt += 1;
 									feed.set('likeNum',like_cnt);
 									console.log('like user'+queryUser.get('nickname'));
-									//var relation = feed.relation('likeUsers');
+									var relation = feed.relation('likeUsers');
 									relation.add(queryUser);
 									feed.save().then(function(feedObj){
 											cb(null,feedObj);
 									});
 								}
 								else
-									cb(1,feedObj);
+									cb(1,feed);
 				
 							},
 							error:function(error){
-									cb(1,feedObj);
+									cb(1,feed);
 							}
 						});
 						
