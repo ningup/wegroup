@@ -560,7 +560,7 @@ router.get('/detail',function(req,res,next){
 									commentclass.getCommentInFeedDetail(feedObjId,0,function(err,havecomment,commentJson){
 										//console.log(groupNickname);
 										//console.log(commentJson);
-										likeclass.isLike(feed,function(islike){
+										likeclass.isLike(feed,username,function(islike){
 												res.render('lyh_test_feed', {
 												username: username,
 												groupObjId:groupObjId,
