@@ -770,7 +770,9 @@
     <script type="text/javascript">
         var windowURL = window.URL || window.webkitURL;
         var inputElement = document.getElementById("up-entry-one");
-        inputElement.addEventListener("change", handleFiles, false);
+        if(inputElement!=null){
+            inputElement.addEventListener("change", handleFiles, false);
+        }
         function handleFiles() {
             var fileList = this.files; 
             if (fileList.length>0) {
