@@ -54,7 +54,7 @@ function FeedClass()
 			var feedCnt = group.get('feedCnt');
 			feedCnt += 1;
 			group.set('feedCnt',feedCnt);
-			console.log("found the "+group.get('nickname'));
+			//console.log("found the "+group.get('nickname'));
 			var relation = group.relation('feedPosted');
             relation.add(feed);
             group.save();
@@ -101,7 +101,7 @@ function FeedClass()
 					var feedCnt = group.get('feedCnt');
 					feedCnt += 1;
 					group.set('feedCnt',feedCnt);
-					console.log("found the "+group.get('nickname'));
+					//console.log("found the "+group.get('nickname'));
 					var relation = group.relation('feedPosted');
 					relation.add(feed);
 					group.save();
@@ -166,7 +166,7 @@ function FeedClass()
 									queryG.get(groupObjId, {
 									success: function(group) {
 										// 成功获得实例
-										console.log("found the "+group.get('nickname'));
+										//console.log("found the "+group.get('nickname'));
 										var relation = group.relation('feedPosted');
 										relation.add(feed);
 										group.save();
@@ -218,7 +218,7 @@ function FeedClass()
 		queryG.get(groupObjId, {
 		 success: function(group) {
 			// 成功获得实例
-			console.log("found the "+group.get('nickname'));
+			//console.log("found the "+group.get('nickname'));
 			var relation = group.relation('feedPosted');
             relation.add(feed);
             group.save();
@@ -249,7 +249,7 @@ function FeedClass()
 	};
 	this.set_vote = function(username,feedObjId,choiceId,cb){
 		var query = new AV.Query(Feed);
-		console.log(feedObjId);
+		//console.log(feedObjId);
 		query.get(feedObjId, {
   		success: function(feed) {
     		// 成功获得实例

@@ -93,11 +93,11 @@ function GroupClass()
 	
 	this.groupSet = function(groupObjId,pushMsg2Wechat,identityVerify){
 		var query = new AV.Query(Group);
-		console.log(groupObjId);
+		//console.log(groupObjId);
 		query.get(groupObjId, {
   		success: function(group) {
     		// 成功获得实例
-			console.log('find group in groupSet');
+			//console.log('find group in groupSet');
 			group.set('pushMsg2Wechat',pushMsg2Wechat);
 			group.set('identityVerify',identityVerify);
 			//group.set('groupColor',groupColor);
@@ -111,11 +111,11 @@ function GroupClass()
    }; 
 	this.joinGroup = function(groupObjId,username,cb){
 		var query = new AV.Query(Group);
-		console.log('jaqunzhe...'+username);
+		//console.log('jaqunzhe...'+username);
   		//query.equalTo('nickname', groupName);
   		query.get(groupObjId,{
   			success: function(group) {
-  				console.log('jiaru de qun'+group.get('nickname'));
+  				//console.log('jiaru de qun'+group.get('nickname'));
   				if(group.get('followersNum')===0){
 					cb(1,null);
 				}
@@ -129,7 +129,7 @@ function GroupClass()
 							queryUser.set('groupJoinedNum',groupJoinedNum);
 							queryUser.set('whichGroupNow',group.getObjectId());
 							queryUser.set('whichGroupNameNow',group.get('nickname'));
-							console.log('加群者是：'+queryUser.get('nickname'));
+							//console.log('加群者是：'+queryUser.get('nickname'));
 							var relationUser = queryUser.relation('groupJoined');
 							relationUser.add(group);
 							queryUser.save().then(function(user){
@@ -177,13 +177,13 @@ function GroupClass()
         for(var i=0 ; i< groups.length;i++){
 			(function(i){
 			groupObjId = groups[i].getObjectId();
-			console.log('requery'+groupObjId);
+			//console.log('requery'+groupObjId);
 			var query = new AV.Query(Group);
 			query.get(groupObjId,{
 				success: function(group) {
 					reQueryGroup[i]=group;
 					j++;
-					console.log('requery'+group.get('nickname'));
+					//console.log('requery'+group.get('nickname'));
 					if(j===groups.length)
 					{
 							cb(null,reQueryGroup);
@@ -202,8 +202,8 @@ function GroupClass()
         queryUser.first({
             success:function(queryUser){
 				   num = parseInt(numS);
-				   console.log(isNaN(numS));
-				   console.log((queryUser.get('tempGroupSwitch')).length);
+				   //console.log(isNaN(numS));
+				   //console.log((queryUser.get('tempGroupSwitch')).length);
 				   if(isNaN(num)){
 						var text = '不是数字，请重新输入。'
 									api.sendText(username, text, function(err,results){

@@ -61,7 +61,7 @@ router.post('/', function(req, res, next) {
 	}
 	else if(commentType ==='imgtext'){
 		var commentImgArray = req.body.commentImgArray;
-		console.log("commentImgArray"+commentImgArray);
+		//console.log("commentImgArray"+commentImgArray);
 		commentImgArray = commentImgArray.split(',');
 		imgurl = commentImgArray[0];
 	}
@@ -92,30 +92,29 @@ router.post('/', function(req, res, next) {
 			msgclass.feedMsg(toWhom,'f_comment',content,username,nickname,headimgurl,groupObjId,comment.getObjectId(),feedObjId,groupName,imgurl,function(){
 				//res.redirect('/comment/detail?cid='+comment.getObjectId()+'&toWhom='+comment.get('who')+'&fid='+feedObjId);
 			});
-	});
+		});
 	}
-	else{}
-	
+	else{}	
 });
 
 router.get('/detail', function(req, res, next) {
-		var cid = req.query.cid;
-		var fid = req.query.fid;
-		var toWhom = req.query.toWhom;
-		console.log('detail');
-		var userclass = new UserClass();
+	var cid = req.query.cid;
+	var fid = req.query.fid;
+	var toWhom = req.query.toWhom;
+	//console.log('detail');
+	var userclass = new UserClass();
 	if (AV.User.current()) {
 		var username = AV.User.current().get('username');
-				var queryC = new AV.Query('Comment');
-				queryC.get(cid, {
-				  success: function(comment) {
-					// 成功获得实例
-					userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-						var groupObjId = whichGroupNow;
-						if(err){
-						 res.send('你还没有加入群呢，快去创建一个吧！');
-						}
-						else{
+		var queryC = new AV.Query('Comment');
+		queryC.get(cid, {
+			success: function(comment) {
+				// 成功获得实例
+				userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+					var groupObjId = whichGroupNow;
+					if(err){
+					  res.send('你还没有加入群呢，快去创建一个吧！');
+					}
+					else{
 						var query = new AV.Query('Comment');
 						query.ascending('createdAt');
 						query.equalTo('isReply','1');
@@ -125,11 +124,11 @@ router.get('/detail', function(req, res, next) {
 						query.find({
 							success: function(comments) {
 								// 成功了
-								console.log(comments.length);
+								//console.log(comments.length);
 								var elseComment = '0';
 								if(comments.length >=25)
-										elseComment = '1';
-								console.log('elseComment'+elseComment);
+									elseComment = '1';
+								//console.log('elseComment'+elseComment);
 								res.render('lyh_test_replyall', {
 									username: username,
 									toWhom:toWhom,
@@ -140,19 +139,18 @@ router.get('/detail', function(req, res, next) {
 									elseComment: elseComment,
 									c:comment
 								});
-
 							},
 							error: function(error) {
 								alert("Error: " + error.code + " " + error.message);
 							}
 						});
-						}
-					});
-				  },
-				  error: function(error) {
-					// 失败了.
-				  }
-			  });
+					}
+				});
+			},
+			error: function(error) {
+			// 失败了.
+			}
+		});
 	}
 	else{
 		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
@@ -160,38 +158,34 @@ router.get('/detail', function(req, res, next) {
 });
 
 router.post('/more', function(req, res, next) {
-		var cid = req.body.inWhichComment;
-		var skipCount = req.body.skipCount;
-		var query = new AV.Query('Comment');
-		query.ascending('createdAt');
-		query.equalTo('isReply','1');
-		query.equalTo('isRemoved',0);
-		query.equalTo('inWhichComment',cid);
-		query.limit(25);
-		query.skip(skipCount);
-		query.find({
-			success: function(comments) {
-				var elseComment = '0';
-				if(comments.length>=25)
-					elseComment = '1';
-				console.log('more');
-				console.log(elseComment+"   "+comments.length+"   "+skipCount);
-				res.json({"elseComment":elseComment,"comments":comments});
-				return ;
-					
-			},
-			error: function(error) {
-				alert("Error: " + error.code + " " + error.message);
-			}
-		});
-  
+	var cid = req.body.inWhichComment;
+	var skipCount = req.body.skipCount;
+	var query = new AV.Query('Comment');
+	query.ascending('createdAt');
+	query.equalTo('isReply','1');
+	query.equalTo('isRemoved',0);
+	query.equalTo('inWhichComment',cid);
+	query.limit(25);
+	query.skip(skipCount);
+	query.find({
+		success: function(comments) {
+			var elseComment = '0';
+			if(comments.length>=25)
+				elseComment = '1';
+			//console.log('more');
+			//console.log(elseComment+"   "+comments.length+"   "+skipCount);
+			res.json({"elseComment":elseComment,"comments":comments});
+			return ;
+		},
+		error: function(error) {
+			alert("Error: " + error.code + " " + error.message);
+		}
+	}); 
 });
-
 
 router.post('/like', function(req, res, next) {
 	username = req.body.username;
 	feedObjId = req.body.feedObjId;
-	//username = username.trim();
 	var likeclass = new LikeClass();
 	likeclass.like(feedObjId,username,function(err, feedObj){
 		var msg = '1';
@@ -200,13 +194,11 @@ router.post('/like', function(req, res, next) {
 		res.json({"status":1,"msg":msg,"likeNum":feedObj.get('likeNum'),"feedObjId":feedObj.getObjectId()});
 		return ;
 	});
-	
 });
 
 router.post('/unlike', function(req, res, next) {
 	username = req.body.username;
 	feedObjId = req.body.feedObjId;
-	//username = username.trim();
 	var likeclass = new LikeClass();
 	likeclass.unlike(feedObjId,username,function(err, feedObj){
 		res.json({"status":1,"msg":"unlike successful","likeNum":feedObj.get('likeNum'),"feedObjId":feedObj.getObjectId()});
@@ -221,73 +213,71 @@ router.get('/msg/detail', function(req, res, next) {
 	var toWhom = req.query.toWhom;
 	var groupObjId = req.query.gid;
 	var msgType = req.query.msgType;
-	console.log('detail');
+	//console.log('detail');
 	var userclass = new UserClass();
 	if (AV.User.current()) {
 		var username = AV.User.current().get('username');
 		var queryC = new AV.Query('Comment');
 		queryC.get(cid, {
 			success: function(comment) {
-			// 成功获得实例
-			userclass.isGroupJoined(username,groupObjId,function(status,results){
-				if(status == 2){
-				 res.send('你不在这个群里了!');
-				}
-				else if(status == 0){
-				 res.send('你没关注微群帮手');
-				}
-				else{
-					var queryF = new AV.Query('Feed');
-					queryF.get(fid, {
-						success: function(feed) {
-							// 成功获得实例
-							if(feed.get('isRemoved')==1){
-								res.send('该话题被删除了');
-							}
-							else{
-								if(msgType == 'f_comment' || msgType == 'c_reply' || msgType == 'r_reply'){
-									var query = new AV.Query('Comment');
-									query.ascending('createdAt');
-									query.equalTo('isReply','1');
-									query.equalTo('isRemoved',0);
-									query.containedIn("who",[username, toWhom]);
-									query.containedIn("toWhom",[username, toWhom]);
-									query.equalTo('inWhichComment',cid);
-									query.limit(25);
-									query.find({
-										success: function(comments) {
-											// 成功了
-											console.log(comments.length);
-											var elseComment = '0';
-											if(comments.length >=25)
-													elseComment = '1';
-											console.log('elseComment'+elseComment);
-											res.render('msg_reply', {
-												username: username,
-												toWhom:toWhom,
-												groupObjId:groupObjId,
-												commentObjId:cid,
-												feedObjId: fid,
-												comments:comments,
-												elseComment: elseComment,
-												c:comment
-											});
-
-										},
-										error: function(error) {
-											alert("Error: " + error.code + " " + error.message);
-										}
-									});
+				// 成功获得实例
+				userclass.isGroupJoined(username,groupObjId,function(status,results){
+					if(status == 2){
+					  res.send('你不在这个群里了!');
+					}
+					else if(status == 0){
+					  res.send('你没关注微群帮手');
+					}
+					else{
+						var queryF = new AV.Query('Feed');
+						queryF.get(fid, {
+							success: function(feed) {
+								// 成功获得实例
+								if(feed.get('isRemoved')==1){
+									res.send('该话题被删除了');
 								}
+								else{
+									if(msgType == 'f_comment' || msgType == 'c_reply' || msgType == 'r_reply'){
+										var query = new AV.Query('Comment');
+										query.ascending('createdAt');
+										query.equalTo('isReply','1');
+										query.equalTo('isRemoved',0);
+										query.containedIn("who",[username, toWhom]);
+										query.containedIn("toWhom",[username, toWhom]);
+										query.equalTo('inWhichComment',cid);
+										query.limit(25);
+										query.find({
+											success: function(comments) {
+												// 成功了
+												//console.log(comments.length);
+												var elseComment = '0';
+												if(comments.length >=25)
+													elseComment = '1';
+												//console.log('elseComment'+elseComment);
+												res.render('msg_reply', {
+													username: username,
+													toWhom:toWhom,
+													groupObjId:groupObjId,
+													commentObjId:cid,
+													feedObjId: fid,
+													comments:comments,
+													elseComment: elseComment,
+													c:comment
+												});
+											},
+											error: function(error) {
+												alert("Error: " + error.code + " " + error.message);
+											}
+										});
+									}
+								}
+							},
+							error: function(error) {
+								// 失败了.
 							}
-						},
-						error: function(error) {
-							// 失败了.
-						}
-					});
-
-				}
-			});
+						});
+					}
+				});
 			},
 			error: function(error) {
 			// 失败了.
@@ -300,45 +290,43 @@ router.get('/msg/detail', function(req, res, next) {
 });
 
 router.post('/msg/more', function(req, res, next) {
-		var cid = req.body.inWhichComment;
-		var skipCount = req.body.skipCount;
-		var username = req.body.username;
-		var toWhom = req.body.toWhom;
-		var query = new AV.Query('Comment');
-		console.log('aaaa');
-		query.ascending('createdAt');
-		query.equalTo('isReply','1');
-		query.equalTo('isRemoved',0);
-		query.equalTo('inWhichComment',cid);
-		query.containedIn("who",[username, toWhom]);
-		query.containedIn("toWhom",[username, toWhom]);
-		query.limit(25);
-		query.skip(skipCount);
-		query.find({
-			success: function(comments) {
-				var elseComment = '0';
-				if(comments.length>=25)
-					elseComment = '1';
-				console.log('more');
-				console.log(elseComment+"   "+comments.length+"   "+skipCount);
-				res.json({"elseComment":elseComment,"comments":comments});
-				return ;
-					
-			},
-			error: function(error) {
-				alert("Error: " + error.code + " " + error.message);
-			}
-		});
-  
+	var cid = req.body.inWhichComment;
+	var skipCount = req.body.skipCount;
+	var username = req.body.username;
+	var toWhom = req.body.toWhom;
+	var query = new AV.Query('Comment');
+	//console.log('aaaa');
+	query.ascending('createdAt');
+	query.equalTo('isReply','1');
+	query.equalTo('isRemoved',0);
+	query.equalTo('inWhichComment',cid);
+	query.containedIn("who",[username, toWhom]);
+	query.containedIn("toWhom",[username, toWhom]);
+	query.limit(25);
+	query.skip(skipCount);
+	query.find({
+		success: function(comments) {
+			var elseComment = '0';
+			if(comments.length>=25)
+				elseComment = '1';
+			//console.log('more');
+			//console.log(elseComment+"   "+comments.length+"   "+skipCount);
+			res.json({"elseComment":elseComment,"comments":comments});
+			return ;
+		},
+		error: function(error) {
+			alert("Error: " + error.code + " " + error.message);
+		}
+	}); 
 });
 
 router.post('/remove', function(req, res, next) {
-		var cid = req.body.commentObjId;
-		var commentclass = new CommentClass();
-		commentclass.rmComment(cid,function(r){
-			res.json({"isComment":r,"cid":cid});
-			return;
-		})
+	var cid = req.body.commentObjId;
+	var commentclass = new CommentClass();
+	commentclass.rmComment(cid,function(r){
+		res.json({"isComment":r,"cid":cid});
+		return;
+	})
 });
 
 

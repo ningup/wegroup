@@ -43,7 +43,7 @@ function userFollowed()
 	  var count;
       api.getFollowers(function (err, dataF, resf){
         count = dataF.count;
-        console.log('count'+count);	
+        //console.log('count'+count);	
         var openids = dataF.data.openid;
         var headFile = new Array();
 			(function iterator(i){
@@ -67,8 +67,8 @@ function userFollowed()
 							newUser.set("province", data.province);
 							newUser.set("city", data.city);
 							//console.log(data.headimgurl+'\n');
-							console.log(data.nickname);
-							console.log(openids[i]);
+							//console.log(data.nickname);
+							//console.log(openids[i]);
 							if(data.headimgurl!=''){		//用户设置头像
 								request({url:data.headimgurl,encoding:null},function(err,res,body){
 									headFile[i] = new AV.File('head_'+data.nickname+'jpg', body);
@@ -78,7 +78,7 @@ function userFollowed()
 											newUser.set("headimgurlShare", file.thumbnailURL(360,200));
 											newUser.signUp(null, {
 												 success: function(newUser) {
-													 console.log(i+'...'+count);
+													 //console.log(i+'...'+count);
 													// 注册成功，可以使用了.
 													iterator(++i);
 														
@@ -95,7 +95,7 @@ function userFollowed()
 						else{
 							newUser.signUp(null, {
 								 success: function(newUser) {
-									 console.log(i+'...'+count+'\n');
+									 //console.log(i+'...'+count+'\n');
 									// 注册成功，可以使用了.
 									iterator(++i);
 										
@@ -118,7 +118,7 @@ function userFollowed()
 		queryUser.equalTo("username",username);
 		queryUser.first({
 			success:function(queryUser){
-				console.log('find user'+ queryUser.get('nickname'));
+				//console.log('find user'+ queryUser.get('nickname'));
 				var relation = queryUser.relation("groupCreated");
 				relation.targetClassName = 'Group';
 				var query = relation.query();
@@ -142,14 +142,14 @@ function userFollowed()
 					  success: function(resultsJ) {
 						for (i = 0; i < resultsJ.length; i++) {
 						  var objectJ = resultsJ[i];
-						  console.log('find relation group:'+ objectJ.get('nickname')+ '创建者是:' +objectJ.get('nicknameOfCUser'));
+						  //console.log('find relation group:'+ objectJ.get('nickname')+ '创建者是:' +objectJ.get('nicknameOfCUser'));
 							lastAccessTime.time[j] = new Object() ;
 							lastAccessTime.time[j].gid = objectJ.getObjectId();
 							lastAccessTime.time[j].time = objectJ.getCreatedAt();
 							j++;
 							if(j===(resultsJ.length+results.length))
 							{
-								console.log(lastAccessTime);
+								//console.log(lastAccessTime);
 								queryUser.set('lastAccessTime',lastAccessTime);
 								queryUser.save();
 							}
@@ -178,7 +178,7 @@ function userFollowed()
 		queryUser.equalTo("username",username);
 		queryUser.first({
 			success:function(queryUser){
-				console.log('find '+ queryUser.get('nickname'));
+				//console.log('find '+ queryUser.get('nickname'));
 				var relation = queryUser.relation("groupCreated");
 				relation.targetClassName = 'Group';
 				var query = relation.query();
@@ -189,7 +189,7 @@ function userFollowed()
 					  var j=0;
 					for (i = 0; i < results.length; i++) {
 					  var object = results[i];
-					  console.log('find relation group:'+ object.get('nickname')+ '创建者是:' +object.get('nicknameOfCUser'));
+					  //console.log('find relation group:'+ object.get('nickname')+ '创建者是:' +object.get('nicknameOfCUser'));
 						j++;
 					}
 					var relationJ = queryUser.relation("groupJoined");
@@ -200,7 +200,7 @@ function userFollowed()
 						for (i = 0; i < resultsJ.length; i++) {
 						  var objectJ = resultsJ[i];
 						  results[j] = objectJ
-						  console.log('find relation group:'+ objectJ.get('nickname')+ '创建者是:' +objectJ.get('nicknameOfCUser'));
+						  //console.log('find relation group:'+ objectJ.get('nickname')+ '创建者是:' +objectJ.get('nicknameOfCUser'));
 							j++;					
 						}
 						cb(null, queryUser,results);
@@ -233,7 +233,7 @@ function userFollowed()
 				newUser.set("country", data.country);
 				newUser.set("province", data.province);
 				newUser.set("city", data.city);
-				console.log('url'+data.headimgurl);
+				//console.log('url'+data.headimgurl);
 				if(data.headimgurl!=''){		//用户设置头像
 				request({url:data.headimgurl,encoding:null},function(err,res,body){
 					var headFile = new AV.File('head'+username, body);
@@ -285,7 +285,7 @@ function userFollowed()
 		query.first({
 			success: function(queryUser) {
 				var whichGroupNow = queryUser.get('whichGroupNow');
-				console.log('whichGroupNow:'+whichGroupNow);
+				//console.log('whichGroupNow:'+whichGroupNow);
 				if(whichGroupNow != '0'){
 					var whichGroupNameNow = queryUser.get('whichGroupNameNow');
 				    cb(0,whichGroupNow,whichGroupNameNow);
@@ -326,14 +326,14 @@ function userFollowed()
 					cb(status,null);
 				}
 				else{
-					console.log('find '+ queryUser.get('nickname'));
+					//console.log('find '+ queryUser.get('nickname'));
 					var relation = queryUser.relation("groupCreated");
 					relation.targetClassName = 'Group';
 					var query = relation.query();
 					query.equalTo('objectId',groupObjId);
 					query.find({
 					  success: function(results) {
-							console.log('find relation group:'+ results.length);
+							//console.log('find relation group:'+ results.length);
 							if(results.length != 0){
 								cb(status,results);
 							}
@@ -376,11 +376,11 @@ function userFollowed()
 		query.equalTo("username", username);
 		query.first({
 			success: function(queryUser){
-				console.log('find '+ queryUser.get('nickname'));
+				//console.log('find '+ queryUser.get('nickname'));
 				var queryG = new AV.Query(Group);
 				queryG.get(groupid,{
 					success: function(group) {
-						console.log('find '+ group.get('nickname'));
+						//console.log('find '+ group.get('nickname'));
 						var relation = group.relation("followers");
 						//relation.targetClassName = 'AV.User';
 						var query = relation.query();
@@ -391,7 +391,7 @@ function userFollowed()
 							for (var i = 0; i < results.length; i++) {
 							  (function(i){
 								    var object = results[i];
-								    console.log('find obj'+ object.get('nickname'));
+								    //console.log('find obj'+ object.get('nickname'));
 									if(object.get('whichGroupNow')===groupid){
 										api.sendText(object.get('username'), queryUser.get('nickname')+'说：'+text, function(err,results){
 											  cb();
@@ -428,11 +428,11 @@ function userFollowed()
 		query.equalTo("username", username);
 		query.first({
 			success: function(queryUser){
-				console.log('find '+ queryUser.get('nickname'));
+				//console.log('find '+ queryUser.get('nickname'));
 				var queryG = new AV.Query(Group);
 				queryG.get(groupid,{
 					success: function(group) {
-						console.log('find '+ group.get('nickname'));
+						//console.log('find '+ group.get('nickname'));
 						var relation = group.relation("followers");
 						//relation.targetClassName = 'AV.User';
 						var query = relation.query();
@@ -443,7 +443,7 @@ function userFollowed()
 							for (var i = 0; i < results.length; i++) {
 							  (function(i){
 								    var object = results[i];
-								    console.log('find obj'+ object.get('nickname'));
+								   // console.log('find obj'+ object.get('nickname'));
 									if(object.get('whichGroupNow')===groupid){
 										if(type === 'image'){
 											api.sendText(object.get('username'), queryUser.get('nickname')+'发了一张图片', function(err,results){
@@ -509,11 +509,11 @@ function userFollowed()
 		query.equalTo("username", username);
 		query.first({
 			success: function(queryUser){
-				console.log('find '+ queryUser.get('nickname'));
+				//console.log('find '+ queryUser.get('nickname'));
 				var queryG = new AV.Query(Group);
 				queryG.get(groupid,{
 					success: function(group) {
-						console.log('find '+ group.get('nickname'));
+						//console.log('find '+ group.get('nickname'));
 						var relation = group.relation("followers");
 						//relation.targetClassName = 'AV.User';
 						var query = relation.query();
@@ -524,13 +524,13 @@ function userFollowed()
 							for (var i = 0; i < results.length; i++) {
 							  (function(i){
 								    var object = results[i];
-								    console.log('find obj'+ object.get('nickname'));
+								   // console.log('find obj'+ object.get('nickname'));
 									if(object.get('whichGroupNow')===groupid){
 										if(type === 'video'){
 											api.sendText(object.get('username'), queryUser.get('nickname')+'发了一个视频', function(err,results){
 														api.sendVideo(object.get('username'), MediaId,thumb_media_id, function(err,results){
 														  cb();
-														  console.log(JSON.stringify(results));
+														  //console.log(JSON.stringify(results));
 														});	
 											});	
 											
@@ -633,7 +633,7 @@ function userFollowed()
 		query1.equalTo("username", username);
 		query1.equalTo("groupid", groupid);
 		var query = AV.Query.or(query1,query2);
-		console.log(groupid);
+		//console.log(groupid);
 		query1.first({
 		success: function(userinfo) {
 			var signTime = userinfo.get('signInTime');

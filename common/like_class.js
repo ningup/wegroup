@@ -11,7 +11,7 @@ function LikeClass()
 					var like_cnt=-1;
 					like_cnt = feed.get('likeNum');
 					if(like_cnt < 0){
-						console.log('获取当前点赞数失败');
+						//console.log('获取当前点赞数失败');
 				    }else{
 						var queryUser = new AV.Query(AV.User);
 						queryUser.equalTo("username",username);
@@ -20,7 +20,7 @@ function LikeClass()
 								if(queryUser != null){
 									like_cnt += 1;
 									feed.set('likeNum',like_cnt);
-									console.log('like user'+queryUser.get('nickname'));
+									//console.log('like user'+queryUser.get('nickname'));
 									var relation = feed.relation('likeUsers');
 									relation.add(queryUser);
 									feed.save().then(function(feedObj){
@@ -52,7 +52,7 @@ function LikeClass()
 					var like_cnt=-1;
 					like_cnt = feed.get('likeNum');
 					if(like_cnt < 0){
-						console.log('获取当前点赞数失败');
+						//console.log('获取当前点赞数失败');
 				  }
 					else if(like_cnt == 0){}
 					else {

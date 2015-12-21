@@ -27,7 +27,7 @@ function FeedClass()
 			  success: function(userinfo) {
 				// 成功获得实例
 				userclass.getGroupNickname(toUsername,groupObjId,function(err,toNickname){
-					console.log('comment find userinfo');
+					//console.log('comment find userinfo');
 					comment.set('headimgurl',userinfo.get('headimgurl'));
 					comment.set('nickname',userinfo.get('nicknameInGroup'));
 					comment.set('toNickname',toNickname);
@@ -36,7 +36,7 @@ function FeedClass()
 							queryF.get(feedObjId, {
 								success: function(feed) {
 									// 成功获得实例
-									console.log("found the feed content"+feed.get('feedContent'));
+									//console.log("found the feed content"+feed.get('feedContent'));
 									var date = new Date();
 									var relation = feed.relation('feedComment');
 									relation.add(comment);
@@ -94,7 +94,7 @@ function FeedClass()
 		query.find({
 			success: function(comments) {
 				// 成功了
-				console.log(comments.length);
+				//console.log(comments.length);
 				if(comments.length == 0)
 						cb(null,'0',commentJson);
 				else{
@@ -127,13 +127,13 @@ function FeedClass()
 									var len = replyComments.length;
 									if (replyComments.length >2){
 										var len = 2;
-										console.log('len'+len);
+										//console.log('len'+len);
 										commentJson.comments[i].reply.moreReply = '1';
 									}
 									var cntj =0;
 									if(len ==0){
 										cnti++;
-										console.log(i);
+										//console.log(i);
 										if(cnti == lenc){
 												cb(null,'1',commentJson);
 										}
@@ -150,7 +150,7 @@ function FeedClass()
 										cntj ++;
 										if(cntj == len){
 											cnti++;
-											console.log(i);
+											//console.log(i);
 											if(cnti == lenc){
 												cb(null,'1',commentJson);
 											}

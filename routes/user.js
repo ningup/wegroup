@@ -38,71 +38,68 @@ var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
 router.get('/signup', function(req, resa, next) {
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
-				userclass.getUserObj('1111',function(err,user){
-					if(err)
-						resa.send('重试一下');
-				});
-	  }else{
+			userclass.getUserObj('1111',function(err,user){
+				if(err)
+					resa.send('重试一下');
+			});
+	  }
+		else{
 			var openid = result.data.openid;
 			var accessToken = result.data.access_token;
 			var expires_in = result.data.expires_in;
-					AV.User._logInWith("weixin", {
-					 "authData": {
-							"openid":openid,
-							"access_token": accessToken,
-							"expires_in": expires_in
-						},
-						success: function(newUser){
-								//返回绑定后的用户
-							
-							userclass.getUserObj(openid,function(err,user){
-								if(err){
-									api.getUser({openid:openid, lang: 'zh_CN'}, function (err, data, userres){
-											newUser.setPassword("A00000000~");
-											newUser.setUsername(data.openid);
-											newUser.set("openid", data.openid);
-											newUser.set("nickname", data.nickname);
-											newUser.set("sex", data.sex);
-											newUser.set("subscribe", 1);
-											newUser.set("country", data.country);
-											newUser.set("province", data.province);
-											newUser.set("city", data.city);
-											console.log('url'+data.headimgurl);
-											if(data.headimgurl!=''){		//用户设置头像
-												request({url:data.headimgurl,encoding:null},function(err,res,body){
-													var headFile = new AV.File('head'+openid, body);
-													headFile.save().then(function(file) {
-															newUser.set("headimgurl", file.thumbnailURL(50,50));
-															newUser.set("headimgSrc", file.url());
-															newUser.set("headimgurlShare", file.thumbnailURL(360,200));
-															newUser.save().then(function(user){
-																	resa.send("注册成功");
-															});
-															//console.log(file.url());
-													}, 
-													function(error){
+			AV.User._logInWith("weixin", {
+				"authData": {
+					"openid":openid,
+					"access_token": accessToken,
+					"expires_in": expires_in
+				},
+				success: function(newUser){
+						//返回绑定后的用户
+					userclass.getUserObj(openid,function(err,user){
+						if(err){
+							api.getUser({openid:openid, lang: 'zh_CN'}, function (err, data, userres){
+								newUser.setPassword("A00000000~");
+								newUser.setUsername(data.openid);
+								newUser.set("openid", data.openid);
+								newUser.set("nickname", data.nickname);
+								newUser.set("sex", data.sex);
+								newUser.set("subscribe", 1);
+								newUser.set("country", data.country);
+								newUser.set("province", data.province);
+								newUser.set("city", data.city);
+								//console.log('url'+data.headimgurl);
+								if(data.headimgurl!=''){		//用户设置头像
+									request({url:data.headimgurl,encoding:null},function(err,res,body){
+										var headFile = new AV.File('head'+openid, body);
+										headFile.save().then(function(file) {
+											newUser.set("headimgurl", file.thumbnailURL(50,50));
+											newUser.set("headimgSrc", file.url());
+											newUser.set("headimgurlShare", file.thumbnailURL(360,200));
+											newUser.save().then(function(user){
+												resa.send("注册成功");
+											});
+										}, 
+										function(error){
 
-													});
-												});
-											}
-											else{
-												newUser.save().then(function(user){
-														resa.send("注册成功");
-												});
-											}
-
-									});	
+										});
+									});
 								}
 								else{
-									resa.send('登录成功,重新进入一下');
+									newUser.save().then(function(user){
+										resa.send("注册成功");
+									});
 								}
-							});
-						},
-						error: function(err){
-							 console.dir(err);
-						}	
-			});
-
+							});	
+						}
+						else{
+							resa.send('登录成功,重新进入一下');
+						}
+					});
+				},
+				error: function(err){
+					console.dir(err);
+				}	
+		 });
 	 }
  });
 });

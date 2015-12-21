@@ -537,7 +537,7 @@ router.post('/detail/comment_more',function(req,res,next){
 	var skip = req.body.skip;
 	var userclass = new UserClass();
 	var commentclass = new CommentClass();
-	console.log('skip..'+skip+'\n'+'username'+username);
+	//console.log('skip..'+skip+'\n'+'username'+username);
 	userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 		if(err){
 			res.json({"err":'1',"msg":'没有加入群，去创建一个吧'});
