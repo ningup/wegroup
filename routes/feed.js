@@ -57,17 +57,10 @@ router.get('/', function(req, res, next) {
 			var limit=20;
 			var feedloadsum = AV.User.current().get('feed_cookies');
 			var feed_scroll = AV.User.current().get('feed_scroll');
-			/*if (req.cookies.feeds_load) {
-    		limit = req.cookies.feeds_load;*/
 				if(feedloadsum > 20){
 						limit = feedloadsum;
 				}
 					console.log('limit'+limit);
-  		//} 
-/*			else {
-				//res.cookie('feeds_load', 20);
-				var limit = 20;
-  		}*/
 		  var username = AV.User.current().get('username');
 			var userclass = new UserClass();
 			 userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -109,9 +102,6 @@ router.get('/', function(req, res, next) {
 								user.set('feed_cookies',0);
 								user.set('feed_scroll',0);
 								user.save();
-								//res.cookie('feeds_load', 20);
-								//res.clearCookie('cookies_feeds_load');
-								//res.clearCookie('feeds_load');
 								res.render('band', {
 									username: username,
 									groupNickname: groupNickname,
@@ -175,17 +165,6 @@ router.post('/history', function(req, res, next) {
 					  queryFeed.lessThan("updateTime", loadFeedTime.oldest);
 						queryFeed.limit(20);
 						queryFeed.find().then(function(feeds){
-/*							if (req.cookies.feeds_load) {
-								var feeds_load = parseInt(req.cookies.feeds_load)+parseInt(feeds.length);
-								console.log('feed cookie length'+feeds_load);
-								res.cookie('feeds_load', feeds_load);
-							}
-							else
-							{
-								var feeds_load = 20 + parseInt(feeds.length);
-								//console.log('feed cookie length'+feeds_load);
-								res.cookie('feeds_load', feeds_load);
-							}*/
 							if(feeds.length != 0){
 									loadFeedTime.oldest = feeds[(feeds.length)-1].get('updateTime');
 									user.set('loadFeedTime',loadFeedTime);
@@ -671,8 +650,6 @@ router.post('/remove',function(req,res,next){
 				var groupObjId = whichGroupNow;
 				var groupNickname = whichGroupNameNow;
 				feedclass.remove_feed(feedObjId,groupObjId,function(){
-				 		/*res.json({"err":'0',"msg":'删除成功'});
-						return;*/
 						res.redirect('/feed');
 			 });
 
