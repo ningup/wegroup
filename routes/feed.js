@@ -107,6 +107,7 @@ router.get('/', function(req, res, next) {
 									
 								}
 								user.set('feed_cookies',0);
+								user.set('feed_scroll',0);
 								user.save();
 								//res.cookie('feeds_load', 20);
 								//res.clearCookie('cookies_feeds_load');
@@ -115,7 +116,7 @@ router.get('/', function(req, res, next) {
 									username: username,
 									groupNickname: groupNickname,
 									groupHeadImg:	group.get('groupHeadImg'),
-									feed_scroll:feed_scroll,
+									scroll:feed_scroll,
 									feedCnt: group.get('feedCnt'),
 									followersNum:group.get('followersNum'),
 									groupOwner:group.get('createdBy'),
@@ -527,7 +528,7 @@ router.get('/groupNickname', function(req, res, next) {
 router.get('/detail',function(req,res,next){
 	var feedObjId = req.query.feedObjId;
 	var cookies_feeds_load = req.query.feedSum;
-	var cookies_feeds_scroll = req.query.feedSum;
+	var cookies_feeds_scroll = req.query.scroll;
 	if (AV.User.current()) {
 		//console.log(req.AV.user);
 		var user = AV.User.current();
@@ -670,8 +671,9 @@ router.post('/remove',function(req,res,next){
 				var groupObjId = whichGroupNow;
 				var groupNickname = whichGroupNameNow;
 				feedclass.remove_feed(feedObjId,groupObjId,function(){
-				 		res.json({"err":'0',"msg":'删除成功'});
-						return;
+				 		/*res.json({"err":'0',"msg":'删除成功'});
+						return;*/
+						res.redirect('/feed');
 			 });
 
 		 }
