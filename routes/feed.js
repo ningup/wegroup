@@ -49,40 +49,41 @@ var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
 router.get('/', function(req, res, next) {
 	if(AV.User.current()){
 		// 如果已经登录，发送当前登录用户信息。
-		//console.log(req.cookies)
-		var limit=20;
-		var feedloadsum = AV.User.current().get('feed_cookies');
-		var feed_scroll = AV.User.current().get('feed_scroll');
-		if(feedloadsum > 20){
-				limit = feedloadsum;
-		}
-		//console.log('limit'+limit);
-		var username = AV.User.current().get('username');
-		var userclass = new UserClass();
-		userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-			if(err){
-			 res.send('你还没有加入群呢，快去创建一个吧！');
+		//console.log(AV.User.current());
+		var user = new AV.User(); 
+		user.id = AV.User.current().id;
+		user.fetch().then(function(user){
+			var limit=20;
+			var feedloadsum = user.get('feed_cookies');
+			var feed_scroll = user.get('feed_scroll');
+			if(feedloadsum > 20){
+					limit = feedloadsum;
 			}
-			else{
-				var groupObjId = whichGroupNow;
-				var groupNickname = whichGroupNameNow;
-				var query = new AV.Query('Group');
-				query.get(groupObjId, {
-					success: function(group) {
-						// 成功获得实例
-						//console.log('you get into the '+ group.get('nickname'));
-						var relation = group.relation("feedPosted");
-						relation.targetClassName = 'Feed';
-						var queryFeed = relation.query();
-						queryFeed.notEqualTo('feedType','vote');
-						queryFeed.notEqualTo('isRemoved',1);
-						queryFeed.descending('updateTime');
-						queryFeed.limit(limit);
-						//queryFeed.equalTo("feedType", "vote");
-						queryFeed.find().then(function(feeds){
-							userclass.getUserObj(username,function(err,user){
+			//console.log('limit'+limit);
+			var username = user.get('username');
+			var userclass = new UserClass();
+			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				if(err){
+				 res.send('你还没有加入群呢，快去创建一个吧！');
+				}
+				else{
+					var groupObjId = whichGroupNow;
+					var groupNickname = whichGroupNameNow;
+					var query = new AV.Query('Group');
+					query.get(groupObjId, {
+						success: function(group) {
+							// 成功获得实例
+							//console.log('you get into the '+ group.get('nickname'));
+							var relation = group.relation("feedPosted");
+							relation.targetClassName = 'Feed';
+							var queryFeed = relation.query();
+							queryFeed.notEqualTo('feedType','vote');
+							queryFeed.notEqualTo('isRemoved',1);
+							queryFeed.descending('updateTime');
+							queryFeed.limit(limit);
+							//queryFeed.equalTo("feedType", "vote");
+							queryFeed.find().then(function(feeds){
 								userclass.getSignInCnt(username,groupObjId, function(err,cnt,isSignIn){
-								//console.log('groupnickname',nickname
 								var loadFeedTime = new Object();
 								if(feeds.length==0){
 									loadFeedTime.latest = new Date();
@@ -113,13 +114,13 @@ router.get('/', function(req, res, next) {
 								 });
 								});
 							});
-						});
-					},
-					error: function(object, error) {
-					// 失败了.
-					}
-				});
-			}
+						},
+						error: function(object, error) {
+						// 失败了.
+						}
+					});
+				}
+			});
 		});
 	} 
 	else {	// 没有登录，跳转到登录页面。
@@ -132,7 +133,6 @@ router.post('/history', function(req, res, next) {
 	var userclass = new UserClass();
 	var username = req.body.username;
 	var lastFeedId = req.body.lastFeedId;
-	//console.log('lastFeedId'+lastFeedId);
 	userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 		if(err){
 			res.send('你还没有加入群呢，快去创建一个吧！');
@@ -143,7 +143,6 @@ router.post('/history', function(req, res, next) {
 			query.get(groupObjId, {
 				success: function(group) {
 					// 成功获得实例
-					//console.log('you get into the '+ group.get('nickname'));
 					userclass.getUserObj(username,function(err,user){
 						var loadFeedTime = user.get('loadFeedTime');
 						var relation = group.relation("feedPosted");
@@ -195,33 +194,37 @@ router.post('/img', function(req, res, next) {
 
 router.get('/group/member', function(req, res, next) {
 	if (AV.User.current()) {
-		var userclass = new UserClass();
-		var username = AV.User.current().get('username');
-		userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-			if(err){
-				res.send('你还没有加入群呢，快去创建一个吧！');
-			}
-			else{
-				var groupObjId = whichGroupNow;
-				var query = new AV.Query('Group');
-				query.get(groupObjId, {
-					success: function(group) {
-						// 成功获得实例
-						var relation = group.relation("followers");
-						//relation.targetClassName = 'Feed';
-						var queryFollowers = relation.query();
-						queryFeed.find().then(function(users){
-							res.render('group_member', {
-								users: users,
+		var user = new AV.User(); 
+		user.id = AV.User.current().id;
+		user.fetch().then(function(user){
+			var userclass = new UserClass();
+			var username = user.get('username');
+			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				if(err){
+					res.send('你还没有加入群呢，快去创建一个吧！');
+				}
+				else{
+					var groupObjId = whichGroupNow;
+					var query = new AV.Query('Group');
+					query.get(groupObjId, {
+						success: function(group) {
+							// 成功获得实例
+							var relation = group.relation("followers");
+							//relation.targetClassName = 'Feed';
+							var queryFollowers = relation.query();
+							queryFeed.find().then(function(users){
+								res.render('group_member', {
+									users: users,
+								});
 							});
-						});
-					},
-					error: function(object, error) {
-					// 失败了.
-					}
-				});
-			}
-		});
+						},
+						error: function(object, error) {
+						// 失败了.
+						}
+					});
+				}
+			});
+	  });
 	}
 	else{
 		//res.send('我不知道你是谁了，重新进入一下吧');
@@ -232,37 +235,41 @@ router.get('/group/member', function(req, res, next) {
 //显示投票
 router.get('/getVote', function(req, res, next) {
 	if (AV.User.current()) {
-		var userclass = new UserClass();
-		var username = AV.User.current().get('username');
-		userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-			if(err){
-				res.send('你还没有加入群呢，快去创建一个吧！');
-			}
-			else{
-				var groupObjId = whichGroupNow;
-				var query = new AV.Query('Group');
-				query.get(groupObjId, {
-					success: function(group) {
-						// 成功获得实例
-						//console.log('you get into the '+ group.get('nickname'));
-						var relation = group.relation("feedPosted");
-						relation.targetClassName = 'Feed';
-						var queryFeed = relation.query();
-						queryFeed.descending('createdAt');
-						queryFeed.equalTo("feedType", "vote");
-						queryFeed.limit(20);
-						queryFeed.find().then(function(votes){
-							res.render('vote', {
-								username: username,
-								votes:votes
+		var user = new AV.User(); 
+		user.id = AV.User.current().id;
+		user.fetch().then(function(user){
+			var userclass = new UserClass();
+			var username = user.get('username');
+			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				if(err){
+					res.send('你还没有加入群呢，快去创建一个吧！');
+				}
+				else{
+					var groupObjId = whichGroupNow;
+					var query = new AV.Query('Group');
+					query.get(groupObjId, {
+						success: function(group) {
+							// 成功获得实例
+							//console.log('you get into the '+ group.get('nickname'));
+							var relation = group.relation("feedPosted");
+							relation.targetClassName = 'Feed';
+							var queryFeed = relation.query();
+							queryFeed.descending('createdAt');
+							queryFeed.equalTo("feedType", "vote");
+							queryFeed.limit(20);
+							queryFeed.find().then(function(votes){
+								res.render('vote', {
+									username: username,
+									votes:votes
+								});
 							});
-						});
-					},
-					error: function(object, error) {
-					// 失败了.
-					}
-				});
-			}
+						},
+						error: function(object, error) {
+						// 失败了.
+						}
+					});
+				}
+			});
 		});
 	}
 	else{
@@ -466,63 +473,66 @@ router.get('/detail',function(req,res,next){
 	var cookies_feeds_load = req.query.feedSum;
 	var cookies_feeds_scroll = req.query.scroll;
 	if (AV.User.current()) {
-		var user = AV.User.current();
-		var username = AV.User.current().get('username');
-		var userclass = new UserClass();
-		var commentclass = new CommentClass();
-		var likeclass = new LikeClass();
-		user.set('feed_cookies',parseInt(cookies_feeds_load));
-		user.set('feed_scroll',parseInt(cookies_feeds_scroll));
-		user.save();
-		userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-			if(err){
-			  res.send('你还没有加入群呢，快去创建一个吧！');
-			}
-			else{
-				var groupObjId = whichGroupNow;
-				var groupNickname = whichGroupNameNow;
-				userclass.isGroupJoined(username,groupObjId,function(status,obj){
-					if(status === 1){
-						//res.send('已加入');
-						var query = new AV.Query('Feed');
-						query.get(feedObjId, {
-							success: function(feed) {
-								// 成功获得实例
-								var visitCnt = feed.get('visitCnt');
-								visitCnt +=1;
-								feed.set('visitCnt',visitCnt);
-								feed.save();
-								commentclass.getCommentInFeedDetail(feedObjId,0,function(err,havecomment,commentJson){
-									likeclass.isLike(feed,username,function(islike){
-										res.render('lyh_test_feed', {
-											username: username,
-											groupObjId:groupObjId,
-											feedObjId:feedObjId,
-											groupNickname:groupNickname,
-											feed:feed,
-											islike:islike,
-											havecomment:havecomment,
-											commentJson:commentJson
-										});	
+		var user = new AV.User(); 
+		user.id = AV.User.current().id;
+		user.fetch().then(function(user){
+			var username = user.get('username');
+			var userclass = new UserClass();
+			var commentclass = new CommentClass();
+			var likeclass = new LikeClass();
+			user.set('feed_cookies',parseInt(cookies_feeds_load));
+			user.set('feed_scroll',parseInt(cookies_feeds_scroll));
+			user.save();
+			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+				if(err){
+					res.send('你还没有加入群呢，快去创建一个吧！');
+				}
+				else{
+					var groupObjId = whichGroupNow;
+					var groupNickname = whichGroupNameNow;
+					userclass.isGroupJoined(username,groupObjId,function(status,obj){
+						if(status === 1){
+							//res.send('已加入');
+							var query = new AV.Query('Feed');
+							query.get(feedObjId, {
+								success: function(feed) {
+									// 成功获得实例
+									var visitCnt = feed.get('visitCnt');
+									visitCnt +=1;
+									feed.set('visitCnt',visitCnt);
+									feed.save();
+									commentclass.getCommentInFeedDetail(feedObjId,0,function(err,havecomment,commentJson){
+										likeclass.isLike(feed,username,function(islike){
+											res.render('lyh_test_feed', {
+												username: username,
+												groupObjId:groupObjId,
+												feedObjId:feedObjId,
+												groupNickname:groupNickname,
+												feed:feed,
+												islike:islike,
+												havecomment:havecomment,
+												commentJson:commentJson
+											});	
+										});
 									});
-								});
-							},
-							error: function(error) {
-								// 失败了.
-							}
-						});
-					}	
-					else if (status === 3){
-						res.send('该群已经解散了');
-					}
-					else if (status === 2){
-						res.send('你不在这个群里，不能看该状态');
-					}
+								},
+								error: function(error) {
+									// 失败了.
+								}
+							});
+						}	
+						else if (status === 3){
+							res.send('该群已经解散了');
+						}
+						else if (status === 2){
+							res.send('你不在这个群里，不能看该状态');
+						}
 
-					else if (status === 0)
-						res.send('未关注');
-				});
-			}
+						else if (status === 0)
+							res.send('未关注');
+					});
+				}
+			});
 		});
 	}
 	else{

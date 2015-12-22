@@ -101,55 +101,56 @@ router.get('/detail', function(req, res, next) {
 	var cid = req.query.cid;
 	var fid = req.query.fid;
 	var toWhom = req.query.toWhom;
-	//console.log('detail');
 	var userclass = new UserClass();
 	if (AV.User.current()) {
-		var username = AV.User.current().get('username');
-		var queryC = new AV.Query('Comment');
-		queryC.get(cid, {
-			success: function(comment) {
-				// 成功获得实例
-				userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
-					var groupObjId = whichGroupNow;
-					if(err){
-					  res.send('你还没有加入群呢，快去创建一个吧！');
-					}
-					else{
-						var query = new AV.Query('Comment');
-						query.ascending('createdAt');
-						query.equalTo('isReply','1');
-						query.equalTo('isRemoved',0);
-						query.equalTo('inWhichComment',cid);
-						query.limit(25);
-						query.find({
-							success: function(comments) {
-								// 成功了
-								//console.log(comments.length);
-								var elseComment = '0';
-								if(comments.length >=25)
-									elseComment = '1';
-								//console.log('elseComment'+elseComment);
-								res.render('lyh_test_replyall', {
-									username: username,
-									toWhom:toWhom,
-									groupObjId:groupObjId,
-									commentObjId:cid,
-									feedObjId: fid,
-									comments:comments,
-									elseComment: elseComment,
-									c:comment
-								});
-							},
-							error: function(error) {
-								alert("Error: " + error.code + " " + error.message);
-							}
-						});
-					}
-				});
-			},
-			error: function(error) {
-			// 失败了.
-			}
+		var user = new AV.User(); 
+		user.id = AV.User.current().id;
+		user.fetch().then(function(user){
+			var username = user.get('username');
+			var queryC = new AV.Query('Comment');
+			queryC.get(cid, {
+				success: function(comment) {
+					// 成功获得实例
+					userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
+						var groupObjId = whichGroupNow;
+						if(err){
+							res.send('你还没有加入群呢，快去创建一个吧！');
+						}
+						else{
+							var query = new AV.Query('Comment');
+							query.ascending('createdAt');
+							query.equalTo('isReply','1');
+							query.equalTo('isRemoved',0);
+							query.equalTo('inWhichComment',cid);
+							query.limit(25);
+							query.find({
+								success: function(comments) {
+									// 成功了
+									var elseComment = '0';
+									if(comments.length >=25)
+										elseComment = '1';
+									res.render('lyh_test_replyall', {
+										username: username,
+										toWhom:toWhom,
+										groupObjId:groupObjId,
+										commentObjId:cid,
+										feedObjId: fid,
+										comments:comments,
+										elseComment: elseComment,
+										c:comment
+									});
+								},
+								error: function(error) {
+									alert("Error: " + error.code + " " + error.message);
+								}
+							});
+						}
+					});
+				},
+				error: function(error) {
+				// 失败了.
+				}
+			});
 		});
 	}
 	else{
@@ -216,72 +217,76 @@ router.get('/msg/detail', function(req, res, next) {
 	//console.log('detail');
 	var userclass = new UserClass();
 	if (AV.User.current()) {
-		var username = AV.User.current().get('username');
-		var queryC = new AV.Query('Comment');
-		queryC.get(cid, {
-			success: function(comment) {
-				// 成功获得实例
-				userclass.isGroupJoined(username,groupObjId,function(status,results){
-					if(status == 2){
-					  res.send('你不在这个群里了!');
-					}
-					else if(status == 0){
-					  res.send('你没关注微群帮手');
-					}
-					else{
-						var queryF = new AV.Query('Feed');
-						queryF.get(fid, {
-							success: function(feed) {
-								// 成功获得实例
-								if(feed.get('isRemoved')==1){
-									res.send('该话题被删除了');
-								}
-								else{
-									if(msgType == 'f_comment' || msgType == 'c_reply' || msgType == 'r_reply'){
-										var query = new AV.Query('Comment');
-										query.ascending('createdAt');
-										query.equalTo('isReply','1');
-										query.equalTo('isRemoved',0);
-										query.containedIn("who",[username, toWhom]);
-										query.containedIn("toWhom",[username, toWhom]);
-										query.equalTo('inWhichComment',cid);
-										query.limit(25);
-										query.find({
-											success: function(comments) {
-												// 成功了
-												//console.log(comments.length);
-												var elseComment = '0';
-												if(comments.length >=25)
-													elseComment = '1';
-												//console.log('elseComment'+elseComment);
-												res.render('msg_reply', {
-													username: username,
-													toWhom:toWhom,
-													groupObjId:groupObjId,
-													commentObjId:cid,
-													feedObjId: fid,
-													comments:comments,
-													elseComment: elseComment,
-													c:comment
-												});
-											},
-											error: function(error) {
-												alert("Error: " + error.code + " " + error.message);
-											}
-										});
+		var user = new AV.User(); 
+		user.id = AV.User.current().id;
+		user.fetch().then(function(user){
+			var username = user.get('username');
+			var queryC = new AV.Query('Comment');
+			queryC.get(cid, {
+				success: function(comment) {
+					// 成功获得实例
+					userclass.isGroupJoined(username,groupObjId,function(status,results){
+						if(status == 2){
+							res.send('你不在这个群里了!');
+						}
+						else if(status == 0){
+							res.send('你没关注微群帮手');
+						}
+						else{
+							var queryF = new AV.Query('Feed');
+							queryF.get(fid, {
+								success: function(feed) {
+									// 成功获得实例
+									if(feed.get('isRemoved')==1){
+										res.send('该话题被删除了');
 									}
+									else{
+										if(msgType == 'f_comment' || msgType == 'c_reply' || msgType == 'r_reply'){
+											var query = new AV.Query('Comment');
+											query.ascending('createdAt');
+											query.equalTo('isReply','1');
+											query.equalTo('isRemoved',0);
+											query.containedIn("who",[username, toWhom]);
+											query.containedIn("toWhom",[username, toWhom]);
+											query.equalTo('inWhichComment',cid);
+											query.limit(25);
+											query.find({
+												success: function(comments) {
+													// 成功了
+													//console.log(comments.length);
+													var elseComment = '0';
+													if(comments.length >=25)
+														elseComment = '1';
+													//console.log('elseComment'+elseComment);
+													res.render('msg_reply', {
+														username: username,
+														toWhom:toWhom,
+														groupObjId:groupObjId,
+														commentObjId:cid,
+														feedObjId: fid,
+														comments:comments,
+														elseComment: elseComment,
+														c:comment
+													});
+												},
+												error: function(error) {
+													alert("Error: " + error.code + " " + error.message);
+												}
+											});
+										}
+									}
+								},
+								error: function(error) {
+									// 失败了.
 								}
-							},
-							error: function(error) {
-								// 失败了.
-							}
-						});
-					}
-				});
-			},
-			error: function(error) {
-			// 失败了.
-			}
+							});
+						}
+					});
+				},
+				error: function(error) {
+				// 失败了.
+				}
+			});
 		});
 	}
 	else{
