@@ -47,6 +47,7 @@ router.get('/signup', function(req, resa, next) {
 			var openid = result.data.openid;
 			var accessToken = result.data.access_token;
 			var expires_in = result.data.expires_in;
+			AV.User.logOut();
 			AV.User._logInWith("weixin", {
 				"authData": {
 					"openid":openid,
@@ -100,6 +101,36 @@ router.get('/signup', function(req, resa, next) {
 					console.dir(err);
 				}	
 		 });
+	 }
+ });
+});
+
+router.get('/login', function(req, res, next) {
+ 	client.getAccessToken(req.query.code, function (err, result) {
+	  if(err){
+			userclass.getUserObj('1111',function(err,user){
+				if(err)
+					resa.send('重试一下');
+			});
+	  }
+		else{
+			var openid = result.data.openid;
+			userclass.getUserObj(openid,function(err,user){
+				if(err){
+					res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+				}
+				else{
+					AV.User.logIn(openid, "A00000000~", {
+						success: function(user) {
+							// 成功了，现在可以做其他事情了.
+							res.send('登录成功,重新进入一下');
+						},
+						error: function(user, error) {
+							// 失败了.
+						}
+					});
+				}
+			});
 	 }
  });
 });
