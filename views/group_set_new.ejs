@@ -69,7 +69,7 @@
                 <%= groupNickname%>
             </div>
         </a>
-        <a class="weui_cell" href="javascript:;">
+        <!--<a class="weui_cell" href="javascript:;">
             <div class="weui_cell_hd">
                 
             </div>
@@ -79,7 +79,7 @@
             <div class="weui_cell_ft">
                 
             </div>
-        </a>
+        </a>-->
         <a class="weui_cell" href="javascript:;">
             <div class="weui_cell_hd">
                 
@@ -131,4 +131,17 @@
     <a href="/group/quit_group" class="weui_btn weui_btn_warn tuichu">删除并退出</a>
 
   </body>
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $('.weui_switch')[0].checked = true;
+        $('.weui_switch').click(function(){
+            console.log($(this)[0].checked);
+            if($(this)[0].checked==true){
+                console.log("选中");
+            }else{
+                console.log("取消");
+            }
+        });
+    });
+  </script>
 </html>
