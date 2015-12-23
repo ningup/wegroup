@@ -311,7 +311,7 @@
                         //alert("coming");
                         if(data.isComment=="0"){
                             $("li.item").each(function(){
-                                if($(this).attr("data-replyid")==data.cid){
+                                if($(this).attr("data-reply")==data.cid){
                                     $(this).remove();
                                 }
                             });

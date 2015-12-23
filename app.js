@@ -438,7 +438,7 @@ app.get('/', function(req, res) {
 	//console.log(req.AV.user);
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
-			AV.User.logIn("orSEhuBllBij-g3Ayx2jujBuuPNY", "A00000000~", {
+			AV.User.logIn("orSEhuNxAkianv5eFOpTJ3LXWADE", "A00000000~", {
 				success: function(user) {
 					// 成功了，现在可以做其他事情了.
 						res.redirect('/feed');
