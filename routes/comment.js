@@ -339,7 +339,8 @@ router.post('/detail/remove', function(req, res, next) {
 	var feedObjId = req.body.feedObjId;
 	var commentclass = new CommentClass();
 	commentclass.rmComment(cid,function(r){
-		res.redirect('/feed/detail?feedObjId'+feedObjId);
+		//res.redirect('/feed');
+		res.redirect('/feed/detail?feedObjId='+feedObjId+'&feedSum=0&scroll=0');
 	});
 });
 
