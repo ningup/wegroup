@@ -47,11 +47,11 @@ var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
 
 //band list
 router.get('/', function(req, res, next) {
-	if(AV.User.current()){
+	if(req.AV.user){
 		// 如果已经登录，发送当前登录用户信息。
 		//console.log(AV.User.current());
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var limit=20;
 			var feedloadsum = user.get('feed_cookies');
@@ -182,7 +182,7 @@ router.post('/img', function(req, res, next) {
 	query.get(feedObjId, {
 	  success: function(feed) {
 	    // 成功获得实例
-	    console.log("fff");
+	    //console.log("fff");
 	    res.json({"status":"0","imgArray":feed.get('feedImgArray')});
 			return ;
 	  },
@@ -193,9 +193,9 @@ router.post('/img', function(req, res, next) {
 });
 
 router.get('/group/member', function(req, res, next) {
-	if (AV.User.current()) {
+	if (req.AV.user) {
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var userclass = new UserClass();
 			var username = user.get('username');
@@ -234,9 +234,9 @@ router.get('/group/member', function(req, res, next) {
 
 //显示投票
 router.get('/getVote', function(req, res, next) {
-	if (AV.User.current()) {
+	if (req.AV.user) {
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var userclass = new UserClass();
 			var username = user.get('username');
@@ -472,9 +472,9 @@ router.get('/detail',function(req,res,next){
 	var feedObjId = req.query.feedObjId;
 	var cookies_feeds_load = req.query.feedSum;
 	var cookies_feeds_scroll = req.query.scroll;
-	if (AV.User.current()) {
+	if (req.AV.user) {
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var username = user.get('username');
 			var userclass = new UserClass();

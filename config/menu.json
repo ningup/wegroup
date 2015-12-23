@@ -1,7 +1,7 @@
 {
   "button":[
     {
-      "name":"创建加入",
+      "name":"我的微群",
       "sub_button":[
 	   {	
 		   "type":"click",
@@ -15,13 +15,13 @@
 		},
 		{
 		   "type":"click",
-		   "name":"分享与加入",
-		   "key":"WEGROUP_SHARE_JOIN"
+		   "name":"加入微群",
+		   "key":"WEGROUP_JOIN"
 		},
 		{
-		   "type":"view",
-		   "name":"成员与设置",
-		   "url":"http://dev.wegroup.avosapps.com/group/set"
+		   "type":"click",
+		   "name":"分享微群",
+		   "key":"WEGROUP_SHARE"
 		},
 		{
 		   "type":"view",
@@ -47,6 +47,11 @@
 		   "type":"view",
 		   "name":"群聊天",
 		   "url":"http://dev.wegroup.avosapps.com/group/room"
+		},
+		{
+		   "type":"view",
+		   "name":"群成员",
+		   "url":"http://dev.wegroup.avosapps.com/group/set"
 		}]
     },
     {

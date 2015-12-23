@@ -102,9 +102,9 @@ router.get('/detail', function(req, res, next) {
 	var fid = req.query.fid;
 	var toWhom = req.query.toWhom;
 	var userclass = new UserClass();
-	if (AV.User.current()) {
+	if (req.AV.user) {
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var username = user.get('username');
 			var queryC = new AV.Query('Comment');
@@ -216,9 +216,9 @@ router.get('/msg/detail', function(req, res, next) {
 	var msgType = req.query.msgType;
 	//console.log('detail');
 	var userclass = new UserClass();
-	if (AV.User.current()) {
+	if (req.AV.user) {
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var username = user.get('username');
 			var queryC = new AV.Query('Comment');
@@ -331,7 +331,16 @@ router.post('/remove', function(req, res, next) {
 	commentclass.rmComment(cid,function(r){
 		res.json({"isComment":r,"cid":cid});
 		return;
-	})
+	});
+});
+
+router.post('/detail/remove', function(req, res, next) {
+	var cid = req.body.commentObjId;
+	var feedObjId = req.body.feedObjId;
+	var commentclass = new CommentClass();
+	commentclass.rmComment(cid,function(r){
+		res.redirect('/feed/detail?feedObjId'+feedObjId);
+	});
 });
 
 

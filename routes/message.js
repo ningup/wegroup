@@ -37,9 +37,9 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/list', function(req, res, next) {
-	if (AV.User.current()) {
+	if (req.AV.user) {
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var username = user.get('username');
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){

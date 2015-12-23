@@ -77,7 +77,7 @@ router.get('/signup', function(req, resa, next) {
 											newUser.set("headimgSrc", file.url());
 											newUser.set("headimgurlShare", file.thumbnailURL(360,200));
 											newUser.save().then(function(user){
-												resa.send("注册成功");
+												resa.send("注册成功,关注[微群帮手]就可以使用了");
 											});
 										}, 
 										function(error){
@@ -87,7 +87,7 @@ router.get('/signup', function(req, resa, next) {
 								}
 								else{
 									newUser.save().then(function(user){
-										resa.send("注册成功");
+										resa.send("注册成功,关注[微群帮手]就可以使用了");
 									});
 								}
 							});	
