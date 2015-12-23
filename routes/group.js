@@ -115,9 +115,9 @@ router.get('/create', function(req, res, next){
 });
 
 router.get('/room', function(req, res, next) {
-	if (AV.User.current()) {
+	if (req.AV.user) {
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var userclass = new UserClass();
 			var username = user.get('username');
@@ -315,9 +315,9 @@ router.post('/head/img', function(req, res, next) {
 });
 
 router.get('/set', function(req, res, next) {
-	if (AV.User.current()) {
+	if (req.AV.user) {
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var username = user.get('username');
 			var userclass = new UserClass();
@@ -360,9 +360,9 @@ router.get('/set', function(req, res, next) {
 });
 
 router.get('/quit_group', function(req, res, next) {
-	if(AV.User.current()){
+	if(req.AV.user){
 		var user = new AV.User(); 
-		user.id = AV.User.current().id;
+		user.id = req.AV.user.id;
 		user.fetch().then(function(user){
 			var username =user.get('username');
 			var userclass = new UserClass();

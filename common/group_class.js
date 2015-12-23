@@ -40,7 +40,7 @@ function GroupClass()
 	this.create = function(flagImg,serverId,groupColor,nickname,username,roomId,cb){
 		var group=new Group();
 		var userinfo = new UserInfo();
-		var promise = new AV.Promise();
+		//var promise = new AV.Promise();
 		group.set('nickname',nickname);
 		group.set('createdBy',username);
 		group.set('groupColor',groupColor);
@@ -379,6 +379,85 @@ function GroupClass()
             }
         });
     };
+	  this.groupSearchByCode = function(username,numS){
+			//console.log('fsdf');
+		 var queryUser = new AV.Query(AV.User);
+        queryUser.equalTo("username",username);
+        queryUser.first({
+            success:function(queryUser){
+				   num = parseInt(numS);
+				   if(isNaN(num)){
+						var text = '不是数字，请重新输入。'
+									api.sendText(username, text, function(err,results){
+									if(err){
+										api.sendText(username, text, function(err,results){
+										});
+									 }
+						 });
+				   }
+				   else if(isNaN(numS)){
+						var text = '不是数字，请重新输入。'
+									api.sendText(username, text, function(err,results){
+									if(err){
+										api.sendText(username, text, function(err,results){
+										});
+									 }
+						 });
+				   }
+				  else if(queryUser.get('whichStatus')!='wegroup_join'){
+						var text = '不是加群模式'
+									api.sendText(username, text, function(err,results){
+									if(err){
+										api.sendText(username, text, function(err,results){
+										});
+									 }
+						 });
+					}
+					else{
+							var groupcode = num;	
+							var query = new AV.Query('Group');
+							query.equalTo('groupCode',groupcode);
+							query.first({
+								success: function(groupsearch) {
+									//console.log(groupsearch);
+									if(groupsearch == null){
+										var text = '您输入的群代码是无效的'; 
+										api.sendText(username, text, function(err,results){		
+											
+										});
+										queryUser.set('whichStatus','wegroup_chat');
+										queryUser.set('tempGroupName','');
+										queryUser.set('tempGroupSwitch',[]);
+										queryUser.save();
+									}
+									else{
+										var text = '是否加入'+'['+groupsearch.get('nickname')+']'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/group/join?id='+groupsearch.getObjectId()+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击加入</a>'; 
+										api.sendText(username, text, function(err,results){					  
+										});
+										queryUser.set('whichStatus','wegroup_chat');
+										queryUser.set('tempGroupName','');
+										queryUser.set('tempGroupSwitch',[]);
+										queryUser.save();
+									}
+								},
+								error: function(error) {
+									var text = '您输入的群代码是无效的'; 
+									api.sendText(message.FromUserName, text, function(err,results){					  
+									});
+									queryUser.set('whichStatus','wegroup_chat');
+									queryUser.set('tempGroupName','');
+									queryUser.set('tempGroupSwitch',[]);
+									queryUser.save();
+								}
+							}); 
+					}
+
+            },
+            error:function(error){
+            }
+        });
+		
+	};
 
 };
 module.exports = GroupClass;

@@ -29,7 +29,7 @@ var groupclass = new GroupClass();
 var feedclass = new FeedClass();
 var publicclass = new PublicClass();
 //var msgclass  = new MsgClass();
-//var Group=AV.Object.extend('Group');
+var Group=AV.Object.extend('Group');
 var config = require('./config/config.js');	
 var menu = JSON.stringify(require('./config/menu.json'));   //微信自定义菜单json数据
 var client = new OAuth(config.appid, config.appsecret);
@@ -69,7 +69,7 @@ app.use(express.static('public'));
 // 加载云代码方法
 app.use(cloud);
 //app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
-app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkUUUU', maxAge: 86400000, fetchUser: false ,name:'liaoqu'}));
+app.use(AV.Cloud.CookieSession({secret: '05XgTktKPMkUUUU', maxAge: 3600000, fetchUser: false ,name:'liaoqu'}));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser('05XgTktKPMkUUUU',{}));
@@ -130,8 +130,13 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				else if(user.get('whichStatus')==='wegroup_switch'){
 					groupclass.groupSwitch(message.FromUserName,message.Content);		
 				}
+				else if(user.get('whichStatus')==='wegroup_join'){
+					var groupcode = message.Content;	
+					groupclass.groupSearchByCode(message.FromUserName,groupcode);
+				}
 				else{
-
+					api.sendText(message.FromUserName,'有什么建议可以到[联系我们]板块告诉我们', function(err,results){
+          });
 				}		
 			}
 			else if(message.MsgType === 'image' || message.MsgType === 'voice'){
@@ -218,8 +223,8 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 								userclass.getUserAllGroup(message.FromUserName,function(err,queryUser,results){
 									var tempGroupSwitch = new Array();
 									var content = '';
-									content = '当前所在群是:'+'<'+whichGroupNameNow+'>\n'; 
-									content += '所有群群如下,输入序号切换。\n';
+									content = '当前群:'+'<'+whichGroupNameNow+'>\n'; 
+									content += '输入你要切换的群序号。\n';
 									var j=0;
 									for(var i=0; i<results.length; i++){
 										j++;
@@ -257,7 +262,36 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 						}); 
 					});			
 				}
-				else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SHARE_JOIN'){
+				else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_JOIN'){
+					userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
+						if(err){
+							var text = '你还没有加入群呢，快去创建一个吧！'; 
+							api.sendText(message.FromUserName, text, function(err,results){
+								if(err){
+									api.sendText(message.FromUserName, err, function(err,results){
+									});
+								}							  
+							}); 
+						}
+						else{
+							var gid = whichGroupNow;
+							var groupNow = new Group();
+							groupNow.id = gid;
+							groupNow.fetch().then(function(groupNow){
+								var text='当前群['+whichGroupNameNow+'('+groupNow.get('groupCode')+')]\n'; 
+								text += '输入要加入的微群代码:';
+								api.sendText(message.FromUserName, text, function(err,results){
+								}); 
+								
+							});
+						}
+					});
+					user.set('whichStatus','wegroup_join');
+					user.set('tempGroupName','');
+					user.set('tempGroupSwitch',[]);
+					user.save();
+				}
+				else if (message.Event === 'CLICK' && message.EventKey === 'WEGROUP_SHARE'){
 					userclass.getCurrentGroup(message.FromUserName,function(err,whichGroupNow,whichGroupNameNow){
 						if(err){
 							var text = '你还没有加入群呢，快去创建一个吧！'; 
@@ -363,10 +397,12 @@ api.getTicket(function(err,results){
 });
 */
 //api.getAccessToken();  //get latest accesstoken
-/*api.createMenu(menu, function (err, result){
+/*
+api.createMenu(menu, function (err, result){
 	//if(err)
 	console.log(JSON.stringify(result));
-});*/
+});
+*/
 
 
 /*api.getMenu(function(err,results){
@@ -376,7 +412,6 @@ api.getTicket(function(err,results){
 /*api.removeMenu(function(err,results){
 	console.log(JSON.stringify(results));
 });*/
-
 
 // 未处理异常捕获 middleware
 app.use(function(req, res, next) {
@@ -416,7 +451,7 @@ app.get('/', function(req, res) {
 			var openid = result.data.openid;
 			var accessToken = result.data.access_token;
 			var user = new AV.User(); 
-			user.id = AV.User.current().id;
+			user.id = req.AV.user.id;
 			user.fetch().then(function(user){
 				if((user.get('username') == openid) ){
 					res.redirect("/feed");
