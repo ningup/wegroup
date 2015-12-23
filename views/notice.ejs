@@ -1,12 +1,84 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="Keywords" content="微群助手－主页" />
+    <meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>微群帮手测试</title>
+
+    <!-- Bootstrap -->
+    <!--<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">-->
+    <!--<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/weui.css">
+    <script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
+    <!--<script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>-->
+    <!--<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+    <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+    <script type="text/javascript">
+        AV.initialize('zsxn9bhj8fuecdfqgqv1ly7lt70cej7ftbe2hp7r4i916gmn', 'u73ok822ykyc19s1i179tqdf2pgz7bhzrlxwprc6pchs1ioo');
+    </script>
+
+    <style type="text/css">
+    body {overflow: hidden;width: 100%;background-color: #f8f8f8;} /*background-color: #FBFBFB;*/
+    .publish{position: fixed;left: 0;top: 0;bottom: 0;right: 0;background-color: #f0eff5;width: 100%;-webkit-user-select:none;-webkit-highlight:none;-webkit-tap-highlight-color:transparent;font-size: 0;}
+    .publish .pub-con{background: #f0eff5;position: relative;top: 0;width: 100%;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;}
+    .publish .pub-con .pub-wrap{background: transparent;overflow: hidden;position: relative;}
+    .publish .pub-con .pub-wrap:before{z-index: 1;top: -1px;display: block;position: absolute;left: 0;border-top: 1px solid #c8c7cc;width: 100%;content: " ";pointer-events:none;}
+    .publish .pub-con .pub-wrap .pub-editor{padding: 10px 20px 15px;background: #fff;}
+    .publish .pub-con .pub-wrap .pub-editor textarea{font-size: 14px;color: #000;margin: 0;display: -webkit-box;-webkit-box-flex:1;border: 0;width: 100%;height: auto;min-height: 200px;-webkit-appearance:none;outline: 0;-webkit-tap-highlight-color:rgba(255,255,255,0);border-radius: 0;background-color: white;-webkit-rtl-ordering:logical;-webkit-user-select:text;flex-direction:column;resize:auto;cursor: auto;white-space: pre-wrap;word-wrap:break-word;font: 11px BlinkMacSystemFont;text-rendering: auto;letter-spacing: normal;word-spacing: normal;text-transform: none;text-indent: 0px;text-shadow: none;text-align: start;-webkit-writing-mode: horizontal-tb;}
+    .publish .pub-con .pub-wrap .pub-type{display: -webkit-box;-webkit-box-pack: end;-webkit-box-align: center;-webkit-box-sizing: content-box;padding: 10px 20px;height: 35px;font-size: 16px;background: #fff;list-style: none;margin: 0; }
+    .publish .pub-con .pub-wrap .pub-type .selectPic{background-image: url(/images/t/test_touxiang.jpg);overflow: hidden;position: relative;margin-right: 14px;width: 25px;height: 25px;background: url(/images/t/test_touxiang.jpg) no-repeat 0 0;background-size: 25px 25px;line-height: 35px;}
+    .publish .pub-con .pub-wrap .pub-type .selectFace{overflow: hidden;position: relative;width: 25px;height: 25px;background: url(/images/t/test_touxiang.jpg) no-repeat 0 0;background-size: 25px 25px;line-height: 35px;}
+    .publish .pub-con .pub-wrap .pub-type .pub-flex{ -webkit-box-flex: 1; height: 35px;line-height: 35px;}
+    .publish .pub-con .pub-wrap .pub-type .pub-btn{height: 35px;line-height: 35px;display: list-item;text-align: -webkit-match-parent;}
+    .publish .pub-con .pub-wrap .pub-type .pub-btn button{border: 0;border-radius: 4px;
+    width: 81px;
+    height: 35px;
+    font-size: 16px;
+    text-align: center;
+    color: #fff;float: right;
+    background-color: #2791dc;outline: 0;
+    -webkit-tap-highlight-color: rgba(255,255,255,0);padding: 0;
+    margin: 0;font: 11px BlinkMacSystemFont;
+    text-rendering: auto;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;}
+    .publish .pub-con .pub-wrap .pub-type .pub-btn button.pub-cancel{margin-right: 10px;}
+    
+    </style>
+
+  </head>
   <body>
-    <h1>公告</h1>
-    <form action="/group/notice" method="POST">
-      群名称：
-      <input type="textarea" name="groupNotice" /> 
-      <input type="hidden" name="username" value=<%= username %> >    
-      <input type="submit" value="完成" />
-    </form>
+    <div class="publish" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+        <div class="pub-con">
+            <div class="pub-wrap">
+                <div class="pub-editor">
+                    <form class="publish_form" method="post" action="/group/notice">
+                        <textarea spellcheck="false" class="editor" placeholder="写下你的公告，10-700个字" name="groupNotice" maxlength="700" minlength="10"></textarea>
+                        <input type="hidden" name="username" value="<%= username %>">
+                    </form>
+                </div>
+                <ul class="pub-type">
+                    <li class="pub-btn "> <button class="pub-publish">发表</button> <!--<button class="pub-cancel">关闭</button>--> </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(".pub-publish").click(function(){
+            if($('.editor').val().length<=0){
+                alert("不能什么都不写哦");
+            }else{
+                $('.publish_form').submit();
+            }
+        });
+    </script>
   </body>
 </html>

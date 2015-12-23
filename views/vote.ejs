@@ -67,6 +67,7 @@
     .modal .modal-dialog .modal-content .body input {width: 100%; height: 40px;border-width: 0;background-color: #dedede;color: #7A7A7A;text-align: center;line-height: 40px;margin-bottom: 1px;}
     .modal .modal-dialog .modal-content .footer button {width: 100%;height: 40px;font-size:20px;text-align: center;line-height:40px;color: #0080FF;border-width: 0;background-color: #FFFFFF;}
     .loading{width: 100%;height: 30px; text-align:center;line-height: 30px;color: #777;}
+    .kongkong{width: 100%;height: 40px;}
     </style>
 
   </head>
@@ -222,7 +223,7 @@
     <% } %>
     <% } %>
         <div class="loading"></div>
-        </div>
+        <div class="kongkong"></div>
     </div>
     <button class="vote-new" type="button" data-toggle="modal" data-target="#myModal">发起投票</button>
 
@@ -456,7 +457,7 @@
                                         }
                                         var str2 = "</div></div><div class=\"vote-info\"><div class=\"sum\">"+ data.votes[i].voteCnt +"人参与</div></div></div>";
                                         str = str + str1 + str2;
-                                        $(".container").append(str);
+                                        $(".container .vote-feed:last").after(str);
                                     }else{
                                         var date = new Date();
                                         var date1 = new Date(data.votes[i].createdAt);
@@ -477,7 +478,7 @@
                                         } 
                                         var str2 = "</div></div><div class=\"vote-info\"><div class=\"sum\">"+ data.votes[i].voteCnt +"人参与</div></div></div>";
                                         str = str + str1 + str2;
-                                        $(".container").append(str);
+                                        $(".container .vote-feed:last").after(str);
                                     }
                                 }else{
                                     var date = new Date();
@@ -508,11 +509,11 @@
                                         }
                                         var str2 = "</div></div><div class=\"vote-info\"><div class=\"sum\">"+ data.votes[i].voteCnt +"人参与</div></div></div>";
                                         str = str + str1 + str2;
-                                        $(".container").append(str);
+                                        $(".container .vote-feed:last").after(str);
                                 }
                             }
                         }else{
-                            if($("ul.feed_ul_list>li").length>0){
+                            if($("ul.feed_ul_list>li")!=null){
                                 $(".loading").html("这是全部的帖子了哦～快去来一发吧～");
                             }else{
                                 $(".loading").html("现在还没有帖子～快去来一发吧～");

@@ -233,7 +233,7 @@
 
   </head>
   <body>
-    <div id="monitor">Y position: <strong id="position">0</strong></div>
+    <!--<div id="monitor">Y position: <strong id="position">0</strong></div>-->
     <div id="wrapper">
       <div class="container">
           <div id="band_top_info" class="band_top_info">
@@ -560,11 +560,11 @@
     </script>
     <script type="text/javascript">
         var myScroll;
-        var position;
+        //var position;
         var flag = 0;
         var page = 0;
         window.onload = function(){
-            position = document.getElementById('position');
+            //position = document.getElementById('position');
             myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:false, tap:true , preventDefaultException:{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }  });
             myScroll.on("scroll", updataPosition);
             myScroll.on("scrollEnd", dowmPosition);
@@ -576,7 +576,7 @@
 
         };
         function updataPosition(){
-            position.innerHTML = this.y>>0;
+            //position.innerHTML = this.y>>0;
             if (this.y>5) {
                 flag = 1;
                 //console.log(flag);

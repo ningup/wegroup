@@ -76,11 +76,14 @@
     .publish .pub-con .pub-wrap input{position: absolute;width: 75%;top: 4px;left: 7px;height: 35px;border-radius: 4px;outline:0; resize:none;box-shadow:0;border-style: solid;border-color:#c8c7cc;border: 1;}
     .container>div{margin-bottom: 45px;}
     .loading{width: 100%;height: 30px; text-align:center;line-height: 30px;color: #777;}
+    .delete_feed{float: left;margin-left: 0;padding: 0;color: #324d82;position: relative;z-index: 2;height: 100%;line-height: 22px;}
+    .delete_feed:after{position: absolute;top: 10px;left: 5px;content: "";}
+    .del{display: inline-block;margin-right: 8px;color: #324d82;font-size: 12px;}
     </style>
 
   </head>
   <body>
-    <div id="monitor">Y position: <strong id="position">0</strong></div>
+    <!--<div id="monitor">Y position: <strong id="position">0</strong></div>-->
     <div id="wrapper">
       <div class="container">
 
@@ -89,7 +92,7 @@
                     <div class="user-avatar"><img src="<%= c.get('headimgurl')%>"></div>
                     <div class="name-wrap">
                       <span class="user-nick"><%= c.get('nickname')%></span>
-                      <span class="lounum">2楼</span>
+                      <!--<span class="lounum">2楼</span>-->
                     </div>
                     <div class="content-wrapper">
                       <div class="ping-content"><%= c.get('content')%></div>
@@ -123,8 +126,11 @@
                           last_time= "刚刚";
                         }%>
                       <span class="time"><%= last_time%></span>
+                        <% if(c.get('who')==username){ %>
+                            <span class="delete_feed">删除</span>
+                        <% } %>
                       <span class="reply"><%= c.get('replyCnt')%></span>
-                      <span class="like">1181111</span>
+                      <!--<span class="like">1181111</span>-->
                     </div>
                     <div class="reply-wrapper">
                       <ul class="reply-list">
@@ -156,6 +162,9 @@
                                         last_time= "刚刚";
                                     }%>
                                     <span class="list_item_time"><!--<%= comments[i].getCreatedAt()%>--><%= last_time%></span>
+                                    <% if(comments[i].get('who')==username){ %>
+                                        <span class="del">删除</span>
+                                    <% } %>
                                   </div>
                                 </div>
                               </li>
@@ -188,6 +197,9 @@
                                         last_time= "刚刚";
                                     }%>
                                     <span class="list_item_time"><!--<%= comments[i].getCreatedAt()%>--><%= last_time%></span>
+                                    <% if(comments[i].get('who')==username){ %>
+                                        <span class="del">删除</span>
+                                    <% } %>
                                   </div>
                                 </div>
                               </li>
@@ -268,6 +280,11 @@
             </div>
 
     </div>
+    <form class="delete_feed_form" method="post" action="/comment/detail/remove">
+        <input type="hidden" id="username" name="username" value="<%= username%>">
+        <input type="hidden" id="feedObjId" name="feedObjId" value="<%= c.get('inWhichFeed')%>">
+        <input type="hidden" id="commentObjId" name="commentObjId" value="<%= c.getObjectId()%>">
+    </form>
 
     <script type="text/javascript">
     var reply_flag = "<%= commentObjId%>";
@@ -278,6 +295,30 @@
     var reply_num = 0;
     $(document).ready(function(){
         //$("ul>li:last").css("margin-bottom","45px");
+        $(".delete_feed").click(function(){
+            $(".delete_feed_form").submit();
+        });
+        $(document).on('click',".del",function(){
+            var commentObjId = $(this).closest("li.item").attr("data-reply");
+            var aj = $.ajax({
+                    url:'/comment/remove',
+                    data:{
+                        "commentObjId":commentObjId
+                    },
+                    type:'post',
+                    dataType:'json',
+                    success:function(data){
+                        //alert("coming");
+                        if(data.isComment=="0"){
+                            $("li.item").each(function(){
+                                if($(this).attr("data-replyid")==data.cid){
+                                    $(this).remove();
+                                }
+                            });
+                        }
+                    }
+            });
+        });
         $(document).on('click',"li.item",function(){
           //alert("heh");
           reply_flag = $(this).attr("data-reply");
@@ -348,7 +389,7 @@
                               }else{
                                 last_time= "刚刚";
                               }
-                              var str = "<li class=\"item\" id=\"temp\" data-reply=\""+data.commentObjId+"\" data-user=\""+ data.username +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.nickname+"</a>:<span class=\"floor_content\">"+data.content+"</span><span class=\"list_item_time\">"+/*data.replyTime*/last_time+"</span></div></div></li>";
+                              var str = "<li class=\"item\" id=\"temp\" data-reply=\""+data.commentObjId+"\" data-user=\""+ data.username +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.nickname+"</a>:<span class=\"floor_content\">"+data.content+"</span><span class=\"list_item_time\">"+/*data.replyTime*/last_time+"</span><span class=\"del\">删除</span></div></div></li>";
                               $("ul.reply-list").append(str);
                           }else{
                               var date = new Date();
@@ -372,7 +413,7 @@
                               }else{
                                 last_time= "刚刚";
                               }
-                              var str = "<li class=\"item\" id=\"temp\" data-reply=\""+data.commentObjId+"\" data-user=\""+ data.username +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.toNickname+"</a>&nbsp;:"+data.content+"</span><span class=\"list_item_time\">"+/*data.replyTime*/last_time+"</span></div></div></li>";
+                              var str = "<li class=\"item\" id=\"temp\" data-reply=\""+data.commentObjId+"\" data-user=\""+ data.username +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.toNickname+"</a>&nbsp;:"+data.content+"</span><span class=\"list_item_time\">"+/*data.replyTime*/last_time+"</span><span class=\"del\">删除</span></div></div></li>";
                               $("ul.reply-list").append(str);
                           } 
                     }
@@ -430,19 +471,19 @@
     </script>
     <script type="text/javascript">
         var myScroll;
-        var position;
+        //var position;
         var flag = 0;
         var page = 0;
         var isHave = "<%= elseComment%>";
         window.onload = function(){
-            position = document.getElementById('position');
+            //position = document.getElementById('position');
             myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true, click:true });
             myScroll.on("scroll", updataPosition);
             myScroll.on("scrollEnd", dowmPosition);
             document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
         };
         function updataPosition(){
-            position.innerHTML = this.y>>0;
+            //position.innerHTML = this.y>>0;
             if (this.y>5) {
                 flag = 1;
                 //console.log(flag);
@@ -515,7 +556,11 @@
                               }else{
                                 last_time= "刚刚";
                               }
-                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">"+data.comments[i].content+"</span><span class=\"list_item_time\">"+/*data.comments[i].createdAt*/last_time+"</span></div></div></li>";
+                              if(data.comments[i].who=="<%= username%>"){
+                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">"+data.comments[i].content+"</span><span class=\"list_item_time\">"+/*data.comments[i].createdAt*/last_time+"</span><span class=\"del\">删除</span></div></div></li>";
+                                }else{
+                                    var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">"+data.comments[i].content+"</span><span class=\"list_item_time\">"+/*data.comments[i].createdAt*/last_time+"</span></div></div></li>";
+                                }
                               $("ul.reply-list").append(str);
                           }else{
                               var date = new Date();
@@ -539,7 +584,11 @@
                               }else{
                                 last_time= "刚刚";
                               }
-                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.comments[i].toNickname+"</a>&nbsp;:"+data.comments[i].content+"</span><span class=\"list_item_time\">"+/*data.comments[i].createdAt*/last_time+"</span></div></div></li>";
+                              if(data.comments[i].who=="<%= username%>"){
+                              var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.comments[i].toNickname+"</a>&nbsp;:"+data.comments[i].content+"</span><span class=\"list_item_time\">"+/*data.comments[i].createdAt*/last_time+"</span><span class=\"del\">删除</span></div></div></li>";
+                                }else{
+                                    var str = "<li class=\"item\" id=\"\" data-reply=\""+data.comments[i].objectId+"\" data-user=\""+ data.comments[i].who +"\"><div class=\"fmain j_floor_main\"><div class=\"floor_footer_item\"><a href=\"\" class=\"user_name \">"+data.comments[i].nickname+"</a>:<span class=\"floor_content\">回复&nbsp;<a href=\"\">"+data.comments[i].toNickname+"</a>&nbsp;:"+data.comments[i].content+"</span><span class=\"list_item_time\">"+/*data.comments[i].createdAt*/last_time+"</span></div></div></li>";
+                                }
                               $("ul.reply-list").append(str);
                           } 
                         }
