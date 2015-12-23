@@ -341,6 +341,8 @@ router.get('/set', function(req, res, next) {
 								res.render('group_set_new', {
 									users: users,
 									groupNickname:groupNickname,
+									groupCode:group.get('groupCode'),
+									userNickname:user.get('nickname'),
 									groupFollowersNum:group.get('followersNum')
 								});
 							});
