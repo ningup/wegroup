@@ -1,9 +1,48 @@
-<!DOCTYPE HTML>
-<html>
-  <body>
-    <p><%=title%></p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="Keywords" content="微群助手－主页" />
+    <meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>微群帮手测试</title>
+
+    <!-- Bootstrap -->
+    <!--<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">-->
+    <!--<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/weui.css">
+    <script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
+    <!--<script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>-->
+    <!--<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+    <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+    <script type="text/javascript">
+        AV.initialize('zsxn9bhj8fuecdfqgqv1ly7lt70cej7ftbe2hp7r4i916gmn', 'u73ok822ykyc19s1i179tqdf2pgz7bhzrlxwprc6pchs1ioo');
+    </script>
     <script language="javascript" type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <script>
+
+    <style type="text/css">
+    body {overflow: hidden;width: 100%;background-color: #f8f8f8;} /*background-color: #FBFBFB;*/
+    /*.contain{position: fixed;text-align:center;top: 0;left: 0;bottom: 0;right: 0;}*/
+    .contain{ position: fixed; z-index:1; top: 50%; left: 50%;width: 100%;text-align:center; font-size: 12px;overflow:hidden;}
+    </style>
+
+  </head>
+  <body>
+    <div class="contain"><h1><%=title%></h1></div>
+    <!--<div class="contain">你已加入该群，赶紧到公众号里和好友互动吧～</div>
+    <div class="contain">你已退出了该群，要记得回来看看～</div>-->
+  </body>
+  <script type="text/javascript">
+    var height = $(".contain").height();
+    var width = $(".contain").width();
+    height = -(height/2);
+    width = -(width/2);
+    $(".contain").css("margin-top",height);
+    $(".contain").css("margin-left",width);
+  </script>
+  <script>
 		function closePage()
 		{
 			wx.config({
@@ -20,6 +59,4 @@
 		}
 		closePage();
 	</script>
-  </body>
 </html>
-

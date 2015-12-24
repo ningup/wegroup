@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta name="Keywords" content="微群助手－主页" />
+    <meta name="Description" content="微信公众平台上的公众号－－微群助手" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>微群帮手测试</title>
+
+    <!-- Bootstrap -->
+    <!--<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">-->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/weui.css">
+    <!--<link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/0.2.0/weui.css"/>-->
+    <script language="javascript" type="text/javascript" src="/javascript/jquery.min.js"></script>
+    <!--<script language="javascript" type="text/javascript" src="/javascript/bootstrap.js"></script>-->
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+    body {background-color: #FBFBFB;}
+    .photo_list {background-color: #FFFFFF;}
+    .tx {padding-top: 15px; }
+    .tx span{display: block;width: 100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align: center;}
+    img {width: 100%;border-radius: 10px;}
+    .tuichu {margin-right: 0.3em;margin-left: 0.3em;margin-top: 0.8em;margin-bottom: 0.4em;}
+    .number_sum {margin-top: 0em;}
+    </style>
+
+  </head>
+  <body>
+    <div class="container photo_list">
+      <div class="row">
+        <% for(var i = 0;i<users.length;i++){ %>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 tx">
+                <img src="<%= users[i].get('headimgurl')%>"><span><%= users[i].get('nickname')%></span>
+            </div>
+        <% } %>
+      </div>
+    </div>
+  </body>
+</html>
