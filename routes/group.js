@@ -107,7 +107,8 @@ router.get('/create', function(req, res, next){
 					});	
 				}		
 				else{
-					res.send('没有群可创建或者该群已经被创建');
+					//res.send('没有群可创建或者该群已经被创建');
+					res.redirect('/group/fini?title=没有群可创建或者该群已经被创建');
 				}
 			}); 
 		}
@@ -124,7 +125,7 @@ router.get('/room', function(req, res, next) {
 			var username = user.get('username');
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				if(err){
-					res.send('你还没有加入群呢，快去创建一个吧！');
+					res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 				}
 				else{
 					var groupObjId = whichGroupNow;
@@ -246,13 +247,15 @@ router.get('/join',function(req,res,next){
 				if(status === 1)
 					res.send('已加入');
 				else if (status === 3){
-					res.send('该群已经解散了');
+					//res.send('该群已经解散了');
+					res.redirect('/group/fini?title=该群已经解散了');
 				}
 				else if (status === 2){
 					var groupclass = new GroupClass();
 					groupclass.joinGroup(groupObjIdJoined,username,function(err,queryUser){
 						if(err){
-							res.send('该群解散了');
+							//res.send('该群解散了');
+							res.redirect('/group/fini?title=该群已经解散了');
 						}
 						else{
 							var query = new AV.Query('Group');
@@ -279,7 +282,8 @@ router.get('/join',function(req,res,next){
 												});
 											}
 										});
-										res.send('加入成功');
+										//res.send('加入成功');
+										res.redirect('/group/fini?title=加入成功');
 									},function(err){});
 								},
 								error:function(error){
@@ -289,7 +293,8 @@ router.get('/join',function(req,res,next){
 					}); 
 				}
 				else if (status === 0)
-					res.send('未关注或者未注册');
+					res.render('guide');
+					
 			});
 		}
 	});
@@ -325,7 +330,8 @@ router.get('/set', function(req, res, next) {
 			var userclass = new UserClass();
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				if(err){
-					res.send('你还没有加入群呢，快去创建一个吧！');
+					//res.send('你还没有加入群呢，快去创建一个吧！');
+					res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 				}
 				else{
 					var groupObjId = whichGroupNow;
@@ -423,7 +429,7 @@ router.post('/notice', function(req, res, next) {
 	var username = req.body.username;
 	var userclass = new UserClass();
 	userclass.setGroupNotice(username,groupNotice,function(queryUser,groupSaved){
-		var text = '群公告已经更新，可点击群公告查看'
+		var text = '群公告已经更新';
 		api.sendText(username, text, function(err,results){
 			if(err){
 				api.sendText(username, text, function(err,results){

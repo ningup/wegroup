@@ -66,7 +66,7 @@ router.get('/', function(req, res, next) {
 			var userclass = new UserClass();
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				if(err){
-				 res.send('你还没有加入群呢，快去创建一个吧！');
+				 res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 				}
 				else{
 					var groupObjId = whichGroupNow;
@@ -126,7 +126,7 @@ router.get('/', function(req, res, next) {
 		}});
 	} 
 	else {	// 没有登录，跳转到登录页面。
-		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup?route=feed&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 	}
 });
 
@@ -137,7 +137,7 @@ router.post('/history', function(req, res, next) {
 	var lastFeedId = req.body.lastFeedId;
 	userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 		if(err){
-			res.send('你还没有加入群呢，快去创建一个吧！');
+			res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 		}
 		else{
 			var groupObjId = whichGroupNow;
@@ -204,7 +204,7 @@ router.get('/group/member', function(req, res, next) {
 			var username = user.get('username');
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				if(err){
-					res.send('你还没有加入群呢，快去创建一个吧！');
+					res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 				}
 				else{
 					var groupObjId = whichGroupNow;
@@ -246,7 +246,7 @@ router.get('/getVote', function(req, res, next) {
 			var username = user.get('username');
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				if(err){
-					res.send('你还没有加入群呢，快去创建一个吧！');
+					res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 				}
 				else{
 					var groupObjId = whichGroupNow;
@@ -288,7 +288,7 @@ router.post('/vote/history', function(req, res, next) {
 	var skip = req.body.skip;
 	userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 		if(err){
-		 res.send('你还没有加入群呢，快去创建一个吧！');
+		 res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 		}
 		else{
 			var groupObjId = whichGroupNow;
@@ -459,7 +459,7 @@ router.get('/groupNickname', function(req, res, next) {
 			var username = result.data.openid;
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				if(err){
-				  res.send('你还没有加入群呢，快去创建一个吧！');
+				  res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 				}
 				else{
 					var groupObjId = whichGroupNow;
@@ -490,7 +490,7 @@ router.get('/detail',function(req,res,next){
 			user.save();
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				if(err){
-					res.send('你还没有加入群呢，快去创建一个吧！');
+					res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 				}
 				else{
 					var groupObjId = whichGroupNow;
@@ -527,14 +527,13 @@ router.get('/detail',function(req,res,next){
 							});
 						}	
 						else if (status === 3){
-							res.send('该群已经解散了');
+							res.redirect('/group/fini?title=该群已经解散了');
 						}
 						else if (status === 2){
-							res.send('你不在这个群里，不能看该状态');
+							res.redirect('/group/fini?title=你不在这个群里，不能看该状态');
 						}
-
 						else if (status === 0)
-							res.send('未关注');
+							res.render('guide');
 					});
 				}
 			});

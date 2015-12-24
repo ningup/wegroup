@@ -36,6 +36,7 @@ var api = new WechatAPI(config.appid, config.appsecret, function (callback) {
 	
 
 router.get('/signup', function(req, resa, next) {
+	var route = req.query.route;
  	client.getAccessToken(req.query.code, function (err, result) {
 	  if(err){
 			userclass.getUserObj('1111',function(err,user){
@@ -93,7 +94,10 @@ router.get('/signup', function(req, resa, next) {
 							});	
 						}
 						else{
-							resa.send('登录成功,重新进入一下');
+							if(route != 'feed')
+								resa.send('登录成功,重新进入一下');
+							else
+								resa.redirect('/'+route);
 						}
 					});
 				},

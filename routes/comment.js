@@ -229,10 +229,10 @@ router.get('/msg/detail', function(req, res, next) {
 					// 成功获得实例
 					userclass.isGroupJoined(username,groupObjId,function(status,results){
 						if(status == 2){
-							res.send('你不在这个群里了!');
+							res.redirect('/group/fini?title=你不在这个群里了!');
 						}
 						else if(status == 0){
-							res.send('你没关注微群帮手');
+							res.render('guide');
 						}
 						else{
 							var queryF = new AV.Query('Feed');
@@ -240,7 +240,7 @@ router.get('/msg/detail', function(req, res, next) {
 								success: function(feed) {
 									// 成功获得实例
 									if(feed.get('isRemoved')==1){
-										res.send('该话题被删除了');
+										res.redirect('/group/fini?title=该话题被删除了');
 									}
 									else{
 										if(msgType == 'f_comment' || msgType == 'c_reply' || msgType == 'r_reply'){

@@ -60,7 +60,7 @@
 		{
 		   "type":"view",
 		   "name":"群状态",
-		   "url":"http://dev.wegroup.avosapps.com/feed"
+			 "url":"http://dev.wegroup.avosapps.com/feed"
 		}]
     }
   ]

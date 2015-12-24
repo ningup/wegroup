@@ -45,7 +45,7 @@ router.get('/list', function(req, res, next) {
 			var username = user.get('username');
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				if(err){
-					res.send('你还没有加入群呢，快去创建一个吧！');
+					res.redirect('/group/fini?title=你还没有加入群呢，快去创建一个吧！');
 				}
 				else{
 					msgclass.getFeedMsg(username,function(msgs){

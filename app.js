@@ -448,20 +448,10 @@ app.get('/', function(req, res) {
 				}
 			});
 	  }else{
+			//res.redirect("/feed");
 			var openid = result.data.openid;
 			var accessToken = result.data.access_token;
-			var user = new AV.User(); 
-			user.id = req.AV.user.id;
-			user.fetch().then(function(user){
-				if((user.get('username') == openid) ){
-					res.redirect("/feed");
-				}
-				else{
-					res.redirect("https://open.weixin.qq.com/con nect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
-
-				}
-			});
-	 }
+	  }
  }); 
 });
 
