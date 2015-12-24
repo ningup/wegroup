@@ -38,9 +38,10 @@ router.post('/', function(req, res, next) {
 
 router.get('/list', function(req, res, next) {
 	if (req.AV.user) {
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username");
+		q.get(uid, {success: function(user){
 			var username = user.get('username');
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
 				if(err){
@@ -55,7 +56,7 @@ router.get('/list', function(req, res, next) {
 				 });	
 				}
 			});
-		});
+		}});
 	}
 	else{
 		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");

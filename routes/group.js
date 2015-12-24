@@ -116,9 +116,10 @@ router.get('/create', function(req, res, next){
 
 router.get('/room', function(req, res, next) {
 	if (req.AV.user) {
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username");
+		q.get(uid, {success: function(user){
 			var userclass = new UserClass();
 			var username = user.get('username');
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -142,7 +143,7 @@ router.get('/room', function(req, res, next) {
 					});
 				}
 			});
-		});
+		}});
 	}
 	else{
 		//res.send('我不知道你是谁了，重新进入一下吧');
@@ -316,9 +317,10 @@ router.post('/head/img', function(req, res, next) {
 
 router.get('/set', function(req, res, next) {
 	if (req.AV.user) {
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username");
+		q.get(uid, {success: function(user){
 			var username = user.get('username');
 			var userclass = new UserClass();
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -353,7 +355,7 @@ router.get('/set', function(req, res, next) {
 					});
 				}
 			});
-		});
+		}});
 	}
 	else{
 		//res.send('我不知道你是谁了，重新进入一下吧');
@@ -363,9 +365,10 @@ router.get('/set', function(req, res, next) {
 
 router.get('/quit_group', function(req, res, next) {
 	if(req.AV.user){
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username");
+		q.get(uid, {success: function(user){
 			var username =user.get('username');
 			var userclass = new UserClass();
 			var groupclass = new GroupClass();
@@ -393,7 +396,7 @@ router.get('/quit_group', function(req, res, next) {
 					res.redirect('/group/fini?title=退群成功');
 				});
 			});
-		});
+		}});
 	}
 	else{
 		//res.send('我不知道你是谁了，重新进入一下吧');

@@ -281,6 +281,7 @@ function userFollowed()
 	};
 	this.getCurrentGroup = function(username,cb){
 		var query = new AV.Query(AV.User);
+		query.select("whichGroupNow", "whichGroupNameNow");
 		query.equalTo("username", username);
 		query.first({
 			success: function(queryUser) {
@@ -562,6 +563,7 @@ function userFollowed()
 		var query = new AV.Query(AV.User);
 		var isOwner = 0; //0不是群主，1是群主
 		query.equalTo("username", username);
+		query.select("whichGroupNow");
 		query.first({
 			success: function(queryUser) {
 				var whichGroupNow = queryUser.get('whichGroupNow');
@@ -588,6 +590,7 @@ function userFollowed()
 	};
 	this.setGroupNotice = function(username,notice,cb){
 		var query = new AV.Query(AV.User);
+		query.select("whichGroupNow");
 		query.equalTo("username", username);
 		query.first({
 			success: function(queryUser) {
@@ -629,11 +632,9 @@ function userFollowed()
 	};
 	this.getSignInCnt = function(username,groupid,cb){
 		var query1 = new AV.Query('UserInfo');
-		var query2 = new AV.Query('UserInfo');
 		query1.equalTo("username", username);
+		query1.select("signInTime", "signInCnt","isSignIn");
 		query1.equalTo("groupid", groupid);
-		var query = AV.Query.or(query1,query2);
-		//console.log(groupid);
 		query1.first({
 		success: function(userinfo) {
 			var signTime = userinfo.get('signInTime');
@@ -665,11 +666,9 @@ function userFollowed()
 	};
 	this.setSignInCnt = function(username,groupid,cb){
 		var query1 = new AV.Query('UserInfo');
-		var query2 = new AV.Query('UserInfo');
 		query1.equalTo("username", username);
+		query1.select("signInTime", "signInCnt","isSignIn");
 		query1.equalTo("groupid", groupid);
-		var query = AV.Query.or(query1,query2);
-		//console.log(groupid);
 		query1.first({
 		success: function(userinfo) {
 			var cnt = userinfo.get('signInCnt');

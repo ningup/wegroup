@@ -103,9 +103,10 @@ router.get('/detail', function(req, res, next) {
 	var toWhom = req.query.toWhom;
 	var userclass = new UserClass();
 	if (req.AV.user) {
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username");
+		q.get(uid, {success: function(user){
 			var username = user.get('username');
 			var queryC = new AV.Query('Comment');
 			queryC.get(cid, {
@@ -151,7 +152,7 @@ router.get('/detail', function(req, res, next) {
 				// 失败了.
 				}
 			});
-		});
+		}});
 	}
 	else{
 		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
@@ -217,9 +218,10 @@ router.get('/msg/detail', function(req, res, next) {
 	//console.log('detail');
 	var userclass = new UserClass();
 	if (req.AV.user) {
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username");
+		q.get(uid, {success: function(user){
 			var username = user.get('username');
 			var queryC = new AV.Query('Comment');
 			queryC.get(cid, {
@@ -287,7 +289,7 @@ router.get('/msg/detail', function(req, res, next) {
 				// 失败了.
 				}
 			});
-		});
+		}});
 	}
 	else{
 		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");

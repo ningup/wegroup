@@ -50,9 +50,11 @@ router.get('/', function(req, res, next) {
 	if(req.AV.user){
 		// 如果已经登录，发送当前登录用户信息。
 		//console.log(AV.User.current());
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username", "feed_cookies","feed_scroll","loadFeedTime");
+		q.get(uid, {success: function(user){
+			//console.log(user);
 			var limit=20;
 			var feedloadsum = user.get('feed_cookies');
 			var feed_scroll = user.get('feed_scroll');
@@ -121,7 +123,7 @@ router.get('/', function(req, res, next) {
 					});
 				}
 			});
-		});
+		}});
 	} 
 	else {	// 没有登录，跳转到登录页面。
 		res.redirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
@@ -194,9 +196,10 @@ router.post('/img', function(req, res, next) {
 
 router.get('/group/member', function(req, res, next) {
 	if (req.AV.user) {
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username");
+		q.get(uid, {success: function(user){
 			var userclass = new UserClass();
 			var username = user.get('username');
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -212,7 +215,7 @@ router.get('/group/member', function(req, res, next) {
 							var relation = group.relation("followers");
 							//relation.targetClassName = 'Feed';
 							var queryFollowers = relation.query();
-							queryFeed.find().then(function(users){
+							queryFollowers.find().then(function(users){
 								res.render('group_member', {
 									users: users,
 								});
@@ -224,7 +227,7 @@ router.get('/group/member', function(req, res, next) {
 					});
 				}
 			});
-	  });
+	  }});
 	}
 	else{
 		//res.send('我不知道你是谁了，重新进入一下吧');
@@ -235,9 +238,10 @@ router.get('/group/member', function(req, res, next) {
 //显示投票
 router.get('/getVote', function(req, res, next) {
 	if (req.AV.user) {
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username");
+		q.get(uid, {success: function(user){
 			var userclass = new UserClass();
 			var username = user.get('username');
 			userclass.getCurrentGroup(username,function(err,whichGroupNow,whichGroupNameNow){
@@ -270,7 +274,7 @@ router.get('/getVote', function(req, res, next) {
 					});
 				}
 			});
-		});
+		}});
 	}
 	else{
 		//res.send('我不知道你是谁了，重新进入一下吧');
@@ -473,9 +477,10 @@ router.get('/detail',function(req,res,next){
 	var cookies_feeds_load = req.query.feedSum;
 	var cookies_feeds_scroll = req.query.scroll;
 	if (req.AV.user) {
-		var user = new AV.User(); 
-		user.id = req.AV.user.id;
-		user.fetch().then(function(user){
+		var q = new AV.Query(AV.User); 
+		var uid = req.AV.user.id;
+		q.select("username", "feed_cookies","feed_scroll");
+		q.get(uid, {success: function(user){
 			var username = user.get('username');
 			var userclass = new UserClass();
 			var commentclass = new CommentClass();
@@ -533,7 +538,7 @@ router.get('/detail',function(req,res,next){
 					});
 				}
 			});
-		});
+		}});
 	}
 	else{
 		//res.send('我不知道你是谁了，重新进入一下吧');
