@@ -83,7 +83,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 	userclass.getUserObj(message.FromUserName,function(err,user){
 		if(err){
 			if(message.MsgType === 'event' && message.Event === 'subscribe'){
-				var text = '还处于开发中，敬请关注！'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击注册</a>'; 
+				var text = '来了就赶紧看看吧'+'<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx88cb5d33bbbe9e75&redirect_uri=http://dev.wegroup.avosapps.com/user/signup&response_type=code&scope=snsapi_base&state=123#wechat_redirect">点击注册</a>'; 
 				api.sendText(message.FromUserName, text, function(err,results){
 					if(err){
 						api.sendText(message.FromUserName, err, function(err,results){
@@ -187,7 +187,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
 				if(message.Event === 'subscribe'){
 					user.set('subscribe', 1);
 					user.save();
-					var text = '还处于开发中，敬请关注！';
+					var text = '来了就赶紧看看吧';
 					api.sendText(message.FromUserName, text, function(err,results){
 						if(err){
 							api.sendText(message.FromUserName, err, function(err,results){
